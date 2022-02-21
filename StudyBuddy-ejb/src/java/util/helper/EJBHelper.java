@@ -19,7 +19,9 @@ import util.exception.InputDataValidationException;
  */
 public class EJBHelper {
    
-
+    public static final int NAME_LENGTH_MIN = 5;
+    public static final int NAME_LENGTH_MAX = 50;
+    
     //Ease of bean validation
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -39,7 +41,6 @@ public class EJBHelper {
     
     //Meant to throw specific exceptions for null objects rather than NPE
     //Typically specific exception is related to entity not existing
-    //Didnt create a DoesNotExist exception since I lazy refactor Prof's code to extend 
     public static <T> T requireNonNull(T obj, DoesNotExistException ex) throws DoesNotExistException {
         T returnObj;
         try {
@@ -51,6 +52,7 @@ public class EJBHelper {
         return returnObj;
     }
     
+    //This is for ease of bean validation.
     public static <T> void throwValidationErrorsIfAny(T entity) throws InputDataValidationException {
         Set<ConstraintViolation<T>> errors = validator.validate(entity);
         StringBuilder sb = new StringBuilder();
