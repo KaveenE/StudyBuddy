@@ -8,6 +8,10 @@ package ejb.session.stateless;
 import entities.AccountEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.AlreadyExistsException;
+import util.exception.DoesNotExistException;
+import util.exception.InputDataValidationException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -18,8 +22,8 @@ public interface AccountSessionBeanLocal {
 
     public List<AccountEntity> retrieveAllAccounts();
 
-    public AccountEntity retrieveAccountById(Long accountId);
+    public AccountEntity retrieveAccountById(Long accountId) throws DoesNotExistException, InputDataValidationException;
 
-    public Long createNewAccount(AccountEntity newAccountEntity);
+    public Long createNewAccount(AccountEntity newAccountEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException;
     
 }

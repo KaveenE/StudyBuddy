@@ -10,7 +10,15 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import util.exception.AccountAlreadyExistsException;
+import util.exception.AccountDoesNotExistException;
+import util.exception.AlreadyExistsException;
+import util.exception.DoesNotExistException;
+import util.exception.InputDataValidationException;
+import util.exception.UnknownPersistenceException;
+import util.helper.EJBHelper;
 
 /**
  *
@@ -30,17 +38,25 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
     }
 
     @Override
-    public AccountEntity retrieveAccountById(Long accountId) {
-        Query query = em.createQuery("SELECT a FROM AccountEntity a WHERE a.accountId = :accountId");
-        query.setParameter("accountId", accountId);
+    public AccountEntity retrieveAccountById(Long accountId) throws DoesNotExistException, InputDataValidationException {
+        AccountEntity account = em.find(AccountEntity.class, accountId);
+        EJBHelper.requireNonNull(account, new AccountDoesNotExistException());
+        EJBHelper.throwValidationErrorsIfAny(account);
 
-        return (AccountEntity) query.getSingleResult();
+        return account;
     }
 
     @Override
-    public Long createNewAccount(AccountEntity newAccountEntity) {
-        em.persist(newAccountEntity);
-        em.flush();
+    public Long createNewAccount(AccountEntity newAccountEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException{
+        EJBHelper.throwValidationErrorsIfAny(newAccountEntity);
+        
+        try {
+            em.persist(newAccountEntity);
+            em.flush();
+        }
+        catch(PersistenceException ex) {
+            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new AccountAlreadyExistsException());
+        }
 
         return newAccountEntity.getAccountId();
     }

@@ -8,6 +8,8 @@ package ejb.session.stateless;
 import entities.SchoolEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.DoesNotExistException;
+import util.exception.InputDataValidationException;
 
 /**
  *
@@ -18,6 +20,6 @@ public interface SchoolEntitySessionBeanLocal {
 
     public List<SchoolEntity> retrieveAllSchools();
 
-    public SchoolEntity retrieveSchoolById(Long schoolId);
+    public SchoolEntity retrieveSchoolById(Long schoolId) throws DoesNotExistException, InputDataValidationException;
     
 }

@@ -5,12 +5,23 @@
  */
 package ejb.session.stateless;
 
+import entities.ModuleEntity;
 import entities.SchoolEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import util.exception.AlreadyExistsException;
+import util.exception.DoesNotExistException;
+import util.exception.InputDataValidationException;
+import util.exception.ModuleAlreadyExistsException;
+import util.exception.ModuleDoesNotExistException;
+import util.exception.SchoolAlreadyExistsException;
+import util.exception.SchoolDoesNotExistException;
+import util.exception.UnknownPersistenceException;
+import util.helper.EJBHelper;
 
 /**
  *
@@ -30,17 +41,25 @@ public class SchoolEntitySessionBean implements SchoolEntitySessionBeanLocal {
     }
 
     @Override
-    public SchoolEntity retrieveSchoolById(Long schoolId) {
-        Query query = em.createQuery("SELECT s FROM SchoolEntity s WHERE s.schoolId = :schoolId");
-        query.setParameter("schoolId", schoolId);
+    public SchoolEntity retrieveSchoolById(Long schoolId) throws DoesNotExistException, InputDataValidationException {
+        SchoolEntity school = em.find(SchoolEntity.class, schoolId);
+        EJBHelper.requireNonNull(school, new SchoolDoesNotExistException());
+        EJBHelper.throwValidationErrorsIfAny(school);
 
-        return (SchoolEntity) query.getSingleResult();
+        return school;
     }
 
-    public Long createNewSchool(SchoolEntity newSchoolEntity) {
+    public Long createNewSchool(SchoolEntity newSchoolEntity) throws AlreadyExistsException, InputDataValidationException, UnknownPersistenceException {
+        EJBHelper.throwValidationErrorsIfAny(newSchoolEntity);
+        
+        try {
         em.persist(newSchoolEntity);
         em.flush();
-
+        }
+        catch(PersistenceException ex) {
+            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new SchoolAlreadyExistsException());
+        }
+        
         return newSchoolEntity.getschoolId();
     }
 }
