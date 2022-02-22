@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,8 +44,8 @@ public class ModuleEntity implements Serializable {
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private SchoolEntity school;
-//    @OneToMany
-//    private List<GroupEntity> groups;
+    @OneToMany
+    private List<GroupEntity> groups;
 
     public ModuleEntity() {
     }
@@ -52,6 +53,14 @@ public class ModuleEntity implements Serializable {
     public ModuleEntity(String name, String code) {
         this.name = name;
         this.code = code;
+    }
+
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupEntity> groups) {
+        this.groups = groups;
     }
 
     public SchoolEntity getSchool() {
