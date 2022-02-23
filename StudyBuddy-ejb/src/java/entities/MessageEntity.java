@@ -35,6 +35,7 @@ public class MessageEntity implements Serializable {
 //    @JoinColumn(nullable = false)
 //    @ManyToOne(optional = false)
 //    private StudentEntity sentBy;
+    // TODO: Besides student, also grp entity relationship
     
     public MessageEntity() {
     }

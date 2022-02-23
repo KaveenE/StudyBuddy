@@ -37,7 +37,7 @@ public class ModuleEntity implements Serializable {
     private String name;
 
     @Column(nullable = false, unique = true, length = EJBHelper.NAME_LENGTH_MAX)
-    @Size(min = EJBHelper.NAME_LENGTH_MIN, max = EJBHelper.NAME_LENGTH_MAX)
+    @Size(min = 4, max = 8)
     @NotNull
     private String code;
 

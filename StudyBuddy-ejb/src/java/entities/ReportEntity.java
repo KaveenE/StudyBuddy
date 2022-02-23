@@ -36,7 +36,7 @@ public class ReportEntity implements Serializable {
     @NotNull
     private Boolean isResolved;
 
-//    @ManyToOne
+//    TODO: @ManyToOne
 //    private StudentEntity student;
     
     public ReportEntity() {

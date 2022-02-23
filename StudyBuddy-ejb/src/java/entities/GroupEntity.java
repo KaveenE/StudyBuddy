@@ -48,7 +48,7 @@ public class GroupEntity implements Serializable {
     private ModuleEntity moduleEntity;
     @OneToMany
     private List<MessageEntity> messages;
-    //relationship with student 
+    //todo: relationship with student 
 
     public GroupEntity() {
     }

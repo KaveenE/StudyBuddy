@@ -19,7 +19,7 @@ import javax.persistence.Id;
 public class AdminEntity extends AccountEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     public AdminEntity() {
         super();
     }
