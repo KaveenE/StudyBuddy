@@ -23,7 +23,7 @@ public interface ModuleEntitySessionBeanLocal {
 
     public List<ModuleEntity> retrieveAllModules();
 
-    public Long createNewModule(AdvertisementEntity newModuleEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException;
+    public Long createNewModule(ModuleEntity newModuleEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException;
 
     public ModuleEntity retrieveModuleById(Long moduleId) throws InputDataValidationException, DoesNotExistException;
     

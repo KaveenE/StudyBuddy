@@ -49,7 +49,7 @@ public class ModuleEntitySessionBean implements ModuleEntitySessionBeanLocal {
     }
     
     @Override
-    public Long createNewModule(AdvertisementEntity newModuleEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException {
+    public Long createNewModule(ModuleEntity newModuleEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException {
         EJBHelper.throwValidationErrorsIfAny(newModuleEntity);
         
         try {
@@ -60,6 +60,6 @@ public class ModuleEntitySessionBean implements ModuleEntitySessionBeanLocal {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new ModuleAlreadyExistsException());
         }
         
-        return newModuleEntity.getAdvertisementId();
+        return newModuleEntity.getmoduleId();
     }
 }
