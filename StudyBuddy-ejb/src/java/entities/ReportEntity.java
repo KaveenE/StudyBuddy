@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -36,8 +37,10 @@ public class ReportEntity implements Serializable {
     @NotNull
     private Boolean isResolved;
 
-//    TODO: @ManyToOne
-//    private StudentEntity student;
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
+    private StudentEntity studentEntity;
+
     
     public ReportEntity() {
     }
@@ -89,6 +92,20 @@ public class ReportEntity implements Serializable {
     @Override
     public String toString() {
         return "entities.ReportEntity[ id=" + reportId + " ]";
+    }
+
+    /**
+     * @return the studentEntity
+     */
+    public StudentEntity getStudentEntity() {
+        return studentEntity;
+    }
+
+    /**
+     * @param studentEntity the studentEntity to set
+     */
+    public void setStudentEntity(StudentEntity studentEntity) {
+        this.studentEntity = studentEntity;
     }
 
 }
