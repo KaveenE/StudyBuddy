@@ -13,11 +13,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
@@ -25,6 +26,7 @@ import javax.validation.constraints.Size;
  * @author enkav
  */
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AccountEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,12 +45,11 @@ public abstract class AccountEntity implements Serializable {
     @Column(nullable = false, length = 32)
     @NotNull
     @Size(min = 8, max = 255)
-    //Atleast 1 digit,lowercase,uppercase,symbol,8 characters & no spaces
-    @Pattern(regexp = "^(?=.*[0-9]) (?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$){8,255}$")
+    //At least 1 digit,lowercase,uppercase,symbol,8 characters & no spaces
+//    @Pattern(regexp = "^(?=.*[0-9]) (?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$){8,255}$")
     private String password;
 
     @Embedded
-    @Column(nullable = false)
     private RatingEntity ratingEntity;
 
     @OneToMany(mappedBy = "rater")

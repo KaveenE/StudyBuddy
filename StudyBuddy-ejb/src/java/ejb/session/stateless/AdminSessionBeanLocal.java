@@ -5,7 +5,8 @@
  */
 package ejb.session.stateless;
 
-import entities.StudentEntity;
+import entities.AccountEntity;
+import entities.AdminEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AlreadyExistsException;
@@ -15,16 +16,14 @@ import util.exception.UnknownPersistenceException;
 
 /**
  *
- * @author enkav
+ * @author larby
  */
 @Local
-public interface StudentEntitySessionBeanLocal {
+public interface AdminSessionBeanLocal {
+    public List<AdminEntity> retrieveAllAdminEntities();
 
-    public List<StudentEntity> retrieveAllStudents();
+    public AdminEntity retrieveAccountById(Long accountId) throws DoesNotExistException, InputDataValidationException;
 
-    public StudentEntity retrieveStudentById(Long studentId) throws DoesNotExistException, InputDataValidationException;
-    
-    public Long createNewStudent(StudentEntity newStudentEntity) throws AlreadyExistsException, InputDataValidationException, UnknownPersistenceException;
-
+    public Long createNewAdminEntity(AdminEntity newAdminEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException;
     
 }

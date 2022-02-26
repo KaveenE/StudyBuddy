@@ -50,6 +50,7 @@ public class StudentEntitySessionBean implements StudentEntitySessionBeanLocal {
         return student;
     }
 
+    @Override
     public Long createNewStudent(StudentEntity newStudentEntity) throws AlreadyExistsException, InputDataValidationException, UnknownPersistenceException {
         EJBHelper.throwValidationErrorsIfAny(newStudentEntity);
         

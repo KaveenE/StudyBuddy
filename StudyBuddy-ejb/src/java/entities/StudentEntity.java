@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
@@ -66,13 +68,20 @@ public class StudentEntity extends AccountEntity implements Serializable {
     @OneToMany(mappedBy = "reportedStudent")
     private List<ReportEntity> reportReceived;
 
-    public StudentEntity() {
+    {
         this.groupsPosted = new ArrayList<>();
         this.groupsApplied = new ArrayList<>();
         this.groups = new ArrayList<>();
         this.messages = new ArrayList<>();
         this.reportsSubmitted = new ArrayList<>();
         this.reportReceived = new ArrayList<>();
+        this.optLocation = false;
+        this.isEnabled = true;
+        this.isPremium = false;
+        this.creditBalance = 0l;
+    }
+    public StudentEntity() {
+        
     }
 
     public StudentEntity(String email, String username, String password, String yearOfStudy) {

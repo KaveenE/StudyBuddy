@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -62,9 +63,11 @@ public class GroupEntity implements Serializable {
     private StudentEntity poster;
 
     @ManyToMany
+    @JoinTable(name = "groupApplied_candidates", joinColumns = @JoinColumn(name = "candidate_studentid"), inverseJoinColumns = @JoinColumn(name = "groupApplied_groupid"))
     private List<StudentEntity> candidates;
 
     @ManyToMany
+    @JoinTable(name = "groups_members", joinColumns = @JoinColumn(name = "members_studentid"), inverseJoinColumns = @JoinColumn(name = "groups_groupid"))
     private List<StudentEntity> groupMembers;
 
     public GroupEntity() {

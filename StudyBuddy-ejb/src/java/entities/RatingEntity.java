@@ -19,10 +19,8 @@ public class RatingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    @Column(nullable = false,scale = 1, precision = 2)
-    @NotNull
+    @Column(scale = 1, precision = 2)
     private Double rating;
-    @Column(nullable = false)
     private String ratingDescription;
 
     public RatingEntity() {

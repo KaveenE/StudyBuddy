@@ -21,5 +21,7 @@ public class AdminEntity extends AccountEntity implements Serializable {
         super();
     }
 
-    
+    public AdminEntity(String email, String username, String password) {
+        super(email, username, password);
+    }
 }

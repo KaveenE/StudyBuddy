@@ -5,7 +5,7 @@
  */
 package ejb.session.stateless;
 
-import entities.StudentEntity;
+import entities.GroupEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AlreadyExistsException;
@@ -15,16 +15,14 @@ import util.exception.UnknownPersistenceException;
 
 /**
  *
- * @author enkav
+ * @author larby
  */
 @Local
-public interface StudentEntitySessionBeanLocal {
+public interface GroupEntitySessionBeanLocal {
+    public List<GroupEntity> retrieveAllGroupEntity();
 
-    public List<StudentEntity> retrieveAllStudents();
+    public Long createNewGroupEntity(GroupEntity newGroupEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException;
 
-    public StudentEntity retrieveStudentById(Long studentId) throws DoesNotExistException, InputDataValidationException;
-    
-    public Long createNewStudent(StudentEntity newStudentEntity) throws AlreadyExistsException, InputDataValidationException, UnknownPersistenceException;
-
+    public GroupEntity retrieveGroupEntityById(Long groupId) throws InputDataValidationException, DoesNotExistException;
     
 }
