@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -46,9 +47,17 @@ public class GroupEntity implements Serializable {
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private ModuleEntity moduleEntity;
-    @OneToMany
+    
+    @OneToMany(mappedBy = "group")
     private List<MessageEntity> messages;
-    //todo: relationship with student 
+    
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
+    private StudentEntity poster;
+    @ManyToMany
+    private List<StudentEntity> candidates;
+    @ManyToMany
+    private List<StudentEntity> groupMembers;
 
     public GroupEntity() {
     }

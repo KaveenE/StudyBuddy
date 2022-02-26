@@ -6,11 +6,14 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -28,7 +31,8 @@ public class StudentEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private String yearOfStudy;
-    //can be null?
+    @Column(nullable = false)
+    @NotNull
     private Long creditBalance; 
     
     @Column(nullable = false)
@@ -38,11 +42,22 @@ public class StudentEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean isEnabled;
-    //can be null?
+    //can be null? not sure actually, can't no premium use this function?
     private Boolean optLocation;
         
-        
+    @OneToMany(mappedBy="poster")
+    private List<GroupEntity> groupsPosted;
+    @ManyToMany(mappedBy="candidates")
+    private List<GroupEntity> groupsApplied;
+    @ManyToMany(mappedBy="groupMembers")
+    private List<GroupEntity> groups;
 
+    @OneToMany(mappedBy="sender")
+    private List<MessageEntity> messages;
+    
+    @OneToMany(mappedBy="studentWhoReported")
+    private List<ReportEntity> reports;
+    
     public Long getStudentId() {
         return studentId;
     }
@@ -144,6 +159,46 @@ public class StudentEntity implements Serializable {
      */
     public void setOptLocation(Boolean optLocation) {
         this.optLocation = optLocation;
+    }
+
+    public List<GroupEntity> getGroupsPosted() {
+        return groupsPosted;
+    }
+
+    public void setGroupsPosted(List<GroupEntity> groupsPosted) {
+        this.groupsPosted = groupsPosted;
+    }
+
+    public List<GroupEntity> getGroupsApplied() {
+        return groupsApplied;
+    }
+
+    public void setGroupsApplied(List<GroupEntity> groupsApplied) {
+        this.groupsApplied = groupsApplied;
+    }
+
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupEntity> groups) {
+        this.groups = groups;
+    }
+
+    public List<MessageEntity> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<MessageEntity> messages) {
+        this.messages = messages;
+    }
+
+    public List<ReportEntity> getReports() {
+        return reports;
+    }
+
+    public void setReports(List<ReportEntity> reports) {
+        this.reports = reports;
     }
     
 }

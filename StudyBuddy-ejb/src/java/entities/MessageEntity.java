@@ -32,10 +32,9 @@ public class MessageEntity implements Serializable {
     @ManyToOne(optional = false)
     private GroupEntity group;
 
-//    @JoinColumn(nullable = false)
-//    @ManyToOne(optional = false)
-//    private StudentEntity sentBy;
-    // TODO: Besides student, also grp entity relationship
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
+    private StudentEntity sender;
     
     public MessageEntity() {
     }
@@ -87,6 +86,14 @@ public class MessageEntity implements Serializable {
     @Override
     public String toString() {
         return "entities.MessageEntity[ id=" + messageId + " ]";
+    }
+
+    public StudentEntity getSender() {
+        return sender;
+    }
+
+    public void setSender(StudentEntity sender) {
+        this.sender = sender;
     }
 
 }

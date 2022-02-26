@@ -39,7 +39,7 @@ public class ReportEntity implements Serializable {
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
-    private StudentEntity studentEntity;
+    private StudentEntity studentWhoReported;
 
     
     public ReportEntity() {
@@ -94,18 +94,12 @@ public class ReportEntity implements Serializable {
         return "entities.ReportEntity[ id=" + reportId + " ]";
     }
 
-    /**
-     * @return the studentEntity
-     */
-    public StudentEntity getStudentEntity() {
-        return studentEntity;
+    public StudentEntity getStudentWhoReported() {
+        return studentWhoReported;
     }
 
-    /**
-     * @param studentEntity the studentEntity to set
-     */
-    public void setStudentEntity(StudentEntity studentEntity) {
-        this.studentEntity = studentEntity;
+    public void setStudentWhoReported(StudentEntity studentWhoReported) {
+        this.studentWhoReported = studentWhoReported;
     }
 
 }
