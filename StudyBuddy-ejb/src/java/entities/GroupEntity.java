@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,19 +48,48 @@ public class GroupEntity implements Serializable {
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private ModuleEntity moduleEntity;
-    
+
     @OneToMany(mappedBy = "group")
     private List<MessageEntity> messages;
-    
+
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private StudentEntity poster;
+
     @ManyToMany
     private List<StudentEntity> candidates;
+
     @ManyToMany
     private List<StudentEntity> groupMembers;
 
     public GroupEntity() {
+        this.candidates = new ArrayList<>();
+        this.groupMembers = new ArrayList<>();
+        this.messages = new ArrayList<>();
+    }
+
+    public StudentEntity getPoster() {
+        return poster;
+    }
+
+    public void setPoster(StudentEntity poster) {
+        this.poster = poster;
+    }
+
+    public List<StudentEntity> getCandidates() {
+        return candidates;
+    }
+
+    public void setCandidates(List<StudentEntity> candidates) {
+        this.candidates = candidates;
+    }
+
+    public List<StudentEntity> getGroupMembers() {
+        return groupMembers;
+    }
+
+    public void setGroupMembers(List<StudentEntity> groupMembers) {
+        this.groupMembers = groupMembers;
     }
 
     public List<MessageEntity> getMessages() {

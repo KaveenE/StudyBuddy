@@ -35,7 +35,7 @@ public class MessageEntity implements Serializable {
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private StudentEntity sender;
-    
+
     public MessageEntity() {
     }
 

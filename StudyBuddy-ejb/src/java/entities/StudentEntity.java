@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,37 +28,47 @@ public class StudentEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long studentId;
-    
+
     @Column(nullable = false)
     @NotNull
     private String yearOfStudy;
     @Column(nullable = false)
     @NotNull
-    private Long creditBalance; 
-    
+    private Long creditBalance;
+
     @Column(nullable = false)
     @NotNull
     private Boolean isPremium;
-    
+
     @Column(nullable = false)
     @NotNull
     private Boolean isEnabled;
     //can be null? not sure actually, can't no premium use this function?
     private Boolean optLocation;
-        
-    @OneToMany(mappedBy="poster")
+
+    @OneToMany(mappedBy = "poster")
     private List<GroupEntity> groupsPosted;
-    @ManyToMany(mappedBy="candidates")
+
+    @ManyToMany(mappedBy = "candidates")
     private List<GroupEntity> groupsApplied;
-    @ManyToMany(mappedBy="groupMembers")
+
+    @ManyToMany(mappedBy = "groupMembers")
     private List<GroupEntity> groups;
 
-    @OneToMany(mappedBy="sender")
+    @OneToMany(mappedBy = "sender")
     private List<MessageEntity> messages;
-    
-    @OneToMany(mappedBy="studentWhoReported")
+
+    @OneToMany(mappedBy = "studentWhoReported")
     private List<ReportEntity> reports;
-    
+
+    public StudentEntity() {
+        this.groupsPosted = new ArrayList<>();
+        this.groupsApplied = new ArrayList<>();
+        this.groups = new ArrayList<>();
+        this.messages = new ArrayList<>();
+        this.reports = new ArrayList<>();
+    }
+
     public Long getStudentId() {
         return studentId;
     }
@@ -200,5 +211,5 @@ public class StudentEntity implements Serializable {
     public void setReports(List<ReportEntity> reports) {
         this.reports = reports;
     }
-    
+
 }

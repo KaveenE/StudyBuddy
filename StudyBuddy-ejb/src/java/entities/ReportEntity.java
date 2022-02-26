@@ -14,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import util.helper.EJBHelper;
 
 /**
  *
@@ -41,7 +39,6 @@ public class ReportEntity implements Serializable {
     @ManyToOne(optional = false)
     private StudentEntity studentWhoReported;
 
-    
     public ReportEntity() {
     }
 
