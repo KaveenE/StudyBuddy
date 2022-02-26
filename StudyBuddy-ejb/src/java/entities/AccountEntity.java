@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -49,9 +50,13 @@ public abstract class AccountEntity implements Serializable {
     private RatingEntity ratingEntity;
     
     @OneToMany(mappedBy = "rater")
-    private List<AccountEntity> ratingToEntities; 
+    private List<AccountEntity> ratingToEntities;
+    @ManyToOne(optional = false)
+    private AccountEntity rater;
     @OneToMany(mappedBy = "ratee")
     private List<AccountEntity> ratingFromEntities;
+    @ManyToOne(optional = false)
+    private AccountEntity ratee;
 
     public AccountEntity() {
     }
@@ -135,6 +140,22 @@ public abstract class AccountEntity implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public AccountEntity getRater() {
+        return rater;
+    }
+
+    public void setRater(AccountEntity rater) {
+        this.rater = rater;
+    }
+
+    public AccountEntity getRatee() {
+        return ratee;
+    }
+
+    public void setRatee(AccountEntity ratee) {
+        this.ratee = ratee;
     }
 
 }
