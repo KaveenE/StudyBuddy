@@ -51,9 +51,10 @@ public class ModuleEntity implements Serializable {
     public ModuleEntity() {
     }
 
-    public ModuleEntity(String name, String code) {
+    public ModuleEntity(String name, String code, SchoolEntity school) {
         this.name = name;
         this.code = code;
+        this.school = school;
     }
 
     public List<GroupEntity> getGroups() {

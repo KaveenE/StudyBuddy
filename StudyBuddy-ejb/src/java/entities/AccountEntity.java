@@ -63,6 +63,12 @@ public abstract class AccountEntity implements Serializable {
     public AccountEntity() {
     }
 
+    public AccountEntity(String email, String username, String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
+    
     public Long getAccountId() {
         return accountId;
     }

@@ -36,7 +36,6 @@ public class ReportEntity implements Serializable {
     //todo date attribute converter 
     @Column(nullable = false)
     @NotNull
-    @AssertFalse
     private Boolean isResolved;
 
     @JoinColumn(nullable = false)

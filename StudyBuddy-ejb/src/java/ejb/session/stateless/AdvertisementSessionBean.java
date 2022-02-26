@@ -5,7 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entities.AccountEntity;
 import entities.AdvertisementEntity;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -13,8 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import util.exception.AdvertisementDoesNotExistException;
-import util.exception.AccountDoesNotExistException;
 import util.exception.AdvertisementDoesNotExistException;
 import util.exception.AdvertismentAlreadyExistsException;
 import util.exception.AlreadyExistsException;

@@ -5,6 +5,8 @@
  */
 package ejb.session.singleton;
 
+import ejb.session.stateless.AccountSessionBeanLocal;
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 
@@ -16,6 +18,7 @@ import javax.ejb.LocalBean;
 @LocalBean
 public class DataInitSessionBean {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @EJB
+    private AccountSessionBeanLocal accountSessionBean;
+    
 }

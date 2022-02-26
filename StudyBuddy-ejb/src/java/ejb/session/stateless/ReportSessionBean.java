@@ -15,7 +15,6 @@ import javax.persistence.Query;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
-import util.exception.ModuleAlreadyExistsException;
 import util.exception.ReportAlreadyExistsException;
 import util.exception.ReportDoesNotExistException;
 import util.exception.UnknownPersistenceException;

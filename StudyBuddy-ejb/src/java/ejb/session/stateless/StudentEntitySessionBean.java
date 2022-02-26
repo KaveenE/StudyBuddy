@@ -61,7 +61,7 @@ public class StudentEntitySessionBean implements StudentEntitySessionBeanLocal {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new StudentAlreadyExistsException());
         }
         
-        return newStudentEntity.getStudentId();
+        return newStudentEntity.getAccountId();
     }
 
 }

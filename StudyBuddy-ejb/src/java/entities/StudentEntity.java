@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
@@ -23,12 +20,9 @@ import javax.validation.constraints.NotNull;
  * @author enkav
  */
 @Entity
-public class StudentEntity implements Serializable {
+public class StudentEntity extends AccountEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long studentId;
 
     //Why is this String?
     @Column(nullable = false)
@@ -78,39 +72,12 @@ public class StudentEntity implements Serializable {
         this.groups = new ArrayList<>();
         this.messages = new ArrayList<>();
         this.reportsSubmitted = new ArrayList<>();
+        this.reportReceived = new ArrayList<>();
     }
 
-    public Long getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (studentId != null ? studentId.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the studentId fields are not set
-        if (!(object instanceof StudentEntity)) {
-            return false;
-        }
-        StudentEntity other = (StudentEntity) object;
-        if ((this.studentId == null && other.studentId != null) || (this.studentId != null && !this.studentId.equals(other.studentId))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "entities.StudentEntity[ id=" + studentId + " ]";
+    public StudentEntity(String email, String username, String password, String yearOfStudy) {
+        super(email, username, password);
+        this.yearOfStudy = yearOfStudy;
     }
 
     /**

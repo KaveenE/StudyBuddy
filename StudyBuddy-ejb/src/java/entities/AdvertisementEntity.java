@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import util.helper.EJBHelper;
 
 /**
  *
@@ -34,6 +33,14 @@ public class AdvertisementEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private String imageUrl;
+
+    public AdvertisementEntity() {
+    }
+
+    public AdvertisementEntity(String companyName, String imageUrl) {
+        this.companyName = companyName;
+        this.imageUrl = imageUrl;
+    }
 
     public Long getAdvertisementId() {
         return advertisementId;

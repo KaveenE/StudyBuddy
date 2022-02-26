@@ -5,7 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entities.ModuleEntity;
 import entities.SchoolEntity;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -16,8 +15,6 @@ import javax.persistence.Query;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
-import util.exception.ModuleAlreadyExistsException;
-import util.exception.ModuleDoesNotExistException;
 import util.exception.SchoolAlreadyExistsException;
 import util.exception.SchoolDoesNotExistException;
 import util.exception.UnknownPersistenceException;
