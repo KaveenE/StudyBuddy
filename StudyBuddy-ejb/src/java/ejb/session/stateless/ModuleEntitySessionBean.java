@@ -5,7 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entities.AdvertisementEntity;
 import entities.ModuleEntity;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -13,8 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import util.exception.AccountDoesNotExistException;
-import util.exception.AdvertismentAlreadyExistsException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -40,6 +37,7 @@ public class ModuleEntitySessionBean implements ModuleEntitySessionBeanLocal {
         return query.getResultList();
     }
 
+    @Override
     public ModuleEntity retrieveModuleById(Long moduleId) throws InputDataValidationException, DoesNotExistException {
         ModuleEntity module = em.find(ModuleEntity.class, moduleId);
         EJBHelper.requireNonNull(module, new ModuleDoesNotExistException());
