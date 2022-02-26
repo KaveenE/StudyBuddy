@@ -27,8 +27,8 @@ public class AdvertisementEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long advertisementId;
     
-    @Column(nullable = false,unique = true, length = EJBHelper.NAME_LENGTH_MIN)
-    @Size(min = EJBHelper.NAME_LENGTH_MIN , max = EJBHelper.NAME_LENGTH_MAX )
+    @Column(nullable = false,unique = true)
+    @Size(min = 1, max = 255)
     @NotNull
     private String companyName;
     @Column(nullable = false)

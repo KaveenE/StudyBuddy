@@ -31,12 +31,12 @@ public class ModuleEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long moduleId;
 
-    @Column(nullable = false, unique = true, length = EJBHelper.NAME_LENGTH_MAX)
-    @Size(min = EJBHelper.NAME_LENGTH_MIN, max = EJBHelper.NAME_LENGTH_MAX)
+    @Column(nullable = false)
+    @Size(min = 5, max = 255)
     @NotNull
     private String name;
 
-    @Column(nullable = false, unique = true, length = EJBHelper.NAME_LENGTH_MAX)
+    @Column(nullable = false, unique = true, length = 8)
     @Size(min = 4, max = 8)
     @NotNull
     private String code;
@@ -44,6 +44,7 @@ public class ModuleEntity implements Serializable {
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private SchoolEntity school;
+    
     @OneToMany
     private List<GroupEntity> groups;
 

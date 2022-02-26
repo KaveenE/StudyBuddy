@@ -13,12 +13,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -31,24 +31,26 @@ public abstract class AccountEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
-    
-    @Column(nullable = false,unique = true)
+
+    @Column(nullable = false, unique = true)
     @NotNull
     @Email
     private String email;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true, length = 32)
     @NotNull
+    @Size(min = 4, max = 32)
     private String username;
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, length = 32)
     @NotNull
+    @Size(min = 8, max = 255)
     //Atleast 1 digit,lowercase,uppercase,symbol,8 characters & no spaces
-    @Pattern(regexp = "^(?=.*[0-9]) (?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$){8,}$")
+    @Pattern(regexp = "^(?=.*[0-9]) (?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$){8,255}$")
     private String password;
-    
+
     @Embedded
     @Column(nullable = false)
     private RatingEntity ratingEntity;
-    
+
     @OneToMany(mappedBy = "rater")
     private List<AccountEntity> ratingToEntities;
     @ManyToOne(optional = false)
@@ -60,7 +62,7 @@ public abstract class AccountEntity implements Serializable {
 
     public AccountEntity() {
     }
-    
+
     public Long getAccountId() {
         return accountId;
     }

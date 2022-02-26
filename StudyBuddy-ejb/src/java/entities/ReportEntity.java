@@ -13,7 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -29,15 +31,21 @@ public class ReportEntity implements Serializable {
 
     @Column(nullable = false)
     @NotNull
+    @Size(min = 1)
     private String description;
     //todo date attribute converter 
     @Column(nullable = false)
     @NotNull
+    @AssertFalse
     private Boolean isResolved;
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private StudentEntity studentWhoReported;
+    
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
+    private StudentEntity reportedStudent;
 
     public ReportEntity() {
     }
@@ -97,6 +105,20 @@ public class ReportEntity implements Serializable {
 
     public void setStudentWhoReported(StudentEntity studentWhoReported) {
         this.studentWhoReported = studentWhoReported;
+    }
+
+    /**
+     * @return the reportedStudent
+     */
+    public StudentEntity getReportedStudent() {
+        return reportedStudent;
+    }
+
+    /**
+     * @param reportedStudent the reportedStudent to set
+     */
+    public void setReportedStudent(StudentEntity reportedStudent) {
+        this.reportedStudent = reportedStudent;
     }
 
 }

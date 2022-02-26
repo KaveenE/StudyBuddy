@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -29,11 +30,14 @@ public class StudentEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long studentId;
 
+    //Why is this String?
     @Column(nullable = false)
     @NotNull
     private String yearOfStudy;
+    
     @Column(nullable = false)
     @NotNull
+    @Min(0)
     private Long creditBalance;
 
     @Column(nullable = false)
@@ -44,6 +48,10 @@ public class StudentEntity implements Serializable {
     @NotNull
     private Boolean isEnabled;
     //can be null? not sure actually, can't no premium use this function?
+    //no premium = default false
+    
+    @Column(nullable = false)
+    @NotNull
     private Boolean optLocation;
 
     @OneToMany(mappedBy = "poster")
@@ -59,14 +67,17 @@ public class StudentEntity implements Serializable {
     private List<MessageEntity> messages;
 
     @OneToMany(mappedBy = "studentWhoReported")
-    private List<ReportEntity> reports;
+    private List<ReportEntity> reportsSubmitted;
+    
+    @OneToMany(mappedBy = "reportedStudent")
+    private List<ReportEntity> reportReceived;
 
     public StudentEntity() {
         this.groupsPosted = new ArrayList<>();
         this.groupsApplied = new ArrayList<>();
         this.groups = new ArrayList<>();
         this.messages = new ArrayList<>();
-        this.reports = new ArrayList<>();
+        this.reportsSubmitted = new ArrayList<>();
     }
 
     public Long getStudentId() {
@@ -205,11 +216,25 @@ public class StudentEntity implements Serializable {
     }
 
     public List<ReportEntity> getReports() {
-        return reports;
+        return reportsSubmitted;
     }
 
     public void setReports(List<ReportEntity> reports) {
-        this.reports = reports;
+        this.reportsSubmitted = reports;
+    }
+
+    /**
+     * @return the reportReceived
+     */
+    public List<ReportEntity> getReportReceived() {
+        return reportReceived;
+    }
+
+    /**
+     * @param reportReceived the reportReceived to set
+     */
+    public void setReportReceived(List<ReportEntity> reportReceived) {
+        this.reportReceived = reportReceived;
     }
 
 }

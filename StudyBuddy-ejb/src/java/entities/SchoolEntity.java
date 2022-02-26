@@ -29,8 +29,8 @@ public class SchoolEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long schoolId;
     
-    @Column(nullable = false, unique = true, length = EJBHelper.NAME_LENGTH_MAX)
-    @Size(min = EJBHelper.NAME_LENGTH_MIN, max = EJBHelper.NAME_LENGTH_MAX)
+    @Column(nullable = false, unique = true)
+    @Size(min = 3)
     @NotNull 
     private String name;
 

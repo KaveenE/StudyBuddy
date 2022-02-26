@@ -2,6 +2,15 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="StudyBuddy-ejbPU" transaction-type="JTA">
     <jta-data-source>jdbc/studyBuddy</jta-data-source>
+    <class>entities.AccountEntity</class>
+    <class>entities.AdminEntity</class>
+    <class>entities.AdvertisementEntity</class>
+    <class>entities.GroupEntity</class>
+    <class>entities.MessageEntity</class>
+    <class>entities.ModuleEntity</class>
+    <class>entities.ReportEntity</class>
+    <class>entities.SchoolEntity</class>
+    <class>entities.StudentEntity</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>

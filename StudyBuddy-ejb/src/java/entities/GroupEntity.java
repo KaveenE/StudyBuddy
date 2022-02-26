@@ -6,6 +6,8 @@
 package entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -19,7 +21,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import util.helper.EJBHelper;
 
 /**
  *
@@ -33,14 +34,19 @@ public class GroupEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupId;
 
-    @Column(nullable = false, length = EJBHelper.NAME_LENGTH_MAX)
-    @Size(min = EJBHelper.NAME_LENGTH_MIN, max = EJBHelper.NAME_LENGTH_MAX)
+    @Column(nullable = false)
+    @Size(min = 3, max = 255)
     @NotNull
     private String groupName;
     @Column(nullable = false)
     @NotNull
     private String description;
-    //todo date attribute converter 
+    //todo date attribute converter
+    
+    @Column(nullable = false)
+    @NotNull
+    private LocalDateTime dateCreated;
+    
     @Column(nullable = false)
     @NotNull
     private Boolean isOpen;
@@ -130,6 +136,20 @@ public class GroupEntity implements Serializable {
 
     public void setIsOpen(Boolean isOpen) {
         this.isOpen = isOpen;
+    }
+
+    /**
+     * @return the dateCreated
+     */
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    /**
+     * @param dateCreated the dateCreated to set
+     */
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public Long getGroupId() {
