@@ -86,7 +86,7 @@ public class DataInitSessionBean {
             groupEntity.setDescription("A very detailed description");
             groupEntity.setModuleEntity(moduleEntitySessionBean.retrieveModuleById(1l));
             groupEntity.setIsOpen(Boolean.TRUE);
-            groupEntity.setDateCreated(LocalDateTime.now());
+            groupEntity.setDateTimeCreated(LocalDateTime.now());
             groupEntity.setPoster(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroupsPosted().add(groupEntity);
             groupEntitySessionBean.createNewGroupEntity(groupEntity);

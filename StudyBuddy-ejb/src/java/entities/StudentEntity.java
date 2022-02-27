@@ -26,7 +26,6 @@ public class StudentEntity extends AccountEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    //Why is this String?
     @Column(nullable = false)
     @NotNull
     private String yearOfStudy;
@@ -43,9 +42,8 @@ public class StudentEntity extends AccountEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean isEnabled;
-    //can be null? not sure actually, can't no premium use this function?
-    //no premium = default false
     
+//no premium = default false
     @Column(nullable = false)
     @NotNull
     private Boolean optLocation;
@@ -67,7 +65,6 @@ public class StudentEntity extends AccountEntity implements Serializable {
     
     @OneToMany(mappedBy = "reportedStudent")
     private List<ReportEntity> reportReceived;
-
     {
         this.groupsPosted = new ArrayList<>();
         this.groupsApplied = new ArrayList<>();

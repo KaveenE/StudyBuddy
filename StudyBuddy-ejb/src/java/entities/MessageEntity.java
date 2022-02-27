@@ -6,12 +6,15 @@
 package entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -25,8 +28,10 @@ public class MessageEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
     private String content;
-    //todo date attribute converter 
-    //attachment type
+    
+    @Column(nullable = false)
+    @NotNull
+    private LocalDateTime dateTimeCreated;
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
@@ -37,6 +42,12 @@ public class MessageEntity implements Serializable {
     private StudentEntity sender;
 
     public MessageEntity() {
+        dateTimeCreated = LocalDateTime.now();
+    }
+
+    public MessageEntity(String content) {
+        this();
+        this.content = content;
     }
 
     public GroupEntity getGroup() {
@@ -94,6 +105,14 @@ public class MessageEntity implements Serializable {
 
     public void setSender(StudentEntity sender) {
         this.sender = sender;
+    }
+
+    public LocalDateTime getDateTimeCreated() {
+        return dateTimeCreated;
+    }
+
+    public void setDateTimeCreated(LocalDateTime dateTimeCreated) {
+        this.dateTimeCreated = dateTimeCreated;
     }
 
 }

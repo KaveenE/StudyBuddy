@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,9 +38,11 @@ public class SchoolEntity implements Serializable {
     private List<ModuleEntity> moduleEntities;
 
     public SchoolEntity() {
+        this.moduleEntities = new ArrayList<>();
     }
 
     public SchoolEntity(String name) {
+        this();
         this.name = name;
     }
 

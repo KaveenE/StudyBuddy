@@ -41,11 +41,10 @@ public class GroupEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private String description;
-    //todo date attribute converter
-    
+
     @Column(nullable = false)
     @NotNull
-    private LocalDateTime dateCreated;
+    private LocalDateTime dateTimeCreated;
     
     @Column(nullable = false)
     @NotNull
@@ -67,15 +66,23 @@ public class GroupEntity implements Serializable {
     private List<StudentEntity> candidates;
 
     @ManyToMany
-    @JoinTable(name = "groups_members", joinColumns = @JoinColumn(name = "members_studentid"), inverseJoinColumns = @JoinColumn(name = "groups_groupid"))
+    @JoinTable(name = "groups_groupMembers", joinColumns = @JoinColumn(name = "groupMember_studentid"), inverseJoinColumns = @JoinColumn(name = "groups_groupid"))
     private List<StudentEntity> groupMembers;
 
     public GroupEntity() {
         this.candidates = new ArrayList<>();
         this.groupMembers = new ArrayList<>();
         this.messages = new ArrayList<>();
+        this.isOpen = true;
+        this.dateTimeCreated = LocalDateTime.now();
     }
 
+    public GroupEntity(String groupName, String description) {
+        this();
+        this.groupName = groupName;
+        this.description = description;
+    }
+    
     public StudentEntity getPoster() {
         return poster;
     }
@@ -141,17 +148,17 @@ public class GroupEntity implements Serializable {
     }
 
     /**
-     * @return the dateCreated
+     * @return the dateTimeCreated
      */
-    public LocalDateTime getDateCreated() {
-        return dateCreated;
+    public LocalDateTime getDateTimeCreated() {
+        return dateTimeCreated;
     }
 
     /**
-     * @param dateCreated the dateCreated to set
+     * @param dateTimeCreated the dateTimeCreated to set
      */
-    public void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
+    public void setDateTimeCreated(LocalDateTime dateTimeCreated) {
+        this.dateTimeCreated = dateTimeCreated;
     }
 
     public Long getGroupId() {

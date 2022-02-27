@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,7 +34,11 @@ public class ReportEntity implements Serializable {
     @NotNull
     @Size(min = 1)
     private String description;
-    //todo date attribute converter 
+    
+    @Column(nullable = false)
+    @NotNull
+    private LocalDateTime dateTimeCreated;
+    
     @Column(nullable = false)
     @NotNull
     private Boolean isResolved;
@@ -42,11 +47,21 @@ public class ReportEntity implements Serializable {
     @ManyToOne(optional = false)
     private StudentEntity studentWhoReported;
     
+    //Is this necessay? I dont have to report a student 
+    //Can be like a report on UI
+    //Even if it's a report on someone, we can always retrieveByUserName
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private StudentEntity reportedStudent;
 
     public ReportEntity() {
+        this.dateTimeCreated = LocalDateTime.now();
+        this.isResolved = false;
+    }
+    
+    public ReportEntity(String description) {
+        this();
+        this.description = description;
     }
 
     public Long getReportId() {
@@ -118,6 +133,14 @@ public class ReportEntity implements Serializable {
      */
     public void setReportedStudent(StudentEntity reportedStudent) {
         this.reportedStudent = reportedStudent;
+    }
+
+    public LocalDateTime getDateTimeCreated() {
+        return dateTimeCreated;
+    }
+
+    public void setDateTimeCreated(LocalDateTime dateTimeCreated) {
+        this.dateTimeCreated = dateTimeCreated;
     }
 
 }

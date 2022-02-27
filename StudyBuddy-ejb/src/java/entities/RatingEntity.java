@@ -24,6 +24,7 @@ public class RatingEntity implements Serializable {
     private String ratingDescription;
 
     public RatingEntity() {
+        rating = Double.valueOf(0);
     }
 
     public Double getRating() {

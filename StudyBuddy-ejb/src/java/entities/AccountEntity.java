@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -62,12 +63,16 @@ public abstract class AccountEntity implements Serializable {
     private AccountEntity ratee;
 
     public AccountEntity() {
+        ratingToEntities = new ArrayList<>();
+        ratingFromEntities = new ArrayList<>();
+        ratingEntity = new RatingEntity();
     }
 
     public AccountEntity(String email, String username, String password) {
+        this();
         this.email = email;
         this.username = username;
-        this.password = password;
+        this.password = password; 
     }
     
     public Long getAccountId() {
