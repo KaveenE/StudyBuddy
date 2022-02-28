@@ -33,12 +33,12 @@ public class ModuleEntity implements Serializable {
     private Long moduleId;
 
     @Column(nullable = false)
-    @Size(min = 5, max = 255)
+    @Size(min = 1, max = 255)
     @NotNull
     private String name;
 
-    @Column(nullable = false, unique = true, length = 8)
-    @Size(min = 4, max = 8)
+    @Column(nullable = false, unique = true, length = 12)
+    @Size(min = 4, max = 12)
     @NotNull
     private String code;
 
