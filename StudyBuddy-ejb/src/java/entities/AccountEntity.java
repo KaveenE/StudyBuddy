@@ -50,26 +50,20 @@ public abstract class AccountEntity implements Serializable {
 //    @Pattern(regexp = "^(?=.*[0-9]) (?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$){8,255}$")
     private String password;
 
-    @Embedded
-    private RatingEntity ratingEntity;
 
     @OneToMany(mappedBy = "rater")
-    private List<AccountEntity> ratingToEntities;
-    @ManyToOne(optional = false)
-    private AccountEntity rater;
+    private List<RatingEntity> ratingByOthers;
+
     @OneToMany(mappedBy = "ratee")
-    private List<AccountEntity> ratingFromEntities;
-    @ManyToOne(optional = false)
-    private AccountEntity ratee;
+    private List<AccountEntity> ratingOthers;
+
 
     public AccountEntity() {
-        ratingToEntities = new ArrayList<>();
-        ratingFromEntities = new ArrayList<>();
-        ratingEntity = new RatingEntity();
     }
 
     public AccountEntity(String email, String username, String password) {
-        this();
+        this.ratingByOthers = new ArrayList<>();
+        this.ratingOthers = new ArrayList<>();
         this.email = email;
         this.username = username;
         this.password = password; 
@@ -124,29 +118,6 @@ public abstract class AccountEntity implements Serializable {
         this.password = password;
     }
 
-    public RatingEntity getRatingEntity() {
-        return ratingEntity;
-    }
-
-    public void setRatingEntity(RatingEntity ratingEntity) {
-        this.ratingEntity = ratingEntity;
-    }
-
-    public List<AccountEntity> getRatingToEntities() {
-        return ratingToEntities;
-    }
-
-    public void setRatingToEntities(List<AccountEntity> ratingToEntities) {
-        this.ratingToEntities = ratingToEntities;
-    }
-
-    public List<AccountEntity> getRatingFromEntities() {
-        return ratingFromEntities;
-    }
-
-    public void setRatingFromEntities(List<AccountEntity> ratingFromEntities) {
-        this.ratingFromEntities = ratingFromEntities;
-    }
 
     public String getUsername() {
         return username;
@@ -156,20 +127,32 @@ public abstract class AccountEntity implements Serializable {
         this.username = username;
     }
 
-    public AccountEntity getRater() {
-        return rater;
+    /**
+     * @return the ratingByOthers
+     */
+    public List<RatingEntity> getRatingByOthers() {
+        return ratingByOthers;
     }
 
-    public void setRater(AccountEntity rater) {
-        this.rater = rater;
+    /**
+     * @param ratingByOthers the ratingByOthers to set
+     */
+    public void setRatingByOthers(List<RatingEntity> ratingByOthers) {
+        this.ratingByOthers = ratingByOthers;
     }
 
-    public AccountEntity getRatee() {
-        return ratee;
+    /**
+     * @return the ratingOthers
+     */
+    public List<AccountEntity> getRatingOthers() {
+        return ratingOthers;
     }
 
-    public void setRatee(AccountEntity ratee) {
-        this.ratee = ratee;
+    /**
+     * @param ratingOthers the ratingOthers to set
+     */
+    public void setRatingOthers(List<AccountEntity> ratingOthers) {
+        this.ratingOthers = ratingOthers;
     }
 
 }
