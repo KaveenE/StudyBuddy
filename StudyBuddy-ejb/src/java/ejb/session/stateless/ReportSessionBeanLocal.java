@@ -25,5 +25,7 @@ public interface ReportSessionBeanLocal {
     public ReportEntity retrieveReporyById(Long reportId) throws InputDataValidationException, DoesNotExistException;
 
     public Long createNewReport(ReportEntity newReportEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException;
+
+    public void updateReport(ReportEntity reportEntity) throws InputDataValidationException, DoesNotExistException;
     
 }

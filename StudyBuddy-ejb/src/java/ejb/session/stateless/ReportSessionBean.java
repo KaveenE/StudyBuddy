@@ -60,4 +60,10 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
         return newReportEntity.getReportId();
     }
 
+    //only supports updating of the isResolved attribute currently
+    @Override
+    public void updateReport(ReportEntity reportEntity) throws InputDataValidationException, DoesNotExistException {
+        ReportEntity reportEntityToUpdate = retrieveReporyById(reportEntity.getReportId());
+        reportEntityToUpdate.setIsResolved(true);
+    }
 }
