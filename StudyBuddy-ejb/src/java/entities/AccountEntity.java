@@ -8,15 +8,14 @@ package entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import util.security.CryptographicHelper;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -49,7 +48,8 @@ public abstract class AccountEntity implements Serializable {
     //At least 1 digit,lowercase,uppercase,symbol,8 characters & no spaces
 //    @Pattern(regexp = "^(?=.*[0-9]) (?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$){8,255}$")
     private String password;
-
+    @Column(columnDefinition = "CHAR(32) NOT NULL")
+    private String salt;
 
     @OneToMany(mappedBy = "rater")
     private List<RatingEntity> ratingByOthers;
@@ -57,18 +57,19 @@ public abstract class AccountEntity implements Serializable {
     @OneToMany(mappedBy = "ratee")
     private List<AccountEntity> ratingOthers;
 
-
     public AccountEntity() {
+        this.salt = CryptographicHelper.getInstance().generateRandomString(32);
     }
 
     public AccountEntity(String email, String username, String password) {
+        this();
         this.ratingByOthers = new ArrayList<>();
         this.ratingOthers = new ArrayList<>();
         this.email = email;
         this.username = username;
-        this.password = password; 
+        setPassword(password);
     }
-    
+
     public Long getAccountId() {
         return accountId;
     }
@@ -115,9 +116,12 @@ public abstract class AccountEntity implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if (password != null) {
+            this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
+        } else {
+            this.password = null;
+        }
     }
-
 
     public String getUsername() {
         return username;
@@ -127,32 +131,28 @@ public abstract class AccountEntity implements Serializable {
         this.username = username;
     }
 
-    /**
-     * @return the ratingByOthers
-     */
     public List<RatingEntity> getRatingByOthers() {
         return ratingByOthers;
     }
 
-    /**
-     * @param ratingByOthers the ratingByOthers to set
-     */
     public void setRatingByOthers(List<RatingEntity> ratingByOthers) {
         this.ratingByOthers = ratingByOthers;
     }
 
-    /**
-     * @return the ratingOthers
-     */
     public List<AccountEntity> getRatingOthers() {
         return ratingOthers;
     }
 
-    /**
-     * @param ratingOthers the ratingOthers to set
-     */
     public void setRatingOthers(List<AccountEntity> ratingOthers) {
         this.ratingOthers = ratingOthers;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
 }
