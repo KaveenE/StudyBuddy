@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entities.AccountEntity;
 import java.util.List;
 import javax.ejb.Local;
+import javax.security.auth.login.AccountNotFoundException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -25,5 +26,7 @@ public interface AccountSessionBeanLocal {
     public AccountEntity retrieveAccountById(Long accountId) throws DoesNotExistException, InputDataValidationException;
 
     public Long createNewAccount(AccountEntity newAccountEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException;
+
+    public void updateAccount(AccountEntity accountToUpdate) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException;
     
 }

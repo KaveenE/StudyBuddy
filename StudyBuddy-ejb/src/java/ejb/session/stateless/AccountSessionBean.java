@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.security.auth.login.AccountNotFoundException;
 import util.exception.AccountAlreadyExistsException;
 import util.exception.AccountDoesNotExistException;
 import util.exception.AlreadyExistsException;
@@ -59,5 +60,17 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
         }
 
         return newAccountEntity.getAccountId();
+    }
+    
+    @Override
+     public void updateAccount(AccountEntity accountToUpdate) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException
+             //update account
+    {
+
+        AccountEntity account = retrieveAccountById(accountToUpdate.getAccountId());
+        account.setEmail(accountToUpdate.getEmail());
+        account.setPassword(accountToUpdate.getPassword());
+       
+       
     }
 }
