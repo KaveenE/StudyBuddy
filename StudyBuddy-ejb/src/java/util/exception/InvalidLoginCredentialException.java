@@ -12,6 +12,7 @@ package util.exception;
 public class InvalidLoginCredentialException extends Exception {
 
     public InvalidLoginCredentialException() {
+        super("Username does not exist or invalid password!");
     }
 
     public InvalidLoginCredentialException(String msg) {

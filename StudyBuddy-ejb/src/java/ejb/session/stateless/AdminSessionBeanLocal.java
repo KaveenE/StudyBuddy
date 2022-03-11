@@ -25,11 +25,11 @@ public interface AdminSessionBeanLocal {
 
     public List<AdminEntity> retrieveAllAdminEntities();
 
-    public AdminEntity retrieveAccountById(Long accountId) throws DoesNotExistException, InputDataValidationException;
+    public AdminEntity retrieveAdminById(Long accountId) throws DoesNotExistException, InputDataValidationException;
 
     public Long createNewAdminEntity(AdminEntity newAdminEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException;
 
-    public AdminEntity retrieveAdminByUsername(String username) throws AccountDoesNotExistException;
+    public AdminEntity retrieveAdminByUsername(String username) throws DoesNotExistException;
 
     public AdminEntity adminLogin(String username, String password) throws InvalidLoginCredentialException;
 

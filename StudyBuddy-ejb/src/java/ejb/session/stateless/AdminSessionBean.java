@@ -5,8 +5,10 @@
  */
 package ejb.session.stateless;
 
+import entities.AccountEntity;
 import entities.AdminEntity;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -16,6 +18,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import util.exception.AccountAlreadyExistsException;
 import util.exception.AccountDoesNotExistException;
+import util.exception.AdminDoesNotExistException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -33,60 +36,44 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
 
     @PersistenceContext(unitName = "StudyBuddy-ejbPU")
     private EntityManager em;
+    @EJB
+    private AccountSessionBeanLocal accountSessionBeanLocal;
 
     @Override
     public List<AdminEntity> retrieveAllAdminEntities() {
-        return em.createQuery("SELECT a FROM AdminEntity a")
-                .getResultList();
+        List<? extends AccountEntity> adminEntities = accountSessionBeanLocal.retrieveAllAccounts(AdminEntity.class);
+        return (List<AdminEntity>)adminEntities;
     }
 
     @Override
-    public AdminEntity retrieveAccountById(Long accountId) throws DoesNotExistException, InputDataValidationException {
-        AdminEntity adminEntity = em.find(AdminEntity.class, accountId);
-        EJBHelper.requireNonNull(adminEntity, new DoesNotExistException("Admin does not exist"));
-
-        return adminEntity;
+    public AdminEntity retrieveAdminById(Long adminId) throws DoesNotExistException, InputDataValidationException {
+        AccountEntity account = accountSessionBeanLocal.retrieveAccountById(adminId);
+        if(! (account instanceof AdminEntity) ) {
+            throw new AdminDoesNotExistException();
+        }
+        return (AdminEntity)account;
     }
 
     @Override
     public Long createNewAdminEntity(AdminEntity newAdminEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException {
-        EJBHelper.throwValidationErrorsIfAny(newAdminEntity);
-
-        try {
-            em.persist(newAdminEntity);
-            em.flush();
-        } catch (PersistenceException ex) {
-            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new AccountAlreadyExistsException());
-        }
-
-        return newAdminEntity.getAccountId();
+        return accountSessionBeanLocal.createNewAccount(newAdminEntity);
     }
 
     @Override
-    public AdminEntity retrieveAdminByUsername(String username) throws AccountDoesNotExistException {
-        Query query = em.createQuery("SELECT a FROM AdminEntity a WHERE a.username = :username");
-        query.setParameter("username", username);
-
-        try {
-            return (AdminEntity) query.getSingleResult();
-        } catch (NoResultException | NonUniqueResultException ex) {
-            throw new AccountDoesNotExistException("Admin Username: " + username + " does not exist!");
+    public AdminEntity retrieveAdminByUsername(String username) throws DoesNotExistException {
+        AccountEntity account = accountSessionBeanLocal.retrieveAccountByUsername(username);
+        if(! (account instanceof AdminEntity) ) {
+            throw new AdminDoesNotExistException();
         }
+        return (AdminEntity)account;
     }
 
     @Override
     public AdminEntity adminLogin(String username, String password) throws InvalidLoginCredentialException {
-        try {
-            AdminEntity adminEntity = retrieveAdminByUsername(username);
-            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + adminEntity.getSalt()));
-
-            if (adminEntity.getPassword().equals(passwordHash)) {
-                return adminEntity;
-            } else {
-                throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
-            }
-        } catch (AccountDoesNotExistException ex) {
-            throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+        AccountEntity account = accountSessionBeanLocal.login(username, password);
+        if(! (account instanceof AdminEntity) ) {
+            throw new InvalidLoginCredentialException();
         }
+        return (AdminEntity)account;
     }
 }

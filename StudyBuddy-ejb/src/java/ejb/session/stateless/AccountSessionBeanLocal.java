@@ -9,9 +9,11 @@ import entities.AccountEntity;
 import java.util.List;
 import javax.ejb.Local;
 import javax.security.auth.login.AccountNotFoundException;
+import util.exception.AccountDoesNotExistException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
+import util.exception.InvalidLoginCredentialException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -28,5 +30,11 @@ public interface AccountSessionBeanLocal {
     public Long createNewAccount(AccountEntity newAccountEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException;
 
     public void updateAccount(AccountEntity accountToUpdate) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException;
+
+    public AccountEntity retrieveAccountByUsername(String username) throws AccountDoesNotExistException;
+
+    public AccountEntity login(String username, String password) throws InvalidLoginCredentialException;
+
+    public List<AccountEntity> retrieveAllAccounts(Class subClass);
     
 }
