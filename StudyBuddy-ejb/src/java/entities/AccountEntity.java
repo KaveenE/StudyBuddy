@@ -46,25 +46,26 @@ public abstract class AccountEntity implements Serializable {
     @NotNull
     @Size(min = 8, max = 255)
     //At least 1 digit,lowercase,uppercase,symbol,8 characters & no spaces
-//    @Pattern(regexp = "^(?=.*[0-9]) (?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$){8,255}$")
+    //@Pattern(regexp = "^(?=.*[0-9]) (?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$){8,255}$")
     private String password;
     @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String salt;
 
-    @OneToMany(mappedBy = "rater")
+    @OneToMany(mappedBy = "ratee")
     private List<RatingEntity> ratingByOthers;
 
-    @OneToMany(mappedBy = "ratee")
+    @OneToMany(mappedBy = "rater")
     private List<AccountEntity> ratingOthers;
 
     public AccountEntity() {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
+        this.ratingByOthers = new ArrayList<>();
+        this.ratingOthers = new ArrayList<>();
     }
 
     public AccountEntity(String email, String username, String password) {
         this();
-        this.ratingByOthers = new ArrayList<>();
-        this.ratingOthers = new ArrayList<>();
+        
         this.email = email;
         this.username = username;
         setPassword(password);
