@@ -54,5 +54,31 @@ public class AdminManagementManagedBean {
     public void setNewAdminEntity(AdminEntity newAdminEntity) {
         this.newAdminEntity = newAdminEntity;
     }
-
+    
+    public Integer getActiveIdx() {
+        String srcPage = JSFHelper.getSrcPage();
+        if(srcPage.equalsIgnoreCase("index") ) {
+            return 0;
+        }
+        else if(srcPage.equalsIgnoreCase("users") )
+        {
+            return 1;
+        }
+        else if(srcPage.equalsIgnoreCase("schools") )
+        {
+            return 2;
+        }
+        else if(srcPage.equalsIgnoreCase("modules") )
+        {
+            return 3;
+        }
+        else if(srcPage.equalsIgnoreCase("reports") )
+        {
+            return 4;
+        }
+        else {
+            return 69;
+        }
+  
+    }
 }

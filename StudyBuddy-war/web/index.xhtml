@@ -1,12 +1,73 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-        Hello from Facelets
-    </h:body>
-</html>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/template/defaultTemplate.xhtml"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                xmlns:p="http://primefaces.org/ui">
 
+    <ui:define name="content">
+
+        <h:panelGroup rendered="#{sessionScope.isLogin == false}">
+            <article>
+                <h3 style = "text-align: center; font-weight: bold;">StudyBuddy Admin</h3>
+                <p style = "text-align: center"> 
+                    New here? <p:commandLink value="Register" process="@this" onclick="PF('registerNewAdmin').show()"/>   now !                  
+                </p>
+            </article>
+        </h:panelGroup>
+
+        <p:dialog widgetVar="registerNewAdmin" header = "Register" resizable="false" responsive="true">
+            <h:form id="registerNewAdminForm">
+                <p:panelGrid columns="2">
+
+                    <p:outputLabel for="username" value="Username:" />
+                    <p:inputText id="username" value="#{adminManagementManagedBean.newAdminEntity.username}" 
+                                 size="16" maxlength="32"
+                                 required="true" requiredMessage="Username is required" 
+                                 placeholder="Username"/>
+
+                    <p:outputLabel for="email" value="Email:" />
+                    <p:inputText id="email" value="#{adminManagementManagedBean.newAdminEntity.email}"
+                                 size="16" maxlength="32"
+                                 required="true" requiredMessage="Email is required" 
+                                 placeholder="Email"/>
+
+                    <p:outputLabel for="password" value="Password:" />
+                    <p:password id="password" value="#{adminManagementManagedBean.newAdminEntity.password}" 
+                                size="16" maxlength="32"
+                                required="true" requiredMessage="Password is required"  
+                                feedback = "true" inline="true" match="confirmPassword" placeholder="Password"/>
+
+                    <p:outputLabel for="confirmPassword" value="Password Confirmation:" />
+                    <p:password id="confirmPassword" value="#{adminManagementManagedBean.newAdminEntity.password}" 
+                                size="16" maxlength="32"
+                                required="true" requiredMessage="Enter password again to confirm"  
+                                placeholder="Confirm Password"/>
+                    
+                    <p:growl life="2000"><p:autoUpdate/></p:growl>
+                    
+                    <f:facet name="footer">
+                        <p:commandButton value="Register" actionListener="#{adminManagementManagedBean.createNewAdmin}"  update="@form"  
+                                         oncomplete="PF('registerNewAdmin').hide()" 
+                                         icon= "ui-icon-check" style = "margin-left: 35%"/>&nbsp;
+                    </f:facet>
+
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <h:panelGroup rendered="#{sessionScope.isLogin == true}">
+            <article>
+                <ul>Display some crap here like
+                    <li>Number of reports to resolve today?</li>         
+                    <li>message of day (if so i guess copy prof)?</li>  
+                    <li>etc</li>  
+                </ul> 
+            </article>
+        </h:panelGroup>
+
+    </ui:define>
+
+</ui:composition>

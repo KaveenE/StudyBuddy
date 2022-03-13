@@ -44,7 +44,7 @@ public abstract class AccountEntity implements Serializable {
     private String username;
     @Column(nullable = false, length = 32)
     @NotNull
-    @Size(min = 8, max = 255)
+    @Size(min = 8, max = 32)
     //At least 1 digit,lowercase,uppercase,symbol,8 characters & no spaces
     //@Pattern(regexp = "^(?=.*[0-9]) (?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$){8,255}$")
     private String password;

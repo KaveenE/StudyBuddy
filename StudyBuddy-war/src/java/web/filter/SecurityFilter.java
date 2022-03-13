@@ -20,10 +20,12 @@ public class SecurityFilter implements Filter {
 
     private static final String CONTEXT_ROOT = "/StudyBuddy";
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
     }
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -41,7 +43,7 @@ public class SecurityFilter implements Filter {
             if (isLogin) {
                 chain.doFilter(request, response);
             } else {
-                httpServletResponse.sendRedirect(CONTEXT_ROOT + "/notLoginError.xhtml");
+                httpServletResponse.sendRedirect(CONTEXT_ROOT + "-war/notLoginError.xhtml");
             }
 
         } else {

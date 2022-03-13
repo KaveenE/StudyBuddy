@@ -8,6 +8,7 @@
             <web-module-libraries>
                 <library dirs="100">
                     <file>${reference.StudyBuddy-ejb.dist}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
                     <file>${libs.jsf20.classpath}</file>

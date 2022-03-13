@@ -74,5 +74,9 @@ public class AdminLoginManagedBean implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    public AdminEntity getCurrentAdmin() {
+        return (AdminEntity)JSFHelper.getExtCtx().getSessionMap().get("currentAdminEntity");
+    }
 
 }
