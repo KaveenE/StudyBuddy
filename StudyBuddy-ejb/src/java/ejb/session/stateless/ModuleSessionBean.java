@@ -6,13 +6,17 @@
 package ejb.session.stateless;
 
 import entities.ModuleEntity;
+import entities.SchoolEntity;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import util.exception.AlreadyExistsException;
+import util.exception.CreateNewEntityException;
+import util.exception.CreateNewModuleException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.ModuleAlreadyExistsException;
@@ -25,7 +29,10 @@ import util.helper.EJBHelper;
  * @author SCXY
  */
 @Stateless
-public class ModuleEntitySessionBean implements ModuleEntitySessionBeanLocal {
+public class ModuleSessionBean implements ModuleSessionBeanLocal {
+
+    @EJB(name = "SchoolSessionBeanLocal")
+    private SchoolSessionBeanLocal schoolSessionBeanLocal;
 
     @PersistenceContext(unitName = "StudyBuddy-ejbPU")
     private EntityManager em;
@@ -45,19 +52,35 @@ public class ModuleEntitySessionBean implements ModuleEntitySessionBeanLocal {
 
         return module;
     }
-    
+
     @Override
-    public Long createNewModule(ModuleEntity newModuleEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException {
+    public Long createNewModule(ModuleEntity newModuleEntity, Long schoolId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewEntityException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newModuleEntity);
-        
+
         try {
+            if (schoolId == null) {
+                throw new CreateNewModuleException("The new module must be associated with a school");
+            }
+
+            SchoolEntity schoolEntity = schoolSessionBeanLocal.retrieveSchoolById(schoolId);
+
             em.persist(newModuleEntity);
+            newModuleEntity.setSchool(schoolEntity);
+            schoolEntity.getModuleEntities().add(newModuleEntity);
             em.flush();
-        }
-        catch(PersistenceException ex) {
+        } catch (PersistenceException ex) {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new ModuleAlreadyExistsException());
         }
-        
+
         return newModuleEntity.getmoduleId();
+    }
+
+    @Override
+    public void updateModule(ModuleEntity moduleEntity) throws InputDataValidationException, DoesNotExistException {
+        EJBHelper.throwValidationErrorsIfAny(moduleEntity);
+        ModuleEntity moduleEntityToUpdate = retrieveModuleById(moduleEntity.getmoduleId());
+
+        moduleEntityToUpdate.setName(moduleEntity.getName());
+        moduleEntityToUpdate.setCode(moduleEntity.getCode());
     }
 }

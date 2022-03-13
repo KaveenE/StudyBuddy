@@ -25,7 +25,7 @@ import util.helper.EJBHelper;
  * @author SCXY
  */
 @Stateless
-public class SchoolEntitySessionBean implements SchoolEntitySessionBeanLocal {
+public class SchoolSessionBean implements SchoolSessionBeanLocal {
 
     @PersistenceContext(unitName = "StudyBuddy-ejbPU")
     private EntityManager em;
@@ -46,17 +46,24 @@ public class SchoolEntitySessionBean implements SchoolEntitySessionBeanLocal {
         return school;
     }
 
+    @Override
     public Long createNewSchool(SchoolEntity newSchoolEntity) throws AlreadyExistsException, InputDataValidationException, UnknownPersistenceException {
         EJBHelper.throwValidationErrorsIfAny(newSchoolEntity);
-        
+
         try {
-        em.persist(newSchoolEntity);
-        em.flush();
-        }
-        catch(PersistenceException ex) {
+            em.persist(newSchoolEntity);
+            em.flush();
+        } catch (PersistenceException ex) {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new SchoolAlreadyExistsException());
         }
-        
+
         return newSchoolEntity.getschoolId();
+    }
+
+    public void updateSchool(SchoolEntity schoolEntity) throws InputDataValidationException, DoesNotExistException {
+        EJBHelper.throwValidationErrorsIfAny(schoolEntity);
+
+        SchoolEntity schoolEntityToUpdate = retrieveSchoolById(schoolEntity.getschoolId());
+        schoolEntityToUpdate.setName(schoolEntity.getName());
     }
 }

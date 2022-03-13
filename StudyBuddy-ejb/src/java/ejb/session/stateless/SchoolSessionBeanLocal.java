@@ -18,7 +18,7 @@ import util.exception.UnknownPersistenceException;
  * @author SCXY
  */
 @Local
-public interface SchoolEntitySessionBeanLocal {
+public interface SchoolSessionBeanLocal {
 
     public List<SchoolEntity> retrieveAllSchools();
 
