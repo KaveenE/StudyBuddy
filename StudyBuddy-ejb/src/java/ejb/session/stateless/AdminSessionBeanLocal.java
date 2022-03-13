@@ -9,7 +9,7 @@ import entities.AccountEntity;
 import entities.AdminEntity;
 import java.util.List;
 import javax.ejb.Local;
-import util.exception.AccountDoesNotExistException;
+import javax.security.auth.login.AccountNotFoundException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -23,7 +23,7 @@ import util.exception.UnknownPersistenceException;
 @Local
 public interface AdminSessionBeanLocal {
 
-    public List<AdminEntity> retrieveAllAdminEntities();
+    public List<AdminEntity> retrieveAllAdmins();
 
     public AdminEntity retrieveAdminById(Long accountId) throws DoesNotExistException, InputDataValidationException;
 
@@ -32,5 +32,7 @@ public interface AdminSessionBeanLocal {
     public AdminEntity retrieveAdminByUsername(String username) throws DoesNotExistException;
 
     public AdminEntity adminLogin(String username, String password) throws InvalidLoginCredentialException;
+
+    public void updateAccountAdmin(AdminEntity accountEntity) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException;
 
 }

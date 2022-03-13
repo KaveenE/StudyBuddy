@@ -29,12 +29,12 @@ public interface AccountSessionBeanLocal {
 
     public Long createNewAccount(AccountEntity newAccountEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException;
 
-    public void updateAccount(AccountEntity accountToUpdate) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException;
-
     public AccountEntity retrieveAccountByUsername(String username) throws AccountDoesNotExistException;
 
     public AccountEntity login(String username, String password) throws InvalidLoginCredentialException;
 
     public List<AccountEntity> retrieveAllAccounts(Class subClass);
-    
+
+    public void updatePassword(AccountEntity accountToUpdatePassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException;
+
 }

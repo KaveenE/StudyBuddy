@@ -6,8 +6,6 @@
 package ejb.session.stateless;
 
 import entities.AccountEntity;
-import entities.AdminEntity;
-import entities.StudentEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -101,14 +99,16 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
             throw new InvalidLoginCredentialException();
         }
     }
-
+    
+    //Only accessible by account owner!
     @Override
-    public void updateAccount(AccountEntity accountToUpdate) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException //update account
-    {
+    public void updatePassword(AccountEntity accountToUpdatePassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException {
 
-        AccountEntity account = retrieveAccountById(accountToUpdate.getAccountId());
-        account.setEmail(accountToUpdate.getEmail());
-        account.setPassword(accountToUpdate.getPassword());
+        EJBHelper.throwValidationErrorsIfAny(accountToUpdatePassword);
 
+        AccountEntity account = retrieveAccountById(accountToUpdatePassword.getAccountId());
+        String newSalt = CryptographicHelper.getInstance().generateRandomString(32);
+        account.setSalt(newSalt);
+        account.setPassword(accountToUpdatePassword.getPassword());
     }
 }

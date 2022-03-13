@@ -19,7 +19,7 @@ import util.exception.UnknownPersistenceException;
  * @author enkav
  */
 @Local
-public interface StudentEntitySessionBeanLocal {
+public interface StudentSessionBeanLocal {
 
     public List<StudentEntity> retrieveAllStudents();
 
@@ -29,7 +29,7 @@ public interface StudentEntitySessionBeanLocal {
 
     public StudentEntity retrieveStudentByUsername(String username) throws DoesNotExistException, InputDataValidationException;
 
-    public StudentEntity login(String username, String password) throws InvalidLoginCredentialException;
+    public StudentEntity studentLogin(String username, String password) throws InvalidLoginCredentialException;
 
     
 }
