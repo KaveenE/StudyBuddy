@@ -19,6 +19,7 @@ import javax.faces.event.ActionEvent;
 import util.exception.AlreadyExistsException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
+import util.helper.JSFHelper;
 
 /**
  *
@@ -40,12 +41,10 @@ public class AdminManagementManagedBean {
     public void createNewAdmin(ActionEvent event) {
         try {
             Long adminId = adminSessionBeanLocal.createNewAdminEntity(newAdminEntity);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New admin account created successfully (Admin Id: " + adminId + ")", null));
-        } catch (AlreadyExistsException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while creating the new admin: The admin account already exist", null));
-        } catch (UnknownPersistenceException | InputDataValidationException ex) {
-            Logger.getLogger(AdminManagementManagedBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
+           JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "New admin account created successfully (Admin Id: " + adminId + ")");
+        } catch (AlreadyExistsException | UnknownPersistenceException | InputDataValidationException ex) {
+            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "An error has occurred while creating the new admin: "+ex);
+        } 
     }
 
     public AdminEntity getNewAdminEntity() {

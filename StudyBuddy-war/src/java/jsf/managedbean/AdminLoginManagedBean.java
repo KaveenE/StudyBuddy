@@ -13,10 +13,12 @@ import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 import util.exception.InvalidLoginCredentialException;
+import util.helper.JSFHelper;
 
 /**
  *
@@ -38,18 +40,23 @@ public class AdminLoginManagedBean implements Serializable {
     public void login(ActionEvent event) throws IOException {
         try {
             AdminEntity currentAdminEntity = adminSessionBeanLocal.adminLogin(username, password);
-            FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("isLogin", true);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("currentAdminEntity", currentAdminEntity);
-            FacesContext.getCurrentInstance().getExternalContext().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/index.xhtml");
+            ExternalContext extCtx = JSFHelper.getExtCtx();
+
+            extCtx.getSession(true);
+            extCtx.getSessionMap().put("isLogin", true);
+            extCtx.getSessionMap().put("currentAdminEntity", currentAdminEntity);;
+            extCtx.redirect(extCtx.getRequestContextPath() + "/index.xhtml");
+
         } catch (InvalidLoginCredentialException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credential: " + ex.getMessage(), null));
+            JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credential: " + ex.getMessage());
         }
     }
 
     public void logout(ActionEvent event) throws IOException {
-        ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)).invalidate();
-        FacesContext.getCurrentInstance().getExternalContext().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/index.xhtml");
+        ExternalContext extCtx = JSFHelper.getExtCtx();
+
+        ((HttpSession) extCtx.getSession(true)).invalidate();
+        extCtx.redirect(extCtx.getRequestContextPath() + "/index.xhtml");
     }
 
     public String getUsername() {
