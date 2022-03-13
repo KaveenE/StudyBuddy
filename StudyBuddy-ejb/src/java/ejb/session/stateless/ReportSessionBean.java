@@ -15,11 +15,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import util.exception.AlreadyExistsException;
-import util.exception.CreateNewReportException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.ReportAlreadyExistsException;
 import util.exception.ReportDoesNotExistException;
+import util.exception.StudentDoesNotExistException;
 import util.exception.UnknownPersistenceException;
 import util.helper.EJBHelper;
 
@@ -53,13 +53,12 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     }
 
     @Override
-    public Long createNewReport(ReportEntity newReportEntity, Long reportedId, Long reporterId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewReportException, DoesNotExistException {
+    public Long createNewReport(ReportEntity newReportEntity, Long reportedId, Long reporterId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newReportEntity);
 
         try {
-            if (reportedId == null || reporterId == null) {
-                throw new CreateNewReportException();
-            }
+            EJBHelper.requireNonNull(reportedId, new StudentDoesNotExistException("The new report must be associated with a reported student"));
+            EJBHelper.requireNonNull(reporterId, new StudentDoesNotExistException("The new report must be associated with a reporter student"));
 
             StudentEntity reportedStudent = studentSessionBeanLocal.retrieveStudentById(reportedId);
             StudentEntity reporterStudent = studentSessionBeanLocal.retrieveStudentById(reporterId);

@@ -33,8 +33,6 @@ import util.helper.NusModHelper;
 import ejb.session.stateless.ModuleSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import ejb.session.stateless.SchoolSessionBeanLocal;
-import util.exception.CreateNewEntityException;
-import util.exception.CreateNewGroupException;
 
 /**
  *
@@ -44,25 +42,25 @@ import util.exception.CreateNewGroupException;
 @LocalBean
 @Startup
 public class DataInitSessionBean {
-    
+
     @EJB
     private StudentSessionBeanLocal studentEntitySessionBean;
-    
+
     @EJB
     private AdminSessionBeanLocal adminSessionBean;
-    
+
     @EJB
     private GroupEntitySessionBeanLocal groupEntitySessionBean;
-    
+
     @EJB
     private ModuleSessionBeanLocal moduleEntitySessionBean;
-    
+
     @EJB
     private SchoolSessionBeanLocal schoolEntitySessionBean;
-    
+
     public DataInitSessionBean() {
     }
-    
+
     @PostConstruct
     public void postConstruct() {
         System.out.println("Singleton postconstruct");
@@ -74,16 +72,16 @@ public class DataInitSessionBean {
             Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void initData() {
         try {
             System.out.println("Data Initialization Start");
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "password", "Freshman"));
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "password", "Freshman"));
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud3@gmail.com", "stud3", "password", "Freshman"));
-            
+
             adminSessionBean.createNewAdminEntity(new AdminEntity("admin@stubud.xyz", "admin", "password"));
-            
+
             SchoolEntity nus = new SchoolEntity("National University of Singapore (NUS)");
             Long schoolId = schoolEntitySessionBean.createNewSchool(nus);
             Long moduleId = new Long(0);
@@ -96,7 +94,7 @@ public class DataInitSessionBean {
                 if (nusModReader != null) {
                     System.out.println("Sucessfully retrieve reader");
                     JSONTokener jsonTokener = new JSONTokener(nusModReader);
-                    
+
                     JSONArray jsonArray = new JSONArray(jsonTokener);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -108,10 +106,10 @@ public class DataInitSessionBean {
                 } else {
                     System.out.println("Returned Reader is null");
                 }
-            } catch (AlreadyExistsException | CreateNewEntityException | NoClassDefFoundError | IOException ex) {
+            } catch (AlreadyExistsException | NoClassDefFoundError | IOException ex) {
                 Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             GroupEntity groupEntity = new GroupEntity();
             groupEntity.setGroupName("Programming Group Freshman");
             groupEntity.setDescription("A very detailed description");
@@ -121,15 +119,15 @@ public class DataInitSessionBean {
             groupEntity.setPoster(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroupsPosted().add(groupEntity);
             groupEntitySessionBean.createNewGroupEntity(groupEntity, moduleId);
-            
+
             groupEntity.getCandidates().add(studentEntitySessionBean.retrieveStudentById(2l));
             studentEntitySessionBean.retrieveStudentById(2l).getGroupsApplied().add(groupEntity);
             groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(3l));
             groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroups().add(groupEntity);
             studentEntitySessionBean.retrieveStudentById(3l).getGroups().add(groupEntity);
-            
-        } catch (AlreadyExistsException | UnknownPersistenceException | InputDataValidationException | DoesNotExistException | CreateNewGroupException ex) {
+
+        } catch (AlreadyExistsException | UnknownPersistenceException | InputDataValidationException | DoesNotExistException ex) {
             Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

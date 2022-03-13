@@ -75,21 +75,17 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, AccountNotFoundException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(studentEntity);
 
-        AccountEntity accountToUpdate = accountSessionBeanLocal.retrieveAccountById(studentEntity.getAccountId());
+        StudentEntity accountToUpdate = retrieveStudentById(studentEntity.getAccountId());
 
-        if (!(accountToUpdate instanceof StudentEntity)) {
-            throw new AccountNotFoundException();
-        } else {
-            StudentEntity accountToUpdateStudent = (StudentEntity) accountToUpdate;
-            accountToUpdateStudent.setEmail(studentEntity.getEmail());
-            accountToUpdateStudent.setYearOfStudy(studentEntity.getYearOfStudy());
-            accountToUpdateStudent.setOptLocation(studentEntity.getOptLocation());
-            
-            //not sure if the following attributes can be updated in this method (depends on the frontend implementation)
-            accountToUpdateStudent.setIsEnabled(studentEntity.getIsEnabled());
-            accountToUpdateStudent.setIsPremium(studentEntity.getIsPremium());
-            accountToUpdateStudent.setCreditBalance(studentEntity.getCreditBalance());
-        }
+        StudentEntity accountToUpdateStudent = (StudentEntity) accountToUpdate;
+        accountToUpdateStudent.setEmail(studentEntity.getEmail());
+        accountToUpdateStudent.setYearOfStudy(studentEntity.getYearOfStudy());
+        accountToUpdateStudent.setOptLocation(studentEntity.getOptLocation());
+
+        //not sure if the following attributes can be updated in this method (depends on the frontend implementation)
+        accountToUpdateStudent.setIsEnabled(studentEntity.getIsEnabled());
+        accountToUpdateStudent.setIsPremium(studentEntity.getIsPremium());
+        accountToUpdateStudent.setCreditBalance(studentEntity.getCreditBalance());
     }
-    
+
 }
