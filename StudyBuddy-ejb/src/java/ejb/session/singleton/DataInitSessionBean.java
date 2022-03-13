@@ -82,8 +82,10 @@ public class DataInitSessionBean {
 
             adminSessionBean.createNewAdminEntity(new AdminEntity("admin@stubud.xyz", "admin", "password"));
 
-            SchoolEntity nus = new SchoolEntity("National University of Singapore (NUS)");
+            SchoolEntity nus = new SchoolEntity("National University of Singapore (NUS)");   
+            SchoolEntity smu = new SchoolEntity("Singapore Management University (SMOO)"); 
             Long schoolId = schoolEntitySessionBean.createNewSchool(nus);
+            schoolEntitySessionBean.createNewSchool(smu);
             Long moduleId = new Long(0);
 
             //Importing modules from NUSMod
