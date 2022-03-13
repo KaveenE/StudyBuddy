@@ -31,4 +31,8 @@ public class JSFHelper {
     public static void addMessage(String clientId, FacesMessage.Severity severity, String summary, String details) {
         getCurrentInstance().addMessage(clientId, new FacesMessage(severity,summary,details));
     }
+    public static String getSrcPage() {
+        String[] tokensDelimitedBySlash = JSFHelper.getExtCtx().getRequestServletPath().split("/");
+        return tokensDelimitedBySlash[tokensDelimitedBySlash.length-1].split("\\.")[0];
+    }
 }
