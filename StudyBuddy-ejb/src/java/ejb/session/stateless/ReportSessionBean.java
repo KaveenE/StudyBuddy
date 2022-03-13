@@ -6,13 +6,16 @@
 package ejb.session.stateless;
 
 import entities.ReportEntity;
+import entities.StudentEntity;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import util.exception.AlreadyExistsException;
+import util.exception.CreateNewReportException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.ReportAlreadyExistsException;
@@ -26,6 +29,9 @@ import util.helper.EJBHelper;
  */
 @Stateless
 public class ReportSessionBean implements ReportSessionBeanLocal {
+
+    @EJB(name = "StudentSessionBeanLocal")
+    private StudentSessionBeanLocal studentSessionBeanLocal;
 
     @PersistenceContext(unitName = "StudyBuddy-ejbPU")
     private EntityManager em;
@@ -47,11 +53,22 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     }
 
     @Override
-    public Long createNewReport(ReportEntity newReportEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException {
+    public Long createNewReport(ReportEntity newReportEntity, Long reportedId, Long reporterId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewReportException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newReportEntity);
 
         try {
+            if (reportedId == null || reporterId == null) {
+                throw new CreateNewReportException();
+            }
+
+            StudentEntity reportedStudent = studentSessionBeanLocal.retrieveStudentById(reportedId);
+            StudentEntity reporterStudent = studentSessionBeanLocal.retrieveStudentById(reporterId);
             em.persist(newReportEntity);
+            reportedStudent.getReportReceived().add(newReportEntity);
+            newReportEntity.setReportedStudent(reportedStudent);
+            reporterStudent.getReports().add(newReportEntity);
+            newReportEntity.setStudentWhoReported(reporterStudent);
+
             em.flush();
         } catch (PersistenceException ex) {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new ReportAlreadyExistsException());

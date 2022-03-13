@@ -25,5 +25,7 @@ public interface AdvertisementSessionBeanLocal {
     public AdvertisementEntity retrieveAdvertisementById(Long advertisementId) throws DoesNotExistException, InputDataValidationException;
 
     public Long createNewAdvertisement(AdvertisementEntity newAdvertisementEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException;
+
+    public void updateAdvertisement(AdvertisementEntity advertisementToUpdate) throws InputDataValidationException, DoesNotExistException;
     
 }

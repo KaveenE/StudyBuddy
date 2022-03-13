@@ -5,14 +5,17 @@
  */
 package ejb.session.stateless;
 
+import entities.AccountEntity;
 import entities.RatingEntity;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import util.exception.AlreadyExistsException;
+import util.exception.CreateNewRatingException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.RatingAlreadyExistsException;
@@ -26,6 +29,10 @@ import util.helper.EJBHelper;
  */
 @Stateless
 public class RatingSessionBean implements RatingSessionBeanLocal {
+
+    @EJB(name = "AccountSessionBeanLocal")
+    private AccountSessionBeanLocal accountSessionBeanLocal;
+
     @PersistenceContext(unitName = "StudyBuddy-ejbPU")
     private EntityManager em;
 
@@ -46,11 +53,21 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
     }
 
     @Override
-    public Long createNewRating(RatingEntity newRatingEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException {
+    public Long createNewRating(RatingEntity newRatingEntity, Long rateeId, Long raterId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewRatingException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newRatingEntity);
 
         try {
+            if (rateeId == null || raterId == null) {
+                throw new CreateNewRatingException();
+            }
+
+            AccountEntity raterAccount = accountSessionBeanLocal.retrieveAccountById(raterId);
+            AccountEntity rateeAccount = accountSessionBeanLocal.retrieveAccountById(rateeId);
             em.persist(newRatingEntity);
+            raterAccount.getRatingOthers().add(newRatingEntity);
+            newRatingEntity.setRater(raterAccount);
+            rateeAccount.getRatingByOthers().add(newRatingEntity);
+            newRatingEntity.setRatee(rateeAccount);
             em.flush();
         } catch (PersistenceException ex) {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new RatingAlreadyExistsException());
@@ -59,9 +76,10 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
         return newRatingEntity.getRatingId();
     }
 
-    //only supports updating of the isResolved attribute currently
     @Override
     public void updateRating(RatingEntity ratingEntity) throws InputDataValidationException, DoesNotExistException {
+        EJBHelper.throwValidationErrorsIfAny(ratingEntity);
+        
         RatingEntity ratingEntityToUpdate = retrieveRatingById(ratingEntity.getRatingId());
         ratingEntityToUpdate.setRating(ratingEntityToUpdate.getRating());
         ratingEntityToUpdate.setRatingDescription(ratingEntityToUpdate.getRatingDescription());

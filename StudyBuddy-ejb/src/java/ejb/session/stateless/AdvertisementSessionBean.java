@@ -49,15 +49,23 @@ public class AdvertisementSessionBean implements AdvertisementSessionBeanLocal {
     @Override
     public Long createNewAdvertisement(AdvertisementEntity newAdvertisementEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException {
         EJBHelper.throwValidationErrorsIfAny(newAdvertisementEntity);
-        
+
         try {
             em.persist(newAdvertisementEntity);
             em.flush();
-        }
-        catch(PersistenceException ex) {
+        } catch (PersistenceException ex) {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new AdvertismentAlreadyExistsException());
         }
-        
+
         return newAdvertisementEntity.getAdvertisementId();
+    }
+
+    @Override
+    public void updateAdvertisement(AdvertisementEntity advertisementEntity) throws InputDataValidationException, DoesNotExistException {
+        EJBHelper.throwValidationErrorsIfAny(advertisementEntity);
+
+        AdvertisementEntity advertisementToUpdate = retrieveAdvertisementById(advertisementEntity.getAdvertisementId());
+        advertisementToUpdate.setCompanyName(advertisementEntity.getCompanyName());
+        advertisementToUpdate.setImageUrl(advertisementEntity.getImageUrl());
     }
 }
