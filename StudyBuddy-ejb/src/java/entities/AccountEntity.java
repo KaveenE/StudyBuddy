@@ -55,7 +55,7 @@ public abstract class AccountEntity implements Serializable {
     private List<RatingEntity> ratingByOthers;
 
     @OneToMany(mappedBy = "rater")
-    private List<AccountEntity> ratingOthers;
+    private List<RatingEntity> ratingOthers;
 
     public AccountEntity() {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
@@ -140,11 +140,11 @@ public abstract class AccountEntity implements Serializable {
         this.ratingByOthers = ratingByOthers;
     }
 
-    public List<AccountEntity> getRatingOthers() {
+    public List<RatingEntity> getRatingOthers() {
         return ratingOthers;
     }
 
-    public void setRatingOthers(List<AccountEntity> ratingOthers) {
+    public void setRatingOthers(List<RatingEntity> ratingOthers) {
         this.ratingOthers = ratingOthers;
     }
 
