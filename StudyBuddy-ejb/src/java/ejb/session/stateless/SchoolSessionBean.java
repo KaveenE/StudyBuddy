@@ -57,13 +57,13 @@ public class SchoolSessionBean implements SchoolSessionBeanLocal {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new SchoolAlreadyExistsException());
         }
 
-        return newSchoolEntity.getschoolId();
+        return newSchoolEntity.getSchoolId();
     }
 
     public void updateSchool(SchoolEntity schoolEntity) throws InputDataValidationException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(schoolEntity);
 
-        SchoolEntity schoolEntityToUpdate = retrieveSchoolById(schoolEntity.getschoolId());
+        SchoolEntity schoolEntityToUpdate = retrieveSchoolById(schoolEntity.getSchoolId());
         schoolEntityToUpdate.setName(schoolEntity.getName());
     }
 }

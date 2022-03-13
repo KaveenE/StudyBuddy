@@ -30,7 +30,7 @@ public class SchoolEntity implements Serializable {
     private Long schoolId;
     
     @Column(nullable = false, unique = true)
-    @Size(min = 3)
+    @Size(min = 3, max = 255)
     @NotNull 
     private String name;
 
@@ -62,11 +62,11 @@ public class SchoolEntity implements Serializable {
         this.name = name;
     }
 
-    public Long getschoolId() {
+    public Long getSchoolId() {
         return schoolId;
     }
 
-    public void setschoolId(Long schoolId) {
+    public void setSchoolId(Long schoolId) {
         this.schoolId = schoolId;
     }
 
@@ -92,7 +92,7 @@ public class SchoolEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.SchoolEntity[ id=" + schoolId + " ]";
+        return String.format("ID: %d, Name:%s", schoolId,name);
     }
 
 }

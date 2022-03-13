@@ -25,4 +25,6 @@ public interface SchoolSessionBeanLocal {
     public SchoolEntity retrieveSchoolById(Long schoolId) throws DoesNotExistException, InputDataValidationException;
 
     public Long createNewSchool(SchoolEntity newSchoolEntity) throws AlreadyExistsException, InputDataValidationException, UnknownPersistenceException;
+
+    public void updateSchool(SchoolEntity schoolEntity) throws InputDataValidationException, DoesNotExistException;
 }
