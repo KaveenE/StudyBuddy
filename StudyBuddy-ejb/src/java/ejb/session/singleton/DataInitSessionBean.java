@@ -7,9 +7,6 @@ package ejb.session.singleton;
 
 import ejb.session.stateless.AdminSessionBeanLocal;
 import ejb.session.stateless.GroupEntitySessionBeanLocal;
-import ejb.session.stateless.ModuleEntitySessionBeanLocal;
-import ejb.session.stateless.SchoolEntitySessionBeanLocal;
-import ejb.session.stateless.StudentEntitySessionBeanLocal;
 import entities.AdminEntity;
 import entities.GroupEntity;
 import entities.ModuleEntity;
@@ -17,7 +14,6 @@ import entities.SchoolEntity;
 import entities.StudentEntity;
 import java.io.IOException;
 import java.io.Reader;
-import static java.lang.System.in;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +30,11 @@ import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
 import util.helper.NusModHelper;
+import ejb.session.stateless.ModuleSessionBeanLocal;
+import ejb.session.stateless.StudentSessionBeanLocal;
+import ejb.session.stateless.SchoolSessionBeanLocal;
+import util.exception.CreateNewEntityException;
+import util.exception.CreateNewGroupException;
 
 /**
  *
@@ -43,25 +44,25 @@ import util.helper.NusModHelper;
 @LocalBean
 @Startup
 public class DataInitSessionBean {
-
+    
     @EJB
-    private StudentEntitySessionBeanLocal studentEntitySessionBean;
-
+    private StudentSessionBeanLocal studentEntitySessionBean;
+    
     @EJB
     private AdminSessionBeanLocal adminSessionBean;
-
+    
     @EJB
     private GroupEntitySessionBeanLocal groupEntitySessionBean;
-
+    
     @EJB
-    private ModuleEntitySessionBeanLocal moduleEntitySessionBean;
-
+    private ModuleSessionBeanLocal moduleEntitySessionBean;
+    
     @EJB
-    private SchoolEntitySessionBeanLocal schoolEntitySessionBean;
-
+    private SchoolSessionBeanLocal schoolEntitySessionBean;
+    
     public DataInitSessionBean() {
     }
-
+    
     @PostConstruct
     public void postConstruct() {
         System.out.println("Singleton postconstruct");
@@ -73,46 +74,44 @@ public class DataInitSessionBean {
             Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void initData() {
         try {
             System.out.println("Data Initialization Start");
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "password", "Freshman"));
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "password", "Freshman"));
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud3@gmail.com", "stud3", "password", "Freshman"));
-
+            
             adminSessionBean.createNewAdminEntity(new AdminEntity("admin@stubud.xyz", "admin", "password"));
-
+            
             SchoolEntity nus = new SchoolEntity("National University of Singapore (NUS)");
-            schoolEntitySessionBean.createNewSchool(nus);
+            Long schoolId = schoolEntitySessionBean.createNewSchool(nus);
+            Long moduleId = new Long(0);
 
             //Importing modules from NUSMod
             try {
                 // Using HTTPS request to nusmod server, currently faulty
 
                 Reader nusModReader = NusModHelper.getReader();
-                if (nusModReader != null) { 
+                if (nusModReader != null) {
                     System.out.println("Sucessfully retrieve reader");
                     JSONTokener jsonTokener = new JSONTokener(nusModReader);
-
+                    
                     JSONArray jsonArray = new JSONArray(jsonTokener);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String name = jsonObject.getString("title");
                         String code = jsonObject.getString("moduleCode");
-                        moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, nus));
+                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, nus), schoolId);
                     }
                     nusModReader.close();
                 } else {
                     System.out.println("Returned Reader is null");
                 }
-
-            } catch (NoClassDefFoundError ex) {
-                Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
+            } catch (AlreadyExistsException | CreateNewEntityException | NoClassDefFoundError | IOException ex) {
                 Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+            
             GroupEntity groupEntity = new GroupEntity();
             groupEntity.setGroupName("Programming Group Freshman");
             groupEntity.setDescription("A very detailed description");
@@ -121,16 +120,16 @@ public class DataInitSessionBean {
             groupEntity.setDateTimeCreated(LocalDateTime.now());
             groupEntity.setPoster(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroupsPosted().add(groupEntity);
-            groupEntitySessionBean.createNewGroupEntity(groupEntity);
-
+            groupEntitySessionBean.createNewGroupEntity(groupEntity, moduleId);
+            
             groupEntity.getCandidates().add(studentEntitySessionBean.retrieveStudentById(2l));
             studentEntitySessionBean.retrieveStudentById(2l).getGroupsApplied().add(groupEntity);
             groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(3l));
             groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroups().add(groupEntity);
             studentEntitySessionBean.retrieveStudentById(3l).getGroups().add(groupEntity);
-
-        } catch (AlreadyExistsException | UnknownPersistenceException | InputDataValidationException | DoesNotExistException ex) {
+            
+        } catch (AlreadyExistsException | UnknownPersistenceException | InputDataValidationException | DoesNotExistException | CreateNewGroupException ex) {
             Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

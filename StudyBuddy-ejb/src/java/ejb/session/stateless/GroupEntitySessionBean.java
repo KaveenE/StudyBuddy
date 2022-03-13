@@ -8,13 +8,17 @@ package ejb.session.stateless;
 import entities.GroupEntity;
 import entities.ModuleEntity;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import util.exception.AccessRightsException;
 import util.exception.AdvertismentAlreadyExistsException;
 import util.exception.AlreadyExistsException;
+import util.exception.CreateNewGroupException;
 import util.exception.DoesNotExistException;
+import util.exception.GroupAccessRightsException;
 import util.exception.GroupEntityDoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
@@ -27,6 +31,9 @@ import util.helper.EJBHelper;
 @Stateless
 public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
 
+    @EJB(name = "ModuleSessionBeanLocal")
+    private ModuleSessionBeanLocal moduleSessionBeanLocal;
+
     @PersistenceContext
     private EntityManager em;
 
@@ -37,16 +44,23 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     }
 
     @Override
-    public Long createNewGroupEntity(GroupEntity newGroupEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException {
+    public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewGroupException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newGroupEntity);
-        
+
         try {
+            if (moduleId == null) {
+                throw new CreateNewGroupException("The new group must be associated with a module");
+            }
+
+            ModuleEntity moduleEntity = moduleSessionBeanLocal.retrieveModuleById(moduleId);
+            newGroupEntity.setModuleEntity(moduleEntity);
+            moduleEntity.getGroups().add(newGroupEntity);
             em.persist(newGroupEntity);
             em.flush();
         } catch (PersistenceException ex) {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new AdvertismentAlreadyExistsException());
         }
-        
+
         return newGroupEntity.getGroupId();
     }
 
@@ -56,4 +70,19 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         EJBHelper.requireNonNull(groupEntity, new GroupEntityDoesNotExistException());
         return groupEntity;
     }
+
+    //Only poster is allowed to change name and description
+    public void updateGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException, AccessRightsException {
+        EJBHelper.throwValidationErrorsIfAny(groupEntity);
+
+        GroupEntity groupEntityToUpdate = retrieveGroupEntityById(groupEntity.getGroupId());
+
+        if (groupEntityToUpdate.getPoster().getAccountId().equals(studentId)) {
+            groupEntityToUpdate.setDescription(groupEntity.getDescription());
+            groupEntityToUpdate.setGroupName(groupEntity.getGroupName());
+        } else {
+            throw new GroupAccessRightsException();
+        }
+    }
+
 }
