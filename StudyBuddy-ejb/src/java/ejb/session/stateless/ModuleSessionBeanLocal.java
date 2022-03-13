@@ -9,7 +9,6 @@ import entities.ModuleEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AlreadyExistsException;
-import util.exception.CreateNewEntityException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
@@ -23,7 +22,7 @@ public interface ModuleSessionBeanLocal {
 
     public List<ModuleEntity> retrieveAllModules();
 
-    public Long createNewModule(ModuleEntity newModuleEntity, Long schoolId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewEntityException, DoesNotExistException;
+    public Long createNewModule(ModuleEntity newModuleEntity, Long schoolId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException;
 
     public ModuleEntity retrieveModuleById(Long moduleId) throws InputDataValidationException, DoesNotExistException;
 

@@ -14,8 +14,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import util.exception.AccountDoesNotExistException;
 import util.exception.AlreadyExistsException;
-import util.exception.CreateNewRatingException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.RatingAlreadyExistsException;
@@ -53,13 +53,12 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
     }
 
     @Override
-    public Long createNewRating(RatingEntity newRatingEntity, Long rateeId, Long raterId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewRatingException, DoesNotExistException {
+    public Long createNewRating(RatingEntity newRatingEntity, Long rateeId, Long raterId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newRatingEntity);
 
         try {
-            if (rateeId == null || raterId == null) {
-                throw new CreateNewRatingException();
-            }
+            EJBHelper.requireNonNull(rateeId, new AccountDoesNotExistException("The new rating must be associated with a ratee"));
+            EJBHelper.requireNonNull(raterId, new AccountDoesNotExistException("The new rating must be associated with a rater"));
 
             AccountEntity raterAccount = accountSessionBeanLocal.retrieveAccountById(raterId);
             AccountEntity rateeAccount = accountSessionBeanLocal.retrieveAccountById(rateeId);
@@ -79,7 +78,7 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
     @Override
     public void updateRating(RatingEntity ratingEntity) throws InputDataValidationException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(ratingEntity);
-        
+
         RatingEntity ratingEntityToUpdate = retrieveRatingById(ratingEntity.getRatingId());
         ratingEntityToUpdate.setRating(ratingEntityToUpdate.getRating());
         ratingEntityToUpdate.setRatingDescription(ratingEntityToUpdate.getRatingDescription());

@@ -9,7 +9,6 @@ import entities.ReportEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AlreadyExistsException;
-import util.exception.CreateNewReportException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
@@ -25,7 +24,7 @@ public interface ReportSessionBeanLocal {
 
     public ReportEntity retrieveReporyById(Long reportId) throws InputDataValidationException, DoesNotExistException;
 
-    public Long createNewReport(ReportEntity newReportEntity, Long reportedId, Long reporterId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewReportException, DoesNotExistException;
+    public Long createNewReport(ReportEntity newReportEntity, Long reportedId, Long reporterId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException;
 
     public void updateReport(ReportEntity reportEntity) throws InputDataValidationException, DoesNotExistException;
 

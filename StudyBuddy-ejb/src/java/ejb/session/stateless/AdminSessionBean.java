@@ -77,12 +77,8 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
 
         EJBHelper.throwValidationErrorsIfAny(adminEntity);
 
-        AccountEntity accountToUpdate = accountSessionBeanLocal.retrieveAccountById(adminEntity.getAccountId());
+        AdminEntity accountToUpdate = retrieveAdminById(adminEntity.getAccountId());
 
-        if (!(accountToUpdate instanceof AdminEntity)) {
-            throw new AccountNotFoundException();
-        } else {
-            accountToUpdate.setEmail(adminEntity.getEmail());
-        }
+        accountToUpdate.setEmail(adminEntity.getEmail());
     }
 }

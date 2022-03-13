@@ -15,12 +15,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import util.exception.AlreadyExistsException;
-import util.exception.CreateNewEntityException;
-import util.exception.CreateNewModuleException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.ModuleAlreadyExistsException;
 import util.exception.ModuleDoesNotExistException;
+import util.exception.SchoolDoesNotExistException;
 import util.exception.UnknownPersistenceException;
 import util.helper.EJBHelper;
 
@@ -54,13 +53,11 @@ public class ModuleSessionBean implements ModuleSessionBeanLocal {
     }
 
     @Override
-    public Long createNewModule(ModuleEntity newModuleEntity, Long schoolId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewEntityException, DoesNotExistException {
+    public Long createNewModule(ModuleEntity newModuleEntity, Long schoolId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newModuleEntity);
 
         try {
-            if (schoolId == null) {
-                throw new CreateNewModuleException("The new module must be associated with a school");
-            }
+            EJBHelper.requireNonNull(schoolId, new SchoolDoesNotExistException("The new module must be associated with a school"));
 
             SchoolEntity schoolEntity = schoolSessionBeanLocal.retrieveSchoolById(schoolId);
 

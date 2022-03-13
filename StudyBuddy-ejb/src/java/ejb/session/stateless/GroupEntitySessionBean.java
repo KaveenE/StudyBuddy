@@ -16,11 +16,11 @@ import javax.persistence.PersistenceException;
 import util.exception.AccessRightsException;
 import util.exception.AdvertismentAlreadyExistsException;
 import util.exception.AlreadyExistsException;
-import util.exception.CreateNewGroupException;
 import util.exception.DoesNotExistException;
 import util.exception.GroupAccessRightsException;
 import util.exception.GroupEntityDoesNotExistException;
 import util.exception.InputDataValidationException;
+import util.exception.ModuleDoesNotExistException;
 import util.exception.UnknownPersistenceException;
 import util.helper.EJBHelper;
 
@@ -44,13 +44,11 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     }
 
     @Override
-    public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, CreateNewGroupException, DoesNotExistException {
+    public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newGroupEntity);
 
         try {
-            if (moduleId == null) {
-                throw new CreateNewGroupException("The new group must be associated with a module");
-            }
+            EJBHelper.requireNonNull(moduleId, new ModuleDoesNotExistException("The new group must be associated with a module"));
 
             ModuleEntity moduleEntity = moduleSessionBeanLocal.retrieveModuleById(moduleId);
             newGroupEntity.setModuleEntity(moduleEntity);
