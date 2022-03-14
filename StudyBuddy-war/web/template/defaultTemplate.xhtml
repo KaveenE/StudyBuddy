@@ -9,17 +9,23 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>StudyBuddy</title>
+        <style>
+            .bgImage {
+                background-image: url("#{resource['images/girlWithBigPencil.jpg']}");
+                background-position: center;
+            }
+        </style>
         <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
         <h:outputStylesheet library="css" name="default.css" />
     </h:head>
-    <h:body>
-
+    <h:body styleClass="#{sessionScope.isLogin ? '':'bgImage'}">
+        
         <p:layout fullPage="true">
 
             <p:layoutUnit position="north" size="120">
 
                 <h1>StudyBuddy</h1>
-
+    
                 <ui:insert name="header">
                     <ui:include src="/header.xhtml" />
                 </ui:insert>
@@ -27,7 +33,7 @@
             </p:layoutUnit>
 
             <p:layoutUnit position="center" >
-                <p:tabMenu activeIndex="#{adminManagementManagedBean.activeIdx}">
+                <p:tabMenu activeIndex="#{adminManagementManagedBean.activeIdx}" rendered ="#{sessionScope.isLogin}">
                     <p:menuitem value="Home" outcome="/index.xhtml" icon="pi pi-home"/>
                     <p:menuitem value="Users" outcome="/admin/users.xhtml" icon="pi pi-users"/>
                     <p:menuitem value="Schools" outcome="/admin/schools.xhtml" icon="pi pi-sitemap" />
