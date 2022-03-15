@@ -24,9 +24,9 @@
                 <p:toolbar>
                     <p:toolbarGroup>
                         <p:commandButton value="New" icon="pi pi-plus" actionListener="#{schoolManagementBean.createNew}"
-                                         update=":form:manage-new-content" oncomplete="PF('manageNewDialog').show()"
+                                         update=":formManageNewContent:manage-new-content" oncomplete="PF('manageNewDialog').show()"
                                          style="margin-right: .5rem">
-                            <p:resetInput target=":form:manage-new-content"/>
+                            <p:resetInput target=":formManageNewContent:manage-new-content"/>
                         </p:commandButton>
                         <p:commandButton id="delete-multiple-button" value="#{schoolManagementBean.deleteButtonMessage}"
                                          icon="pi pi-trash" actionListener="#{schoolManagementBean.deleteSelectedSchools}"
@@ -75,11 +75,11 @@
                     </p:column>
 
                     <p:column exportable="false">
-                        <p:commandButton icon="pi pi-pencil" update=":form:manage-content"
+                        <p:commandButton icon="pi pi-pencil" update="formManageContent"
                                          oncomplete="PF('manageDialog').show()"
                                          process="@this">
                             <f:setPropertyActionListener value="#{schoolEntity}" target="#{schoolManagementBean.selectedSchoolEntity}"/>
-                            <p:resetInput target=":form:manage-content"/>
+                            <p:resetInput target=":formManageContent:manage-content"/>
                         </p:commandButton>
                         <p:commandButton icon="pi pi-trash" process="@this"
                                          oncomplete="PF('deleteDialog').show()">
@@ -88,10 +88,11 @@
                     </p:column>
 
                 </p:dataTable>
-
-                <!--EDIT-->
-                <p:dialog header="Edit School Details" showEffect="fade" modal="true"
-                          widgetVar="manageDialog" responsive="true" appendTo="@(body)" resizable="false">
+            </h:form>
+            <!--EDIT-->
+            <p:dialog header="Edit School Details" showEffect="fade" modal="true"
+                      widgetVar="manageDialog" responsive="true" appendTo="@(body)" resizable="false">
+                <h:form id ="formManageContent">
                     <p:outputPanel id="manage-content" >
                         <p:panelGrid columns="2" rendered="#{not empty schoolManagementBean.selectedSchoolEntity}" styleClass="ui-noborder" >
                             <h:outputLabel value="School ID: " />
@@ -104,16 +105,17 @@
                             <h:outputText id="displayInEdit" />
                         </p:panelGrid>
                     </p:outputPanel>
-                    <f:facet name="footer">
-                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagementBean.saveSchool}"                                  
-                                         update="manage-content" process="manage-content @this" />
-                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageDialog').hide()"/>
-                    </f:facet>
-                </p:dialog>
 
-                <!--ADD-->
-                <p:dialog header="Add School" showEffect="fade" modal="true"
-                          widgetVar="manageNewDialog" responsive="true" appendTo="@(body)" resizable="false">
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagementBean.saveSchool}"                                  
+                                     update="manage-content" process="manage-content @this" />
+                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageDialog').hide()"/>                   
+                </h:form>
+            </p:dialog>
+
+            <!--ADD-->
+            <p:dialog header="Add School" showEffect="fade" modal="true"
+                      widgetVar="manageNewDialog" responsive="true" appendTo="@(body)" resizable="false">
+                <h:form id ="formManageNewContent">
                     <p:outputPanel id="manage-new-content" >
                         <p:panelGrid columns="2" rendered="#{not empty schoolManagementBean.selectedSchoolEntity}" styleClass="ui-noborder" >             
                             <h:outputLabel value="Name: " />
@@ -123,29 +125,29 @@
                             <h:outputText id="displayInAdd" />
                         </p:panelGrid>      
                     </p:outputPanel>
-                    <f:facet name="footer">
-                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagementBean.saveSchool}"                                  
-                                         update="manage-new-content" process="manage-new-content @this"/>
-                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageNewDialog').hide()"/>
-                    </f:facet>
-                </p:dialog>
 
-                <!--Confirm Dialogs-->
-                <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
-                                 message="Delete the school?" header="Confirm" severity="alert" appendTo="@(body)">
-                    <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{schoolManagementBean.deleteSelectedSchool}"
-                                     process="@this" oncomplete="PF('deleteDialog').hide()"/>
-                    <p:commandButton value="No" type="button" icon="pi pi-times"
-                                     onclick="PF('deleteDialog').hide()"/>
-                </p:confirmDialog>
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagementBean.saveSchool}"                                  
+                                     update="manage-new-content" process="manage-new-content @this"/>
+                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageNewDialog').hide()"/>
 
-                <p:confirmDialog global="true" showEffect="fade" width="300">
-                    <p:commandButton value="Yes" type="button" icon="pi pi-check"
-                                     styleClass="ui-confirmdialog-yes"/>
-                    <p:commandButton value="No" type="button"  icon="pi pi-times" 
-                                     styleClass="ui-confirmdialog-no ui-button-secondary"/>
-                </p:confirmDialog>
-            </h:form>
+                </h:form>
+            </p:dialog>
+
+            <!--Confirm Dialogs-->
+            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
+                             message="Delete the school?" header="Confirm" severity="alert" appendTo="@(body)">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{schoolManagementBean.deleteSelectedSchool}"
+                                 process="@this" oncomplete="PF('deleteDialog').hide()"/>
+                <p:commandButton value="No" type="button" icon="pi pi-times"
+                                 onclick="PF('deleteDialog').hide()"/>
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" icon="pi pi-check"
+                                 styleClass="ui-confirmdialog-yes"/>
+                <p:commandButton value="No" type="button"  icon="pi pi-times" 
+                                 styleClass="ui-confirmdialog-no ui-button-secondary"/>
+            </p:confirmDialog>
 
         </div>
 

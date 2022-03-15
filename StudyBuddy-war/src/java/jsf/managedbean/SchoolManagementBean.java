@@ -89,7 +89,7 @@ public class SchoolManagementBean implements Serializable {
 
         PrimeFaces.current().executeScript("PF('manageDialog').hide()");
         PrimeFaces.current().executeScript("PF('manageNewDialog').hide()");
-        PrimeFaces.current().ajax().update("form:growl", "form:dataTableAllSchools");
+        PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools");
     }
     
     public void deleteSelectedSchool() {
