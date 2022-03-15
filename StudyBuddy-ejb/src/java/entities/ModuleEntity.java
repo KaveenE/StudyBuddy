@@ -95,11 +95,11 @@ public class ModuleEntity implements Serializable {
         this.code = code;
     }
 
-    public Long getmoduleId() {
+    public Long getModuleId() {
         return moduleId;
     }
 
-    public void setmoduleId(Long moduleId) {
+    public void setModuleId(Long moduleId) {
         this.moduleId = moduleId;
     }
 

@@ -69,13 +69,13 @@ public class ModuleSessionBean implements ModuleSessionBeanLocal {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new ModuleAlreadyExistsException());
         }
 
-        return newModuleEntity.getmoduleId();
+        return newModuleEntity.getModuleId();
     }
 
     @Override
     public void updateModule(ModuleEntity moduleEntity) throws InputDataValidationException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(moduleEntity);
-        ModuleEntity moduleEntityToUpdate = retrieveModuleById(moduleEntity.getmoduleId());
+        ModuleEntity moduleEntityToUpdate = retrieveModuleById(moduleEntity.getModuleId());
 
         moduleEntityToUpdate.setName(moduleEntity.getName());
         moduleEntityToUpdate.setCode(moduleEntity.getCode());
