@@ -83,4 +83,11 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         }
     }
 
+    @Override
+    public void deleteGroup(Long groupId) throws DoesNotExistException, InputDataValidationException {
+        GroupEntity groupEntityToDelete = retrieveGroupEntityById(groupId);
+
+        groupEntityToDelete.setIsDeleted(true);
+    }
+
 }

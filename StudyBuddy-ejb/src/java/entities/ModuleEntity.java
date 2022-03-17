@@ -41,6 +41,9 @@ public class ModuleEntity implements Serializable {
     @Size(min = 4, max = 12)
     @NotNull
     private String code;
+    @Column(nullable = false)
+    @NotNull
+    private Boolean isDeleted;
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
@@ -51,6 +54,7 @@ public class ModuleEntity implements Serializable {
 
     public ModuleEntity() {
         groups = new ArrayList<>();
+        this.isDeleted = false;
     }
     public ModuleEntity(String name, String code) {
         this(name,code,null);
@@ -61,6 +65,14 @@ public class ModuleEntity implements Serializable {
         this.name = name;
         this.code = code;
         this.school = school;
+    }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public List<GroupEntity> getGroups() {

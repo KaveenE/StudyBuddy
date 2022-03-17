@@ -26,4 +26,6 @@ public interface GroupEntitySessionBeanLocal {
 
     public GroupEntity retrieveGroupEntityById(Long groupId) throws InputDataValidationException, DoesNotExistException;
 
+    public void deleteGroup(Long groupId) throws DoesNotExistException, InputDataValidationException;
+
 }

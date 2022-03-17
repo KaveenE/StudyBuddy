@@ -28,4 +28,6 @@ public interface ModuleSessionBeanLocal {
 
     public void updateModule(ModuleEntity moduleEntity) throws InputDataValidationException, DoesNotExistException;
 
+    public void deleteModule(Long moduleId) throws DoesNotExistException, InputDataValidationException;
+
 }

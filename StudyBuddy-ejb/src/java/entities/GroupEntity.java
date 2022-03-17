@@ -41,14 +41,15 @@ public class GroupEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private String description;
-
     @Column(nullable = false)
     @NotNull
     private LocalDateTime dateTimeCreated;
-    
     @Column(nullable = false)
     @NotNull
     private Boolean isOpen;
+    @Column(nullable = false)
+    @NotNull
+    private Boolean isDeleted;
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
@@ -74,6 +75,7 @@ public class GroupEntity implements Serializable {
         this.groupMembers = new ArrayList<>();
         this.messages = new ArrayList<>();
         this.isOpen = true;
+        this.isDeleted = false;
         this.dateTimeCreated = LocalDateTime.now();
     }
 
@@ -82,7 +84,15 @@ public class GroupEntity implements Serializable {
         this.groupName = groupName;
         this.description = description;
     }
-    
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public StudentEntity getPoster() {
         return poster;
     }
