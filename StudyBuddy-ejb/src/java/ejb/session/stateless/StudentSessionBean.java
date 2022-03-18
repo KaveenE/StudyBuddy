@@ -72,6 +72,7 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
 
     //Password deliberately not updated as only the account owner can change the password
+    @Override
     public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, AccountNotFoundException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(studentEntity);
 

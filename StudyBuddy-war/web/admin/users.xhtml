@@ -2,10 +2,229 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../template/defaultTemplate.xhtml">
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                template="./../template/defaultTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:define name="content">
-        content
+
+
+        <div>
+            <h3>Users</h3>
+
+            <p:growl id="growl" life="2000">
+                <p:autoUpdate/>
+            </p:growl>
+
+            <h:form id="form">
+
+                <!--Buttons for create and mass delete-->
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="New" icon="pi pi-plus" actionListener="#{studentManagementBean.createNew}"
+                                         update=":formManageNewContent:manage-new-content" oncomplete="PF('manageNewDialog').show()"
+                                         style="margin-right: .5rem">
+                            <p:resetInput target=":formManageNewContent:manage-new-content"/>
+                        </p:commandButton>
+                        <p:commandButton id="delete-multiple-button" value="#{studentManagementBean.deleteButtonMessage}"
+                                         icon="pi pi-trash" actionListener="#{studentManagementBean.deleteSelectedUsers()}"
+                                         disabled="#{!studentManagementBean.hasMultipleSelectedStudents()}" 
+                                         update="@this">
+                            <p:confirm header="Confirmation" message="Delete the selected students?" icon="pi pi-exclamation-triangle"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+                <br/>
+
+                <!--DataTable-->
+                <p:dataTable id="dataTableAllUsers"  value="#{studentManagementBean.studentEntities}" var="studentEntity" widgetVar="dataTableAllUsers" 
+                             rowKey="#{studentEntity.accountId}" rowIndexVar="rowIndex"
+                             filteredValue="#{studentManagementBean.filteredStudentEntities}"
+                             globalFilterFunction="#{studentManagementBean.globalFilterFunction}"
+                             selection="#{studentManagementBean.selectedStudensEntities}"
+                            
+                             reflow="true" tableStyle="table-layout:auto"
+                             paginator="true" 
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                             rows="10" rowsPerPageTemplate="10,20,50" paginatorPosition="bottom">
+
+                    <f:facet name="header">
+                        <p:outputPanel style="text-align: right;">
+                            <div class="ui-inputgroup" style="display: inline-flex">
+                                <span class="ui-inputgroup-addon"><i class="pi pi-search"></i></span>
+                                <p:inputText id="globalFilter" onkeyup="PF('dataTableAllUsers').filter()" placeholder="Enter keyword"/>
+                            </div>    
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:ajax event="rowSelect" update=":form:delete-multiple-button"/>
+                    <p:ajax event="rowUnselect" update=":form:delete-multiple-button"/>
+                    <p:ajax event="rowSelectCheckbox" update=":form:delete-multiple-button"/>
+                    <p:ajax event="rowUnselectCheckbox" update=":form:delete-multiple-button"/>
+                    <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>
+
+                    <p:column selectionMode="multiple" exportable="false" width="25" style ="text-align: center;"></p:column>
+
+                    <p:column headerText="ID" sortBy="#{studentEntity.accountId}">
+                        <h:outputText value="#{studentEntity.accountId}"/>
+                    </p:column>
+
+                    <p:column headerText="Username" sortBy="#{studentEntity.username}">
+                        <h:outputText value="#{studentEntity.username}" />
+                    </p:column>
+
+                    <p:column headerText="Year Of Study" sortBy="#{studentEntity.yearOfStudy}">
+                        <h:outputText value="#{studentEntity.yearOfStudy}" />
+                    </p:column>
+
+                    <p:column headerText="Credit Balance" sortBy="#{studentEntity.creditBalance}">
+                        <h:outputText value="#{studentEntity.creditBalance}" />
+                    </p:column>
+
+                    <p:column headerText="Premium Account?" sortBy="#{studentEntity.isPremium}">
+                        <h:outputText value="#{studentEntity.isPremium}" />
+                    </p:column>
+
+                    <p:column headerText="Account Enabled?" sortBy="#{studentEntity.isEnabled}">
+                        <h:outputText value="#{studentEntity.isEnabled}" />
+                    </p:column>
+
+                    <p:column headerText="Location Enabled?" sortBy="#{studentEntity.optLocation}">
+                        <h:outputText value="#{studentEntity.optLocation}" />
+                    </p:column>
+
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-pencil" update="formManageContent"
+                                         oncomplete="PF('manageDialog').show()"
+                                         process="@this">
+                            <f:setPropertyActionListener value="#{studentEntity}" target="#{studentManagementBean.selectedStudentEntity}"/>
+                            <p:resetInput target=":formManageContent:manage-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash" process="@this"
+                                         oncomplete="PF('deleteDialog').show()">
+                            <f:setPropertyActionListener value="#{studentEntity}" target="#{studentManagementBean.selectedStudentEntity}"/>
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+            <!--EDIT-->
+            <p:dialog header="Edit User Details" showEffect="fade" modal="true"
+                      widgetVar="manageDialog" responsive="true" appendTo="@(body)" resizable="false">
+                <h:form id ="formManageContent">
+                    <p:outputPanel id="manage-content" >
+                        <p:panelGrid columns="2" rendered="#{not empty studentManagementBean.selectedStudentEntity}" styleClass="ui-noborder" >
+                            <h:outputLabel value="Student ID: " />
+                            <h:outputText value="#{studentManagementBean.selectedStudentEntity.accountId}" />
+
+                            <h:outputLabel value="Username: " />                            
+                            <h:outputText value="#{studentManagementBean.selectedStudentEntity.username}" />
+
+                            <h:outputLabel value="Year Of Study: " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.yearOfStudy}" />
+                            
+
+                            <h:outputLabel value= "Credit Balance: : " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.creditBalance}" />
+                          
+
+                            <h:outputLabel value="Premium Account? : " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
+                         
+
+                            <h:outputLabel value="Account Enabled? : " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.isEnabled}" />
+                           
+
+                            <h:outputLabel value="Location Enabled? : " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.optLocation}" />
+                            <h:outputText id="displayInEdit" />
+                        </p:panelGrid>
+                    </p:outputPanel>
+
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{studentManagementBean.saveStudent}"                                  
+                                     update="manage-content" process="manage-content @this" />
+                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageDialog').hide()"/>                   
+                </h:form>
+            </p:dialog>
+
+            <!--ADD-->
+            <p:dialog header="Add Student" showEffect="fade" modal="true"
+                      widgetVar="manageNewDialog" responsive="true" appendTo="@(body)" resizable="false">
+                <h:form id ="formManageNewContent">
+                    <p:outputPanel id="manage-new-content" >
+                        <p:panelGrid columns="2" rendered="#{not empty studentManagementBean.selectedStudentEntity}" styleClass="ui-noborder" >             
+                            <h:outputLabel value="Username: " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.username}" />
+          
+
+                            <h:outputLabel value="Year Of Study: " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.yearOfStudy}" />
+                            
+
+                            <h:outputLabel value="creditBalance: " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.creditBalance}" />
+                
+
+
+                            <h:outputLabel value="Premium Account? : " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
+                    
+
+                            <h:outputLabel value="Location Enabled? ? : " />
+                            <p:inputTextarea rows="5" cols="10" 
+                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.optLocation}" />
+                            <h:outputText id="displayInAdd" />
+
+                        </p:panelGrid>      
+                    </p:outputPanel>
+
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{studentManagementBean.saveStudent}"                                  
+                                     update="manage-new-content" process="manage-new-content @this"/>
+                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageNewDialog').hide()"/>
+
+                </h:form>
+            </p:dialog>
+
+            <!--Confirm Dialogs-->
+            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
+                             message="Delete student user?" header="Confirm" severity="alert" appendTo="@(body)">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{studentManagementBean.deleteSelectedUser}"
+                                 process="@this" oncomplete="PF('deleteDialog').hide()"/>
+                <p:commandButton value="No" type="button" icon="pi pi-times"
+                                 onclick="PF('deleteDialog').hide()"/>
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" icon="pi pi-check"
+                                 styleClass="ui-confirmdialog-yes"/>
+                <p:commandButton value="No" type="button"  icon="pi pi-times" 
+                                 styleClass="ui-confirmdialog-no ui-button-secondary"/>
+            </p:confirmDialog>
+
+        </div>
+
     </ui:define>
 
 </ui:composition>
