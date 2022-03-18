@@ -44,7 +44,7 @@
                              filteredValue="#{studentManagementBean.filteredStudentEntities}"
                              globalFilterFunction="#{studentManagementBean.globalFilterFunction}"
                              selection="#{studentManagementBean.selectedStudensEntities}"
-                            
+
                              reflow="true" tableStyle="table-layout:auto"
                              paginator="true" 
                              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
@@ -124,27 +124,27 @@
 
                             <h:outputLabel value="Year Of Study: " />
                             <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
+                                             counter="displayInEdit" maxlength="20" counterTemplate="{0} characters remaining." 
                                              autoResize="false" value="#{studentManagementBean.selectedStudentEntity.yearOfStudy}" />
-                            
+
 
                             <h:outputLabel value= "Credit Balance: : " />
                             <p:inputTextarea rows="5" cols="10" 
                                              counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
                                              autoResize="false" value="#{studentManagementBean.selectedStudentEntity.creditBalance}" />
-                          
+
 
                             <h:outputLabel value="Premium Account? : " />
                             <p:inputTextarea rows="5" cols="10" 
                                              counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
                                              autoResize="false" value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
-                         
+
 
                             <h:outputLabel value="Account Enabled? : " />
                             <p:inputTextarea rows="5" cols="10" 
                                              counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
                                              autoResize="false" value="#{studentManagementBean.selectedStudentEntity.isEnabled}" />
-                           
+
 
                             <h:outputLabel value="Location Enabled? : " />
                             <p:inputTextarea rows="5" cols="10" 
@@ -167,36 +167,24 @@
                     <p:outputPanel id="manage-new-content" >
                         <p:panelGrid columns="2" rendered="#{not empty studentManagementBean.selectedStudentEntity}" styleClass="ui-noborder" >             
                             <h:outputLabel value="Username: " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.username}" />
-          
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.username}" />
+
 
                             <h:outputLabel value="Year Of Study: " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.yearOfStudy}" />
-                            
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.yearOfStudy}" />
 
                             <h:outputLabel value="creditBalance: " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.creditBalance}" />
-                
-
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.creditBalance}" />
 
                             <h:outputLabel value="Premium Account? : " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
-                    
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
 
+                            <h:outputLabel value="Account Enabled? ? : " />
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.isEnabled}" />
+                           
                             <h:outputLabel value="Location Enabled? ? : " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInAdd" maxlength="20" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.optLocation}" />
-                            <h:outputText id="displayInAdd" />
-
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.optLocation}" />
+                           
                         </p:panelGrid>      
                     </p:outputPanel>
 

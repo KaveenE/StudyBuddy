@@ -39,7 +39,7 @@ public class ModuleManagementBean implements Serializable {
     private SchoolSessionBeanLocal schoolSessionBean;
 
     private List<ModuleEntity> moduleEntities;
-    private List<ModuleEntity> filteredModulelEntities;
+    private List<ModuleEntity> filteredModuleEntities;
     private List<ModuleEntity> selectedModuleEntities;
     private ModuleEntity selectedModuleEntity;
 
@@ -146,12 +146,12 @@ public class ModuleManagementBean implements Serializable {
         this.moduleEntities = moduleEntities;
     }
 
-    public List<ModuleEntity> getFilteredModulelEntities() {
-        return filteredModulelEntities;
+    public List<ModuleEntity> getFilteredModuleEntities() {
+        return filteredModuleEntities;
     }
 
-    public void setFilteredModulelEntities(List<ModuleEntity> filteredModulelEntities) {
-        this.filteredModulelEntities = filteredModulelEntities;
+    public void setFilteredModuleEntities(List<ModuleEntity> filteredModuleEntities) {
+        this.filteredModuleEntities = filteredModuleEntities;
     }
 
     public List<ModuleEntity> getSelectedModuleEntities() {
