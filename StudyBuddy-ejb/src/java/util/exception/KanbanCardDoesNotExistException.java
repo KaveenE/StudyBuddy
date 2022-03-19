@@ -9,7 +9,7 @@ package util.exception;
  *
  * @author larby
  */
-public class KanbanCardDoesNotExistException extends Exception {
+public class KanbanCardDoesNotExistException extends DoesNotExistException {
 
     public KanbanCardDoesNotExistException() {
     }
