@@ -156,16 +156,18 @@
                                                itemValue="#{studentEntity.accountId}" 
                                                itemLabel="#{studentEntity.username}"/>
                             </p:selectOneMenu>
-                            
+
                             <h:outputLabel value="Description: " />
-                            <h:inputText value="#{reportManagementManagedBean.selectedReportEntity.description}"/>
+                            <p:inputTextarea rows="5" cols="30" 
+                                             counter="displayInAdd" maxlength="255" counterTemplate="{0} characters remaining." 
+                                             autoResize="false" value="#{reportManagementManagedBean.selectedReportEntity.description}"/>
 
                             <h:outputLabel value="Date Of Report: " />
                             <h:inputText value="#{reportManagementManagedBean.selectedReportEntity.dateTimeCreated}"/>
 
                             <h:outputLabel value="Report Resolved?: " />
                             <h:inputText value="#{reportManagementManagedBean.selectedReportEntity.isResolved}"/>
-
+                            <h:outputText id="displayInAdd" />
                         </p:panelGrid>      
                     </p:outputPanel>
 
