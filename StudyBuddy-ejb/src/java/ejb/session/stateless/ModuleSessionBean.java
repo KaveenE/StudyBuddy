@@ -38,7 +38,7 @@ public class ModuleSessionBean implements ModuleSessionBeanLocal {
 
     @Override
     public List<ModuleEntity> retrieveAllModules() {
-        Query query = em.createQuery("SELECT m FROM ModuleEntity m");
+        Query query = em.createQuery("SELECT m FROM ModuleEntity m WHERE m.isDeleted = false");
 
         return query.getResultList();
     }
@@ -46,6 +46,9 @@ public class ModuleSessionBean implements ModuleSessionBeanLocal {
     @Override
     public ModuleEntity retrieveModuleById(Long moduleId) throws InputDataValidationException, DoesNotExistException {
         ModuleEntity module = em.find(ModuleEntity.class, moduleId);
+        if(module.getIsDeleted()) {
+            throw new ModuleDoesNotExistException();
+        }
         EJBHelper.requireNonNull(module, new ModuleDoesNotExistException());
         EJBHelper.throwValidationErrorsIfAny(module);
 

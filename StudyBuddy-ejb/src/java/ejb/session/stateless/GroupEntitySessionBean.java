@@ -40,7 +40,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
 
     @Override
     public List<GroupEntity> retrieveAllGroupEntity() {
-        return em.createQuery("SELECT g FROM GroupEntity g")
+        return em.createQuery("SELECT g FROM GroupEntity g WHERE g.isDeleted = false")
                 .getResultList();
     }
 
@@ -70,6 +70,9 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     @Override
     public GroupEntity retrieveGroupEntityById(Long groupId) throws InputDataValidationException, DoesNotExistException {
         GroupEntity groupEntity = em.find(GroupEntity.class, groupId);
+        if(groupEntity.getIsDeleted()){
+            throw new GroupEntityDoesNotExistException();
+        }
         EJBHelper.requireNonNull(groupEntity, new GroupEntityDoesNotExistException());
         return groupEntity;
     }
