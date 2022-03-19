@@ -7,6 +7,7 @@ package ejb.session.singleton;
 
 import ejb.session.stateless.AdminSessionBeanLocal;
 import ejb.session.stateless.GroupEntitySessionBeanLocal;
+import ejb.session.stateless.KanbanSessionBeanLocal;
 import entities.AdminEntity;
 import entities.GroupEntity;
 import entities.ModuleEntity;
@@ -42,6 +43,9 @@ import ejb.session.stateless.SchoolSessionBeanLocal;
 @LocalBean
 @Startup
 public class DataInitSessionBean {
+
+    @EJB
+    private KanbanSessionBeanLocal kanbanSessionBean;
 
     @EJB
     private StudentSessionBeanLocal studentEntitySessionBean;
@@ -112,6 +116,7 @@ public class DataInitSessionBean {
                 Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            // Group Entity
             GroupEntity groupEntity = new GroupEntity();
             groupEntity.setGroupName("Programming Group Freshman");
             groupEntity.setDescription("A very detailed description");
@@ -128,7 +133,9 @@ public class DataInitSessionBean {
             groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroups().add(groupEntity);
             studentEntitySessionBean.retrieveStudentById(3l).getGroups().add(groupEntity);
-
+            
+//          Kanban Board Entity
+            kanbanSessionBean.createDefaultKanbanBoard(1l);
         } catch (AlreadyExistsException | UnknownPersistenceException | InputDataValidationException | DoesNotExistException ex) {
             Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,11 +31,18 @@ public class AdvertisementEntity implements Serializable {
     @Size(min = 1, max = 255)
     @NotNull
     private String companyName;
+    
     @Column(nullable = false)
     @NotNull
     private String imageUrl;
+    
+    @Column(nullable = false)
+    @NotNull
+    @Min(0)
+    private Long numberOfClicks;
 
     public AdvertisementEntity() {
+        this.numberOfClicks = 0l;
     }
 
     public AdvertisementEntity(String companyName, String imageUrl) {
@@ -89,6 +97,20 @@ public class AdvertisementEntity implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    /**
+     * @return the numberOfClicks
+     */
+    public Long getNumberOfClicks() {
+        return numberOfClicks;
+    }
+
+    /**
+     * @param numberOfClicks the numberOfClicks to set
+     */
+    public void setNumberOfClicks(Long numberOfClicks) {
+        this.numberOfClicks = numberOfClicks;
     }
     
 }

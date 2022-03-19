@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -29,13 +31,16 @@ public class RatingEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ratingId;
         
-    @Column(scale = 1, precision = 2)
-    private Double rating;
-    
-    //should description be optional?
     @Column(nullable = false)
     @NotNull
-    @Size(min = 1)
+    @Min(1)
+    @Max(5)
+    private Integer rating;
+    
+    //should description be optional? ye but they can give empty string
+    @Column(nullable = false)
+    @NotNull
+    @Size(min = 0)
     private String ratingDescription;
 
     @JoinColumn(nullable = false)
@@ -48,20 +53,24 @@ public class RatingEntity implements Serializable {
 
         
     public RatingEntity() {
-        rating = Double.valueOf(0);
     }
     
-    public RatingEntity(Double rating, String ratingDescription) {
-        this();
-        this.rating = rating;
-        this.ratingDescription = ratingDescription;
+    public RatingEntity(Integer rating, AccountEntity ratee, AccountEntity rater) {
+        this(rating, "", ratee, rater);
     }
 
-    public Double getRating() {
+    public RatingEntity(Integer rating, String ratingDescription, AccountEntity ratee, AccountEntity rater) {
+        this.rating = rating;
+        this.ratingDescription = ratingDescription;
+        this.ratee = ratee;
+        this.rater = rater;
+    }
+
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 

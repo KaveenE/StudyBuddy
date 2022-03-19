@@ -45,6 +45,13 @@ public class MessageEntity implements Serializable {
         dateTimeCreated = LocalDateTime.now();
     }
 
+    public MessageEntity(String content, GroupEntity group, StudentEntity sender) {
+        this();
+        this.content = content;
+        this.group = group;
+        this.sender = sender;
+    }
+
     public MessageEntity(String content) {
         this();
         this.content = content;

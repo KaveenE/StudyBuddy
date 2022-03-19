@@ -19,6 +19,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -69,6 +70,9 @@ public class GroupEntity implements Serializable {
     @ManyToMany
     @JoinTable(name = "groups_groupMembers", joinColumns = @JoinColumn(name = "groupMember_studentid"), inverseJoinColumns = @JoinColumn(name = "groups_groupid"))
     private List<StudentEntity> groupMembers;
+    
+    @OneToMany(mappedBy = "group")
+    private List<KanbanBoard> kanbanBoard;
 
     public GroupEntity() {
         this.candidates = new ArrayList<>();
@@ -77,6 +81,7 @@ public class GroupEntity implements Serializable {
         this.isOpen = true;
         this.isDeleted = false;
         this.dateTimeCreated = LocalDateTime.now();
+        this.kanbanBoard = new ArrayList<>();
     }
 
     public GroupEntity(String groupName, String description) {
@@ -123,6 +128,20 @@ public class GroupEntity implements Serializable {
 
     public void setMessages(List<MessageEntity> messages) {
         this.messages = messages;
+    }
+
+    /**
+     * @return the kanbanBoard
+     */
+    public List<KanbanBoard> getKanbanBoard() {
+        return kanbanBoard;
+    }
+
+    /**
+     * @param kanbanBoard the kanbanBoard to set
+     */
+    public void setKanbanBoard(List<KanbanBoard> kanbanBoard) {
+        this.kanbanBoard = kanbanBoard;
     }
 
     public String getGroupName() {

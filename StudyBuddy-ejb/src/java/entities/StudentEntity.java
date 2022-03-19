@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
@@ -63,6 +61,9 @@ public class StudentEntity extends AccountEntity implements Serializable {
     @OneToMany(mappedBy = "studentWhoReported")
     private List<ReportEntity> reportsSubmitted;
     
+    @ManyToMany(mappedBy = "assignedStudents")
+    private List<KanbanCard> assignedCards;
+    
     @OneToMany(mappedBy = "reportedStudent")
     private List<ReportEntity> reportReceived;
     {
@@ -72,6 +73,7 @@ public class StudentEntity extends AccountEntity implements Serializable {
         this.messages = new ArrayList<>();
         this.reportsSubmitted = new ArrayList<>();
         this.reportReceived = new ArrayList<>();
+        this.assignedCards = new ArrayList<>();
         this.optLocation = false;
         this.isEnabled = true;
         this.isPremium = false;
@@ -154,6 +156,20 @@ public class StudentEntity extends AccountEntity implements Serializable {
      */
     public void setOptLocation(Boolean optLocation) {
         this.optLocation = optLocation;
+    }
+
+    /**
+     * @return the assignedCards
+     */
+    public List<KanbanCard> getAssignedCards() {
+        return assignedCards;
+    }
+
+    /**
+     * @param assignedCards the assignedCards to set
+     */
+    public void setAssignedCards(List<KanbanCard> assignedCards) {
+        this.assignedCards = assignedCards;
     }
 
     public List<GroupEntity> getGroupsPosted() {

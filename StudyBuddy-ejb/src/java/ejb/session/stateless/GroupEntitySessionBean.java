@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entities.GroupEntity;
+import entities.KanbanBoard;
 import entities.ModuleEntity;
 import java.util.List;
 import javax.ejb.EJB;
@@ -53,6 +54,10 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
             ModuleEntity moduleEntity = moduleSessionBeanLocal.retrieveModuleById(moduleId);
             newGroupEntity.setModuleEntity(moduleEntity);
             moduleEntity.getGroups().add(newGroupEntity);
+            
+//          Set up kanban board
+            
+
             em.persist(newGroupEntity);
             em.flush();
         } catch (PersistenceException ex) {
