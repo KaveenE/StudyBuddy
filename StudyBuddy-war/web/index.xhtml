@@ -45,9 +45,9 @@
                                 size="16" maxlength="32"
                                 required="true" requiredMessage="Enter password again to confirm"  
                                 placeholder="Confirm Password"/>
-                    
+
                     <p:growl life="2000"><p:autoUpdate/></p:growl>
-                    
+
                     <f:facet name="footer">
                         <p:commandButton value="Register" actionListener="#{adminManagementManagedBean.createNewAdmin}"  update="@form"  
                                          oncomplete="PF('registerNewAdmin').hide()" 
@@ -66,6 +66,9 @@
                     <li>etc</li>  
                 </ul> 
             </article>
+
+            <p:calendar id="inline" mode="inline" />
+
         </h:panelGroup>
 
     </ui:define>
