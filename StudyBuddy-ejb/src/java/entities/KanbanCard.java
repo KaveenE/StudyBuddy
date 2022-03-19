@@ -29,7 +29,7 @@ public class KanbanCard implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long kanbanCardId;
     
     @Column(nullable = false, length = 64)
@@ -59,15 +59,18 @@ public class KanbanCard implements Serializable {
 
     public KanbanCard() {
         this.assignedStudents = new ArrayList<>();
+        this.kanbanList = null;
         this.description = "";
     }
-
-    public KanbanCard(String title, String description, LocalDateTime deadlineStart, LocalDateTime deadlineEnd, StudentEntity author, KanbanList kanbanList) {
-        this.title = title;
-        this.description = description;
-        this.deadlineStart = deadlineStart;
-        this.deadlineEnd = deadlineEnd;
+    
+    public KanbanCard(String title, String description, LocalDateTime deadlineStart, LocalDateTime deadlineEnd, StudentEntity author) {
+        this();
         this.author = author;
+        
+    }
+    
+    public KanbanCard(String title, String description, LocalDateTime deadlineStart, LocalDateTime deadlineEnd, StudentEntity author, KanbanList kanbanList) {
+        this(title, description, deadlineStart, deadlineEnd, author);
         this.kanbanList = kanbanList;
     }
 

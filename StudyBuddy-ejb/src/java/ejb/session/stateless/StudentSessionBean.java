@@ -76,9 +76,8 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, AccountNotFoundException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(studentEntity);
 
-        StudentEntity accountToUpdate = retrieveStudentById(studentEntity.getAccountId());
+        StudentEntity accountToUpdateStudent = retrieveStudentById(studentEntity.getAccountId());
 
-        StudentEntity accountToUpdateStudent = (StudentEntity) accountToUpdate;
         accountToUpdateStudent.setEmail(studentEntity.getEmail());
         accountToUpdateStudent.setYearOfStudy(studentEntity.getYearOfStudy());
         accountToUpdateStudent.setOptLocation(studentEntity.getOptLocation());
