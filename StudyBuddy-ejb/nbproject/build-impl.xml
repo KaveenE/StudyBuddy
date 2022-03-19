@@ -800,7 +800,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.javaee-api-8.0.classpath}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.jsf20.classpath}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${file.reference.json-20211205.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.json-20211205.jar-1}" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
     <target name="-copy-meta-inf">
