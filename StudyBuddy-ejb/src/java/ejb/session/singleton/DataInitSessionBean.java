@@ -125,7 +125,7 @@ public class DataInitSessionBean {
             groupEntity.setDateTimeCreated(LocalDateTime.now());
             groupEntity.setPoster(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroupsPosted().add(groupEntity);
-            groupEntitySessionBean.createNewGroupEntity(groupEntity, moduleId);
+            groupEntitySessionBean.createNewGroupEntity(groupEntity, 1l);
 
             groupEntity.getCandidates().add(studentEntitySessionBean.retrieveStudentById(2l));
             studentEntitySessionBean.retrieveStudentById(2l).getGroupsApplied().add(groupEntity);

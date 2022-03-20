@@ -412,6 +412,15 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
             
             board.getKanbanLists().forEach(l -> l.getKanbanCards().add(new KanbanCard("New Card", "", null, null, poster, l)));
             
+            EJBHelper.throwValidationErrorsIfAny(board);
+            
+            for (KanbanList l : board.getKanbanLists()) {
+                EJBHelper.throwValidationErrorsIfAny(l);
+                for (KanbanCard c : l.getKanbanCards()) {
+                    EJBHelper.throwValidationErrorsIfAny(c);
+                }
+            }
+            
             em.persist(board);
             em.flush();
             
