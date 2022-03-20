@@ -141,7 +141,7 @@ public class StudentManagementBean implements Serializable {
         this.filteredStudentEntities = filteredStudentEntities;
     }
 
-    public List<StudentEntity> getSelectedStudensEntities() {
+    public List<StudentEntity> getSelectedStudentEntities() {
         return selectedStudentEntities;
     }
 

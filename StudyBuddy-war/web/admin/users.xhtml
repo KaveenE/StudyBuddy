@@ -43,7 +43,7 @@
                              rowKey="#{studentEntity.accountId}" rowIndexVar="rowIndex"
                              filteredValue="#{studentManagementBean.filteredStudentEntities}"
                              globalFilterFunction="#{studentManagementBean.globalFilterFunction}"
-                             selection="#{studentManagementBean.selectedStudensEntities}"
+                             selection="#{studentManagementBean.selectedStudentEntities}"
 
                              reflow="true" tableStyle="table-layout:auto"
                              paginator="true" 
@@ -168,10 +168,10 @@
                             <h:outputLabel value="Premium Account? : " />
                             <h:inputText value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
 
-                            <h:outputLabel value="Account Enabled? ? : " />
+                            <h:outputLabel value="Account Enabled? : " />
                             <h:inputText value="#{studentManagementBean.selectedStudentEntity.isEnabled}" />
 
-                            <h:outputLabel value="Location Enabled? ? : " />
+                            <h:outputLabel value="Location Enabled? : " />
                             <h:inputText value="#{studentManagementBean.selectedStudentEntity.optLocation}" />
 
                         </p:panelGrid>      
