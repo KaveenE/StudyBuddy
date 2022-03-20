@@ -116,7 +116,7 @@ public class DataInitSessionBean {
                 Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            // Group Entity
+            // Group Entity. Edited
             GroupEntity groupEntity = new GroupEntity();
             groupEntity.setGroupName("Programming Group Freshman");
             groupEntity.setDescription("A very detailed description");

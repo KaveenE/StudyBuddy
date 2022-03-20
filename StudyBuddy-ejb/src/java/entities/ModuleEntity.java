@@ -137,7 +137,7 @@ public class ModuleEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.ModuleEntity[ id=" + moduleId + " ]";
+        return moduleId+" "+getCode()+" "+getName();
     }
 
 }
