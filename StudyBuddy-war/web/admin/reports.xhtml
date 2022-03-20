@@ -66,24 +66,26 @@
                         <h:outputText value="#{reportEntity.reportId}"/>
                     </p:column>
 
-                    <p:column headerText="Student Who Reported" sortBy="#{reportEntity.studentWhoReported}">
-                        <h:outputText value="#{reportEntity.studentWhoReported}"/>
+                    <p:column headerText="Reporter" sortBy="#{reportEntity.studentWhoReported.username}">
+                        <h:outputText value="#{reportEntity.studentWhoReported.username}"/>
                     </p:column>
 
-                    <p:column headerText="Student Being Reported" sortBy="#{reportEntity.reportedStudent}">
-                        <h:outputText value="#{reportEntity.reportedStudent}"/>
+                    <p:column headerText="Reported" sortBy="#{reportEntity.reportedStudent.username}">
+                        <h:outputText value="#{reportEntity.reportedStudent.username}"/>
                     </p:column>
 
                     <p:column headerText="Description" sortBy="#{reportEntity.description}">
                         <h:outputText value="#{reportEntity.description}"/>
                     </p:column>
 
-                    <p:column headerText="Date Of Report" sortBy="#{reportEntity.dateTimeCreated}">
-                        <h:outputText value="#{reportEntity.dateTimeCreated}" />
+                    <p:column headerText="ReportDate" sortBy="#{reportEntity.dateTimeCreated}">
+                        <h:outputText value="#{reportEntity.dateTimeCreated}" >
+                            <f:convertDateTime type="localDateTime" dateStyle="medium" timeStyle="short"/>
+                        </h:outputText>
                     </p:column>
 
-                    <p:column headerText="Report Resolved? " sortBy="#{reportEntity.isResolved}">
-                        <h:outputText value="#{reportEntity.isResolved}" />
+                    <p:column headerText="Resolved" sortBy="#{reportEntity.isResolved}" style="width:50px;text-align: center;">
+                        <p:selectBooleanCheckbox value="#{reportEntity.isResolved}" disabled="true" />
                     </p:column>
 
                     <p:column exportable="false">
@@ -110,17 +112,19 @@
                             <h:outputLabel value="Report ID: " />
                             <h:outputText value="#{reportManagementManagedBean.selectedReportEntity.reportId}" />
 
-                            <h:outputLabel value="Student Who Reported: " />
-                            <h:inputText value="#{reportManagementManagedBean.reportingStudentEntity.accountId}" />
+                            <h:outputLabel value="Reporter: " />
+                            <h:outputText value="#{reportManagementManagedBean.reportingStudentEntity.username}" />
 
-                            <h:outputLabel value="Student Being Reported: " />
-                            <h:inputText value="#{reportManagementManagedBean.reportedStudentEntity.accountId}"/>
+                            <h:outputLabel value="Reported: " />
+                            <h:outputText value="#{reportManagementManagedBean.reportedStudentEntity.username}"/>
 
-                            <h:outputLabel value="Date Of Report: " />
-                            <h:inputText value="#{reportManagementManagedBean.selecteReportEntity.dateTimeCreated}"/>
-
-                            <h:outputLabel value="Report Resolved? : " />
-                            <h:inputText value="#{reportManagementManagedBean.selecteReportEntity.isResolved}"/>
+                            <h:outputLabel value="Report Date: " />
+                            <h:outputText value="#{reportManagementManagedBean.selectedReportEntity.dateTimeCreated}" >
+                                <f:convertDateTime type="localDateTime" dateStyle="medium" timeStyle="short"/>
+                            </h:outputText>
+                            
+                            <h:outputLabel value="Resolve report? : " />
+                            <p:selectBooleanCheckbox value="#{reportManagementManagedBean.selectedReportEntity.isResolved}"/>
                         </p:panelGrid>
                     </p:outputPanel>
 
