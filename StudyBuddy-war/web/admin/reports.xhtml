@@ -23,11 +23,6 @@
                 <!--Buttons for create and mass delete-->
                 <p:toolbar>
                     <p:toolbarGroup>
-                        <p:commandButton value="New" icon="pi pi-plus" actionListener="#{reportManagementManagedBean.createNew}"
-                                         update=":formManageNewContent:manage-new-content" oncomplete="PF('manageNewDialog').show()"
-                                         style="margin-right: .5rem">
-                            <p:resetInput target=":formManageNewContent:manage-new-content"/>
-                        </p:commandButton>
                         <p:commandButton id="delete-multiple-button" value="#{reportManagementManagedBean.deleteButtonMessage}"
                                          icon="pi pi-trash" actionListener="#{reportManagementManagedBean.deleteSelectedReports}"
                                          disabled="#{!reportManagementManagedBean.hasMultipleSelectedReports()}" 
@@ -83,8 +78,8 @@
                         <h:outputText value="#{reportEntity.description}"/>
                     </p:column>
 
-                    <p:column headerText="Date Of Report" sortBy="#{reportEntity.dateOfReport}">
-                        <h:outputText value="#{reportEntity.dateOfReport}" />
+                    <p:column headerText="Date Of Report" sortBy="#{reportEntity.dateTimeCreated}">
+                        <h:outputText value="#{reportEntity.dateTimeCreated}" />
                     </p:column>
 
                     <p:column headerText="Report Resolved? " sortBy="#{reportEntity.isResolved}">
@@ -95,12 +90,12 @@
                         <p:commandButton icon="pi pi-pencil" update="formManageContent"
                                          oncomplete="PF('manageDialog').show()"
                                          process="@this">
-                            <f:setPropertyActionListener value="#{reportEntity}" target="#{reportManagementBean.selectedReportEntity}"/>
+                            <f:setPropertyActionListener value="#{reportEntity}" target="#{reportManagementManagedBean.selectedReportEntity}"/>
                             <p:resetInput target=":formManageContent:manage-content"/>
                         </p:commandButton>
                         <p:commandButton icon="pi pi-trash" process="@this"
                                          oncomplete="PF('deleteDialog').show()">
-                            <f:setPropertyActionListener value="#{reportEntity}" target="#{reportManagementBean.selectedReportEntity}"/>
+                            <f:setPropertyActionListener value="#{reportEntity}" target="#{reportManagementManagedBean.selectedReportEntity}"/>
                         </p:commandButton>
                     </p:column>
 
@@ -132,52 +127,6 @@
                     <p:commandButton value="Save" icon="pi pi-check" actionListener="#{reportManagementManagedBean.saveReport}"                                  
                                      update="manage-content" process="manage-content @this" />
                     <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageDialog').hide()"/>                   
-                </h:form>
-            </p:dialog>
-
-            <!--ADD-->
-            <p:dialog header="Add Report" showEffect="fade" modal="true"
-                      widgetVar="manageNewDialog" responsive="true" appendTo="@(body)" resizable="false">
-                <h:form id ="formManageNewContent">
-                    <p:outputPanel id="manage-new-content" >
-                        <p:panelGrid columns="2" rendered="#{not empty  reportManagementManagedBean.selectedReportEntity}" styleClass="ui-noborder" >             
-                            <h:outputLabel value="Student Who Reported: " />
-                            <p:selectOneMenu value="#{reportManagementManagedBean.reportingStudentEntity.accountId}" required="true">
-                                <f:selectItem itemLabel="" noSelectionOption="true"/>
-                                <f:selectItems value="#{reportManagementManagedBean.studentEntities}" var="studentEntity" 
-                                               itemValue="#{studentEntity.accountId}" 
-                                               itemLabel="#{studentEntity.username}"/>
-                            </p:selectOneMenu>
-
-                            <h:outputLabel value="Student Being Reported: " />
-                            <p:selectOneMenu value="#{reportManagementManagedBean.reportedStudentEntity.accountId}" required="true">
-                                <f:selectItem itemLabel="" noSelectionOption="true"/>
-                                <f:selectItems value="#{reportManagementManagedBean.studentEntities}" var="studentEntity" 
-                                               itemValue="#{studentEntity.accountId}" 
-                                               itemLabel="#{studentEntity.username}"/>
-                            </p:selectOneMenu>
-
-                            <h:outputLabel value="Description: " />
-                            <p:inputTextarea rows="5" cols="30" 
-                                             counter="displayInAdd" maxlength="255" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{reportManagementManagedBean.selectedReportEntity.description}"/>
-
-                            <h:outputLabel value="Date Of Report: " />
-                            <h:inputText value="#{reportManagementManagedBean.selectedReportEntity.dateTimeCreated} ">
-                                <f:convertDateTime pattern="dd/MM/yyyy"/>
-                            </h:inputText>
-
-
-                            <h:outputLabel value="Report Resolved?: " />
-                            <h:inputText value="#{reportManagementManagedBean.selectedReportEntity.isResolved}"/>
-                            <h:outputText id="displayInAdd" />
-                        </p:panelGrid>      
-                    </p:outputPanel>
-
-                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{reportManagementManagedBean.saveReport}"                                  
-                                     update="manage-new-content" process="manage-new-content @this"/>
-                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageNewDialog').hide()"/>
-
                 </h:form>
             </p:dialog>
 

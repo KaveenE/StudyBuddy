@@ -32,8 +32,10 @@ import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
 import util.helper.NusModHelper;
 import ejb.session.stateless.ModuleSessionBeanLocal;
+import ejb.session.stateless.ReportSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import ejb.session.stateless.SchoolSessionBeanLocal;
+import entities.ReportEntity;
 
 /**
  *
@@ -43,6 +45,9 @@ import ejb.session.stateless.SchoolSessionBeanLocal;
 @LocalBean
 @Startup
 public class DataInitSessionBean {
+
+    @EJB(name = "ReportSessionBeanLocal")
+    private ReportSessionBeanLocal reportSessionBeanLocal;
 
     @EJB
     private KanbanSessionBeanLocal kanbanSessionBean;
@@ -61,6 +66,7 @@ public class DataInitSessionBean {
 
     @EJB
     private SchoolSessionBeanLocal schoolEntitySessionBean;
+    
 
     public DataInitSessionBean() {
     }
@@ -133,6 +139,8 @@ public class DataInitSessionBean {
             groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroups().add(groupEntity);
             studentEntitySessionBean.retrieveStudentById(3l).getGroups().add(groupEntity);
+            
+            reportSessionBeanLocal.createNewReport(new ReportEntity("test"), 1L, 2L);
             
 //          Kanban Board Entity
             kanbanSessionBean.createDefaultKanbanBoard(1l);

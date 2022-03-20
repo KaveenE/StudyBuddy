@@ -57,7 +57,7 @@ public class ReportManagementManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct() {
         reportEntities = reportSessionBean.retrieveAllReports();
-        setStudentEntities(studentSessionBean.retrieveAllStudents());
+        studentEntities = studentSessionBean.retrieveAllStudents();
     }
 
     public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -84,7 +84,7 @@ public class ReportManagementManagedBean implements Serializable {
         if (this.selectedReportEntity.getReportId() == null) {
 
             try {
-                reportSessionBean.createNewReport(selectedReportEntity, selectedReportEntity.getReportId(), getReportingStudentEntity().getAccountId());
+                reportSessionBean.createNewReport(selectedReportEntity, reportedStudentEntity.getAccountId(), reportingStudentEntity.getAccountId());
 
             } catch (DoesNotExistException | AlreadyExistsException | InputDataValidationException | UnknownPersistenceException ex) {
                 JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while creating the new report: " + ex.getMessage());
