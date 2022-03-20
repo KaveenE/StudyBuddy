@@ -61,13 +61,17 @@ public class KanbanCard implements Serializable {
         this.assignedStudents = new ArrayList<>();
     }
 
-    public KanbanCard(String title, String description, LocalDateTime deadlineStart, LocalDateTime deadlineEnd, StudentEntity author, KanbanList kanbanList) {
+    public KanbanCard(String title, String description, LocalDateTime deadlineStart, LocalDateTime deadlineEnd, StudentEntity author) {
         this();
         this.title = title;
         this.description = description;
         this.deadlineStart = deadlineStart;
         this.deadlineEnd = deadlineEnd;
         this.author = author;
+    }
+    
+    public KanbanCard(String title, String description, LocalDateTime deadlineStart, LocalDateTime deadlineEnd, StudentEntity author, KanbanList kanbanList) {
+        this(title, description, deadlineStart, deadlineEnd, author);
         this.kanbanList = kanbanList;
     }
     

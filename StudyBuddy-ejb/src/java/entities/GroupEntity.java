@@ -68,7 +68,7 @@ public class GroupEntity implements Serializable {
     private List<StudentEntity> candidates;
 
     @ManyToMany
-    @JoinTable(name = "groups_groupMembers", joinColumns = @JoinColumn(name = "groups_groupidgroup"), inverseJoinColumns = @JoinColumn(name = "Member_studentid"))
+    @JoinTable(name = "groups_groupMembers", joinColumns = @JoinColumn(name = "groups_groupid"), inverseJoinColumns = @JoinColumn(name = "groupMember_studentid"))
     private List<StudentEntity> groupMembers;
     
     @OneToMany(mappedBy = "group")
