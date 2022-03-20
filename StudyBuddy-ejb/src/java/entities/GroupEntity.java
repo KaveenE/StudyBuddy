@@ -72,7 +72,7 @@ public class GroupEntity implements Serializable {
     private List<StudentEntity> groupMembers;
     
     @OneToMany(mappedBy = "group")
-    private List<KanbanBoard> kanbanBoard;
+    private List<KanbanBoard> kanbanBoards;
 
     public GroupEntity() {
         this.candidates = new ArrayList<>();
@@ -81,7 +81,7 @@ public class GroupEntity implements Serializable {
         this.isOpen = true;
         this.isDeleted = false;
         this.dateTimeCreated = LocalDateTime.now();
-        this.kanbanBoard = new ArrayList<>();
+        this.kanbanBoards = new ArrayList<>();
     }
 
     public GroupEntity(String groupName, String description) {
@@ -131,17 +131,17 @@ public class GroupEntity implements Serializable {
     }
 
     /**
-     * @return the kanbanBoard
+     * @return the kanbanBoards
      */
-    public List<KanbanBoard> getKanbanBoard() {
-        return kanbanBoard;
+    public List<KanbanBoard> getKanbanBoards() {
+        return kanbanBoards;
     }
 
     /**
-     * @param kanbanBoard the kanbanBoard to set
+     * @param kanbanBoards the kanbanBoards to set
      */
-    public void setKanbanBoard(List<KanbanBoard> kanbanBoard) {
-        this.kanbanBoard = kanbanBoard;
+    public void setKanbanBoards(List<KanbanBoard> kanbanBoards) {
+        this.kanbanBoards = kanbanBoards;
     }
 
     public String getGroupName() {

@@ -12,6 +12,7 @@ package util.exception;
 public class KanbanCardDoesNotExistException extends DoesNotExistException {
 
     public KanbanCardDoesNotExistException() {
+        this("Kanban card does not exist!");
     }
 
     public KanbanCardDoesNotExistException(String string) {
