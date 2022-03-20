@@ -120,36 +120,26 @@
                             <h:outputText value="#{studentManagementBean.selectedStudentEntity.accountId}" />
 
                             <h:outputLabel value="Username: " />                            
-                            <h:outputText value="#{studentManagementBean.selectedStudentEntity.username}" />
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.username}" />
 
                             <h:outputLabel value="Year Of Study: " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInEdit" maxlength="20" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.yearOfStudy}" />
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.yearOfStudy}" />
 
 
                             <h:outputLabel value= "Credit Balance: : " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.creditBalance}" />
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.creditBalance}" />
 
 
                             <h:outputLabel value="Premium Account? : " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
 
 
                             <h:outputLabel value="Account Enabled? : " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.isEnabled}" />
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.isEnabled}" />
 
 
                             <h:outputLabel value="Location Enabled? : " />
-                            <p:inputTextarea rows="5" cols="10" 
-                                             counter="displayInEdit" maxlength="10" counterTemplate="{0} characters remaining." 
-                                             autoResize="false" value="#{studentManagementBean.selectedStudentEntity.optLocation}" />
+                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.optLocation}" />
                             <h:outputText id="displayInEdit" />
                         </p:panelGrid>
                     </p:outputPanel>
