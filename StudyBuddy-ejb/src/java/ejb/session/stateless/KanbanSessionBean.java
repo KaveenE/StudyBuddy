@@ -20,11 +20,15 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.GroupEntityDoesNotExistException;
 import util.exception.InputDataValidationException;
+import util.exception.KanbanBoardAlreadyExistsException;
 import util.exception.KanbanBoardDoesNotExistException;
+import util.exception.KanbanCardAlreadyExistsException;
 import util.exception.KanbanCardDoesNotExistException;
+import util.exception.KanbanListAlreadyExistsException;
 import util.exception.KanbanListDoesNotExistException;
 import util.exception.StudentDoesNotExistException;
 import util.exception.UnknownPersistenceException;
@@ -47,28 +51,24 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
     private GroupEntitySessionBeanLocal groupEntitySessionBean;
 
     @Override
-    public Long createNewKanbanBoard(KanbanBoard newKanbanBoard, Long groupId) throws UnknownPersistenceException, GroupEntityDoesNotExistException, InputDataValidationException {
+    public Long createNewKanbanBoard(KanbanBoard newKanbanBoard, Long groupId) throws DoesNotExistException, InputDataValidationException, AlreadyExistsException, UnknownPersistenceException {
         EJBHelper.throwValidationErrorsIfAny(newKanbanBoard);
-
-        if (groupId == null) {
-            throw new GroupEntityDoesNotExistException("Group Id must not be null");
-        }
+        EJBHelper.requireNonNull(groupId, new GroupEntityDoesNotExistException("Group Id must not be null"));
 
         try {
             GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
 
             newKanbanBoard.setGroup(group);
-            group.getKanbanBoard().add(newKanbanBoard);
+            group.getKanbanBoards().add(newKanbanBoard);
 
             em.persist(newKanbanBoard);
             em.flush();
 
-            return newKanbanBoard.getKanbanBoardId();
-        } catch (DoesNotExistException ex) {
-            throw new GroupEntityDoesNotExistException("Group Id must not be null");
         } catch (PersistenceException ex) {
-            throw new UnknownPersistenceException("Unknown Persistence Error");
+            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new KanbanBoardAlreadyExistsException());
         }
+
+        return newKanbanBoard.getKanbanBoardId();
     }
 
     @Override
@@ -78,50 +78,33 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
     }
 
     @Override
-    public void updateKanbanBoard(KanbanBoard kanbanBoard) throws KanbanBoardDoesNotExistException, InputDataValidationException {
+    public void updateKanbanBoard(KanbanBoard kanbanBoard) throws DoesNotExistException, InputDataValidationException {
         EJBHelper.throwValidationErrorsIfAny(kanbanBoard);
 
-        try {
-            KanbanBoard kanbanBoardToUpdate = em.find(KanbanBoard.class, kanbanBoard.getKanbanBoardId());
+        KanbanBoard kanbanBoardToUpdate = em.find(KanbanBoard.class, kanbanBoard.getKanbanBoardId());
+        EJBHelper.requireNonNull(kanbanBoardToUpdate, new KanbanBoardDoesNotExistException());
 
-            if (kanbanBoardToUpdate == null) {
-                throw new KanbanBoardDoesNotExistException("This kanban board does not exist!");
-            }
+        kanbanBoardToUpdate.setHeading(kanbanBoard.getHeading());
 
-            kanbanBoardToUpdate.setHeading(kanbanBoard.getHeading());
-        } catch (IllegalArgumentException ex) {
-            throw new KanbanBoardDoesNotExistException("This kanban board does not exist!");
-        }
     }
 
     @Override
-    public void deleteKanbanBoard(Long kanbanBoardId) throws KanbanBoardDoesNotExistException {
-        try {
-            KanbanBoard kanbanBoard = em.find(KanbanBoard.class, kanbanBoardId);
+    public void deleteKanbanBoard(Long kanbanBoardId) throws DoesNotExistException {
+        KanbanBoard kanbanBoardToDelete = em.find(KanbanBoard.class, kanbanBoardId);
+        EJBHelper.requireNonNull(kanbanBoardToDelete, new KanbanBoardDoesNotExistException());
 
-            if (kanbanBoard == null) {
-                throw new KanbanBoardDoesNotExistException("Kanban board does not exist!");
-            }
+        kanbanBoardToDelete.getGroup().getKanbanBoards().remove(kanbanBoardToDelete);
+        kanbanBoardToDelete.setGroup(null);
+        em.remove(kanbanBoardToDelete);
 
-            kanbanBoard.getGroup().getKanbanBoard().remove(kanbanBoard);
-            kanbanBoard.setGroup(null);
-
-            em.remove(kanbanBoard);
-        } catch (IllegalArgumentException ex) {
-            throw new KanbanBoardDoesNotExistException("This kanban board does not exist!");
-        }
     }
 
     @Override
-    public Long createNewKanbanList(KanbanList newKanbanList, Long kanbanBoardId) throws UnknownPersistenceException, KanbanBoardDoesNotExistException, InputDataValidationException {
+    public Long createNewKanbanList(KanbanList newKanbanList, Long kanbanBoardId) throws UnknownPersistenceException, AlreadyExistsException, DoesNotExistException, InputDataValidationException {
         EJBHelper.throwValidationErrorsIfAny(newKanbanList);
-
-        if (kanbanBoardId == null) {
-            throw new KanbanBoardDoesNotExistException("Kanban board Id must not be null");
-        }
+        EJBHelper.requireNonNull(kanbanBoardId, new KanbanBoardDoesNotExistException("Kanban board Id must not be null"));
 
         KanbanBoard kanbanBoard = retrieveKanbanBoardById(kanbanBoardId);
-
         newKanbanList.setKanbanBoard(kanbanBoard);
         kanbanBoard.getKanbanLists().add(newKanbanList);
 
@@ -129,7 +112,7 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
             em.persist(newKanbanList);
             em.flush();
         } catch (PersistenceException ex) {
-            throw new UnknownPersistenceException("Unkown Persistence Error");
+            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new KanbanListAlreadyExistsException());
         }
 
         return newKanbanList.getKanbanListId();
@@ -142,71 +125,46 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
     }
 
     @Override
-    public void updateKanbanList(KanbanList kanbanList) throws KanbanListDoesNotExistException, InputDataValidationException {
+    public void updateKanbanList(KanbanList kanbanList) throws DoesNotExistException, InputDataValidationException {
         EJBHelper.throwValidationErrorsIfAny(kanbanList);
-
-        try {
-            KanbanList kanbanListToUpdate = em.find(KanbanList.class, kanbanList.getKanbanListId());
-
-            if (kanbanListToUpdate == null) {
-                throw new KanbanListDoesNotExistException("This kanban list does not exist!");
-            }
-
-            kanbanListToUpdate.setHeading(kanbanList.getHeading());
-        } catch (IllegalArgumentException ex) {
-            throw new KanbanListDoesNotExistException("This kanban list does not exist!");
-        }
+        KanbanList kanbanListToUpdate = em.find(KanbanList.class, kanbanList.getKanbanListId());
+        EJBHelper.requireNonNull(kanbanListToUpdate, new KanbanListDoesNotExistException());
+        //So what to update?
     }
 
     @Override
-    public void deleteKanbanList(Long kanbanListId) throws KanbanListDoesNotExistException {
-        try {
-            KanbanList kanbanList = em.find(KanbanList.class, kanbanListId);
+    public void deleteKanbanList(Long kanbanListId) throws DoesNotExistException {
+        KanbanList kanbanListToDelete = em.find(KanbanList.class, kanbanListId);
+        EJBHelper.requireNonNull(kanbanListToDelete, new KanbanListDoesNotExistException());
 
-            if (kanbanList == null) {
-                throw new KanbanListDoesNotExistException("Kanban list does not exist!");
-            }
+        kanbanListToDelete.getKanbanBoard().getKanbanLists().remove(kanbanListToDelete);
+        kanbanListToDelete.setKanbanBoard(null);
+        em.remove(kanbanListToDelete);
 
-            kanbanList.getKanbanBoard().getKanbanLists().remove(kanbanList);
-            kanbanList.setKanbanBoard(null);
-
-            em.remove(kanbanList);
-        } catch (IllegalArgumentException ex) {
-            throw new KanbanListDoesNotExistException("This kanban list does not exist!");
-        }
     }
 
     @Override
-    public Long createNewKanbanCard(KanbanCard newKanbanCard, Long kanbanListId, Long authorStudentId) throws UnknownPersistenceException, StudentDoesNotExistException, KanbanListDoesNotExistException, InputDataValidationException {
+    public Long createNewKanbanCard(KanbanCard newKanbanCard, Long kanbanListId, Long authorStudentId) throws UnknownPersistenceException, DoesNotExistException, DoesNotExistException, AlreadyExistsException, InputDataValidationException {
+        EJBHelper.throwValidationErrorsIfAny(newKanbanCard);
+        EJBHelper.requireNonNull(kanbanListId, new KanbanListDoesNotExistException("Kanban board Id must not be null"));
+        EJBHelper.requireNonNull(authorStudentId, new StudentDoesNotExistException("Student Id must not be null"));
+
+        KanbanList kanbanList = retrieveKanbanListById(kanbanListId);
+        StudentEntity student = studentSessionBean.retrieveStudentById(authorStudentId);
+
+        newKanbanCard.setKanbanList(kanbanList);
+        kanbanList.getKanbanCards().add(newKanbanCard);
+        newKanbanCard.setAuthor(student);
+
         try {
-            EJBHelper.throwValidationErrorsIfAny(newKanbanCard);
-
-            if (kanbanListId == null) {
-                throw new KanbanListDoesNotExistException("Kanban board Id must not be null");
-            }
-
-            if (authorStudentId == null) {
-                throw new StudentDoesNotExistException("Student Id must not be null");
-
-            }
-
-            KanbanList kanbanList = retrieveKanbanListById(kanbanListId);
-            StudentEntity student = studentSessionBean.retrieveStudentById(authorStudentId);
-
-            newKanbanCard.setKanbanList(kanbanList);
-            kanbanList.getKanbanCards().add(newKanbanCard);
-
-            newKanbanCard.setAuthor(student);
-
             em.persist(newKanbanCard);
             em.flush();
 
-            return newKanbanCard.getKanbanCardId();
-        } catch (DoesNotExistException ex) {
-            throw new StudentDoesNotExistException("This student does not exist");
         } catch (PersistenceException ex) {
-            throw new UnknownPersistenceException("Unkown Persistence Error");
+            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new KanbanCardAlreadyExistsException());
         }
+
+        return newKanbanCard.getKanbanCardId();
     }
 
     @Override
@@ -258,170 +216,99 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
     }
 
     @Override
-    public void deleteKanbanCard(Long kanbanCardId) throws KanbanCardDoesNotExistException {
-        try {
-            KanbanCard kanbanCard = em.find(KanbanCard.class, kanbanCardId);
+    public void deleteKanbanCard(Long kanbanCardId) throws DoesNotExistException {
+        KanbanCard kanbanCard = em.find(KanbanCard.class, kanbanCardId);
+        EJBHelper.requireNonNull(kanbanCard, new KanbanCardDoesNotExistException());
 
-            if (kanbanCard == null) {
-                throw new KanbanCardDoesNotExistException("Kanban board does not exist!");
-            }
+        kanbanCard.getKanbanList().getKanbanCards().remove(kanbanCard);
+        kanbanCard.setKanbanList(null);
+        kanbanCard.getAssignedStudents().forEach(s -> s.getAssignedCards().remove(kanbanCard));
+        kanbanCard.setAssignedStudents(new ArrayList<>());
 
-            kanbanCard.getKanbanList().getKanbanCards().remove(kanbanCard);
-            kanbanCard.setKanbanList(null);
-
-            kanbanCard.getAssignedStudents().forEach(
-                    s -> {
-                        s.getAssignedCards().remove(kanbanCard);
-                    }
-            );
-
-            kanbanCard.setAssignedStudents(new ArrayList<>());
-
-            em.remove(kanbanCard);
-        } catch (IllegalArgumentException ex) {
-            throw new KanbanCardDoesNotExistException("This kanban board does not exist!");
-        }
+        em.remove(kanbanCard);
     }
 
     @Override
-    public List<KanbanCard> retrieveKanbanCardsAssignedToStudents(Long StudentId) throws StudentDoesNotExistException {
-        List<KanbanCard> res = null;
+    public List<KanbanCard> retrieveKanbanCardsAssignedToStudents(Long StudentId) throws DoesNotExistException, InputDataValidationException {
+        List<KanbanCard> kanbanCards = studentSessionBean.retrieveStudentById(StudentId).getAssignedCards();
+        kanbanCards.forEach(card -> card.getAssignedStudents());
 
-        try {
-            StudentEntity student = studentSessionBean.retrieveStudentById(StudentId);
-
-            res = em.createQuery("SELECT kc FROM KanbanCard kc WHERE :student MEMBER OF kc.assignedStudents")
-                    .setParameter("student", student)
-                    .getResultList();
-
-            res.forEach(c -> {
-                c.getAssignedStudents();
-            });
-        } catch (DoesNotExistException ex) {
-            throw new StudentDoesNotExistException("Student not exist");
-        } catch (InputDataValidationException ex) {
-            Logger.getLogger(KanbanSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return res;
+        return kanbanCards;
     }
 
     @Override
-    public KanbanBoard retrieveKanbanBoardById(Long kanbanBoardId) throws KanbanBoardDoesNotExistException {
-        try {
-            KanbanBoard board = em.find(KanbanBoard.class, kanbanBoardId);
-            if (board == null) {
-                throw new KanbanBoardDoesNotExistException("Kanban Board does not exist!");
-            }
+    public KanbanBoard retrieveKanbanBoardById(Long kanbanBoardId) throws DoesNotExistException {
+        KanbanBoard board = em.find(KanbanBoard.class, kanbanBoardId);
+        EJBHelper.requireNonNull(board, new KanbanBoardDoesNotExistException());
 
-            board.getKanbanLists();
+        board.getKanbanLists();
 
-            return board;
-        } catch (IllegalArgumentException ex) {
-            throw new KanbanBoardDoesNotExistException("Kanban Board does not exist!");
-        }
+        return board;
+
     }
 
     @Override
-    public List<KanbanBoard> retrieveKanbanBoardsByGroupId(Long groupId) throws GroupEntityDoesNotExistException {
-        List<KanbanBoard> res = null;
+    public List<KanbanBoard> retrieveKanbanBoardsByGroupId(Long groupId) throws DoesNotExistException, InputDataValidationException {
+        List<KanbanBoard> kanbanBoards = null;
 
-        try {
-            GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
+        GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
+        kanbanBoards = group.getKanbanBoards();
 
-            res = em.createQuery("SELECT kc FROM KanbanBoard kc WHERE kc.group = :group")
-                    .setParameter("group", group)
-                    .getResultList();
-        } catch (DoesNotExistException ex) {
-            throw new GroupEntityDoesNotExistException("Group not exist");
-        } catch (InputDataValidationException ex) {
-            Logger.getLogger(KanbanSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return res;
+        return kanbanBoards;
     }
 
     @Override
-    public KanbanList retrieveKanbanListById(Long kanbanListId) throws KanbanListDoesNotExistException {
-        try {
-            KanbanList list = em.find(KanbanList.class, kanbanListId);
-            if (list == null) {
-                throw new KanbanListDoesNotExistException("Kanban List does not exist!");
-            }
-
-            return list;
-        } catch (IllegalArgumentException ex) {
-            throw new KanbanListDoesNotExistException("Kanban List does not exist!");
-        }
+    public KanbanList retrieveKanbanListById(Long kanbanListId) throws DoesNotExistException {
+        KanbanList list = em.find(KanbanList.class, kanbanListId);
+        EJBHelper.requireNonNull(list, new KanbanListDoesNotExistException());
+        return list;
     }
 
     @Override
-    public List<KanbanList> retrieveKanbanListsBykanbanBoardId(Long kanbanBoardId) throws KanbanBoardDoesNotExistException {
-        List<KanbanList> res = null;
-
-        KanbanBoard board = retrieveKanbanBoardById(kanbanBoardId);
-
-        res = em.createQuery("SELECT kc FROM KanbanList kc WHERE kc.kanbanBoard = :board")
-                .setParameter("board", board)
-                .getResultList();
-
-        return res;
+    public List<KanbanList> retrieveKanbanListsBykanbanBoardId(Long kanbanBoardId) throws DoesNotExistException {
+        return retrieveKanbanBoardById(kanbanBoardId).getKanbanLists();
     }
 
     @Override
-    public KanbanCard retrieveKanbanCardById(Long kanbanCardId) throws KanbanCardDoesNotExistException {
-        try {
-            KanbanCard card = em.find(KanbanCard.class, kanbanCardId);
-            if (card == null) {
-                throw new KanbanCardDoesNotExistException("Kanban Card does not exist!");
-            }
-
-            return card;
-        } catch (IllegalArgumentException ex) {
-            throw new KanbanCardDoesNotExistException("Kanban Card does not exist!");
-        }
+    public KanbanCard retrieveKanbanCardById(Long kanbanCardId) throws DoesNotExistException {
+        KanbanCard card = em.find(KanbanCard.class, kanbanCardId);
+        EJBHelper.requireNonNull(card, new KanbanCardDoesNotExistException());
+        return card;
     }
 
     @Override
-    public List<KanbanCard> retrieveKanbanCardsBykanbanListId(Long kanbanListId) throws KanbanListDoesNotExistException {
-        List<KanbanCard> res = null;
-
+    public List<KanbanCard> retrieveKanbanCardsBykanbanListId(Long kanbanListId) throws DoesNotExistException {
         KanbanList list = retrieveKanbanListById(kanbanListId);
-
-        res = em.createQuery("SELECT kc FROM KanbanCard kc WHERE kc.kanbanList = :list")
-                .setParameter("list", list)
-                .getResultList();
-
-        return res;
+        return list.getKanbanCards();
     }
 
     @Override
     public Long createDefaultKanbanBoard(Long GroupId) throws GroupEntityDoesNotExistException {
         try {
             GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(GroupId);
-            
+
             StudentEntity poster = group.getPoster();
-            
+
             KanbanBoard board = new KanbanBoard(String.format("%s's Kanban Board", group.getGroupName()), group);
-            
+
             board.getKanbanLists().add(new KanbanList("Back log", board));
             board.getKanbanLists().add(new KanbanList("Tasks", board));
             board.getKanbanLists().add(new KanbanList("Doing", board));
             board.getKanbanLists().add(new KanbanList("Finished", board));
             board.getKanbanLists().add(new KanbanList("Archive", board));
-            
+
             board.getKanbanLists().forEach(l -> l.getKanbanCards().add(new KanbanCard("New Card", "", null, null, poster, l)));
-            
+
             em.persist(board);
             em.flush();
-            
+
             return board.getKanbanBoardId();
         } catch (InputDataValidationException ex) {
             Logger.getLogger(KanbanSessionBean.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DoesNotExistException ex) {
             throw new GroupEntityDoesNotExistException("This group does not exist!");
         }
-        
+
         return null;
     }
 
