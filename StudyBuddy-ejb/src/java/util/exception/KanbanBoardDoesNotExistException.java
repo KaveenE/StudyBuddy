@@ -12,6 +12,7 @@ package util.exception;
 public class KanbanBoardDoesNotExistException extends DoesNotExistException {
 
     public KanbanBoardDoesNotExistException() {
+        this("This kanban board does not exist!");
     }
 
     public KanbanBoardDoesNotExistException(String string) {
