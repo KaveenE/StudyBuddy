@@ -116,7 +116,7 @@
                             <h:outputText value="#{reportManagementManagedBean.selectedReportEntity.reportId}" />
 
                             <h:outputLabel value="Student Who Reported: " />
-                            <h:outputText value="#{reportManagementManagedBean.reportingStudentEntity.accountId}" />
+                            <h:inputText value="#{reportManagementManagedBean.reportingStudentEntity.accountId}" />
 
                             <h:outputLabel value="Student Being Reported: " />
                             <h:inputText value="#{reportManagementManagedBean.reportedStudentEntity.accountId}"/>
@@ -163,7 +163,10 @@
                                              autoResize="false" value="#{reportManagementManagedBean.selectedReportEntity.description}"/>
 
                             <h:outputLabel value="Date Of Report: " />
-                            <h:inputText value="#{reportManagementManagedBean.selectedReportEntity.dateTimeCreated}"/>
+                            <h:inputText value="#{reportManagementManagedBean.selectedReportEntity.dateTimeCreated} ">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </h:inputText>
+
 
                             <h:outputLabel value="Report Resolved?: " />
                             <h:inputText value="#{reportManagementManagedBean.selectedReportEntity.isResolved}"/>
