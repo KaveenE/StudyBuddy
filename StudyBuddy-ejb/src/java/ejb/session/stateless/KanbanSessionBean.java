@@ -58,7 +58,7 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
             GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
 
             newKanbanBoard.setGroup(group);
-            group.getKanbanBoard().add(newKanbanBoard);
+            group.getKanbanBoards().add(newKanbanBoard);
 
             em.persist(newKanbanBoard);
             em.flush();
@@ -103,7 +103,7 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
                 throw new KanbanBoardDoesNotExistException("Kanban board does not exist!");
             }
 
-            kanbanBoard.getGroup().getKanbanBoard().remove(kanbanBoard);
+            kanbanBoard.getGroup().getKanbanBoards().remove(kanbanBoard);
             kanbanBoard.setGroup(null);
 
             em.remove(kanbanBoard);
