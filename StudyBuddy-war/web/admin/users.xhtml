@@ -83,16 +83,16 @@
                         <h:outputText value="#{studentEntity.creditBalance}" />
                     </p:column>
 
-                    <p:column headerText="Premium Account?" sortBy="#{studentEntity.isPremium}">
-                        <h:outputText value="#{studentEntity.isPremium}" />
+                    <p:column headerText="Premium" sortBy="#{studentEntity.isPremium}" style="width:50px;text-align: center;">
+                        <p:selectBooleanCheckbox value="#{studentEntity.isPremium}" disabled="true"/>
                     </p:column>
 
-                    <p:column headerText="Account Enabled?" sortBy="#{studentEntity.isEnabled}">
-                        <h:outputText value="#{studentEntity.isEnabled}" />
+                    <p:column headerText="Account Enabled" sortBy="#{studentEntity.isEnabled}" style="width:110px;text-align: center;">
+                        <p:selectBooleanCheckbox value="#{studentEntity.isEnabled}" disabled="true"/>
                     </p:column>
 
-                    <p:column headerText="Location Enabled?" sortBy="#{studentEntity.optLocation}">
-                        <h:outputText value="#{studentEntity.optLocation}" />
+                    <p:column headerText="Location Enabled" sortBy="#{studentEntity.optLocation}" style="width:110px;text-align: center;">
+                        <p:selectBooleanCheckbox value="#{studentEntity.optLocation}" disabled="true"/>
                     </p:column>
 
                     <p:column exportable="false">
@@ -120,27 +120,26 @@
                             <h:outputText value="#{studentManagementBean.selectedStudentEntity.accountId}" />
 
                             <h:outputLabel value="Username: " />                            
-                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.username}" />
+                            <h:outputText value="#{studentManagementBean.selectedStudentEntity.username}" />
 
                             <h:outputLabel value="Year Of Study: " />
-                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.yearOfStudy}" />
+                            <h:outputText value="#{studentManagementBean.selectedStudentEntity.yearOfStudy}" />
 
 
                             <h:outputLabel value= "Credit Balance: : " />
-                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.creditBalance}" />
+                            <p:inputNumber value="#{studentManagementBean.selectedStudentEntity.creditBalance}" />
 
 
                             <h:outputLabel value="Premium Account? : " />
-                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
+                            <p:selectBooleanCheckbox value="#{studentManagementBean.selectedStudentEntity.isPremium}" />
 
 
                             <h:outputLabel value="Account Enabled? : " />
-                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.isEnabled}" />
+                            <p:selectBooleanCheckbox value="#{studentManagementBean.selectedStudentEntity.isEnabled}" />
 
 
                             <h:outputLabel value="Location Enabled? : " />
-                            <h:inputText value="#{studentManagementBean.selectedStudentEntity.optLocation}" />
-                            <h:outputText id="displayInEdit" />
+                            <p:selectBooleanCheckbox value="#{studentManagementBean.selectedStudentEntity.optLocation}" />
                         </p:panelGrid>
                     </p:outputPanel>
 
