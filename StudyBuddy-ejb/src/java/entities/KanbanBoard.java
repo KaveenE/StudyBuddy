@@ -37,7 +37,7 @@ public class KanbanBoard implements Serializable {
     @NotNull
     private String heading;
     
-    @JoinColumn() // nullable = true cos i saw u setting setGroup(true) in bean
+    @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private GroupEntity group;
     
