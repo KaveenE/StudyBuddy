@@ -106,9 +106,13 @@ public class ModuleManagementBean implements Serializable {
     }
 
     public void deleteSelectedModule() {
-        //TODO: Only deletes from page, not DB!
-        //Replace below line with method from EJB
-        this.moduleEntities.remove(this.selectedModuleEntity);
+        try {
+            moduleSessionBean.deleteModule(selectedModuleEntity.getModuleId());
+            moduleEntities.remove(selectedModuleEntity);
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while deleting: " + ex);
+        }
+
         this.selectedModuleEntity = null;
         JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Module Removed");
         PrimeFaces.current().ajax().update("growl", "form:dataTableAllModules", "form:delete-multiple-button");
@@ -118,7 +122,15 @@ public class ModuleManagementBean implements Serializable {
     public void deleteSelectedModules() {
         //TODO: Only deletes from page, not DB!
         //Replace below line with method from EJB
-        this.moduleEntities.removeAll(this.selectedModuleEntities);
+        selectedModuleEntities.forEach(mod -> {
+            try {
+                moduleSessionBean.deleteModule(mod.getModuleId());
+                moduleEntities.remove(mod);
+            } catch (DoesNotExistException | InputDataValidationException ex) {
+                JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while deleting: " + ex);
+            }
+        });
+
         this.selectedModuleEntities = null;
         JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Modules Removed");
         PrimeFaces.current().ajax().update("growl", "form:dataTableAllModules");
