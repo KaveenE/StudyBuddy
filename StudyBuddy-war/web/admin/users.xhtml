@@ -28,12 +28,12 @@
                                          style="margin-right: .5rem">
                             <p:resetInput target=":formManageNewContent:manage-new-content"/>
                         </p:commandButton>
-                        <p:commandButton id="delete-multiple-button" value="#{studentManagementBean.deleteButtonMessage}"
+<!--                        <p:commandButton id="delete-multiple-button" value="#{studentManagementBean.deleteButtonMessage}"
                                          icon="pi pi-trash" actionListener="#{studentManagementBean.deleteSelectedUsers()}"
                                          disabled="#{!studentManagementBean.hasMultipleSelectedStudents()}" 
                                          update="@this">
                             <p:confirm header="Confirmation" message="Delete the selected students?" icon="pi pi-exclamation-triangle"/>
-                        </p:commandButton>
+                        </p:commandButton>-->
                     </p:toolbarGroup>
                 </p:toolbar>
                 <br/>
@@ -44,7 +44,6 @@
                              filteredValue="#{studentManagementBean.filteredStudentEntities}"
                              globalFilterFunction="#{studentManagementBean.globalFilterFunction}"
                              selection="#{studentManagementBean.selectedStudentEntities}"
-
                              reflow="true" tableStyle="table-layout:auto"
                              paginator="true" 
                              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
@@ -59,13 +58,13 @@
                         </p:outputPanel>
                     </f:facet>
 
-                    <p:ajax event="rowSelect" update=":form:delete-multiple-button"/>
+<!--                <p:ajax event="rowSelect" update=":form:delete-multiple-button"/>
                     <p:ajax event="rowUnselect" update=":form:delete-multiple-button"/>
                     <p:ajax event="rowSelectCheckbox" update=":form:delete-multiple-button"/>
                     <p:ajax event="rowUnselectCheckbox" update=":form:delete-multiple-button"/>
-                    <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>
+                    <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>-->
 
-                    <p:column selectionMode="multiple" exportable="false" width="25" style ="text-align: center;"></p:column>
+                    <p:column selectionMode="single" exportable="false" width="25" style ="text-align: center;"></p:column>
 
                     <p:column headerText="ID" sortBy="#{studentEntity.accountId}">
                         <h:outputText value="#{studentEntity.accountId}"/>
@@ -83,15 +82,15 @@
                         <h:outputText value="#{studentEntity.creditBalance}" />
                     </p:column>
 
-                    <p:column headerText="Premium" sortBy="#{studentEntity.isPremium}" style="width:50px;text-align: center;">
+                    <p:column headerText="Premium" sortBy="#{studentEntity.isPremium}" filterBy="#{studentEntity.isPremium}" style="width:50px;text-align: center;">
                         <p:selectBooleanCheckbox value="#{studentEntity.isPremium}" disabled="true"/>
                     </p:column>
 
-                    <p:column headerText="Account Enabled" sortBy="#{studentEntity.isEnabled}" style="width:110px;text-align: center;">
+                    <p:column headerText="Account Enabled" sortBy="#{studentEntity.isEnabled}" filterBy="#{studentEntity.isEnabled}" style="width:110px;text-align: center;">
                         <p:selectBooleanCheckbox value="#{studentEntity.isEnabled}" disabled="true"/>
                     </p:column>
 
-                    <p:column headerText="Location Enabled" sortBy="#{studentEntity.optLocation}" style="width:110px;text-align: center;">
+                    <p:column headerText="Location Enabled" sortBy="#{studentEntity.optLocation}" filterBy="#{studentEntity.optLocation}" style="width:110px;text-align: center;">
                         <p:selectBooleanCheckbox value="#{studentEntity.optLocation}" disabled="true"/>
                     </p:column>
 
@@ -102,10 +101,10 @@
                             <f:setPropertyActionListener value="#{studentEntity}" target="#{studentManagementBean.selectedStudentEntity}"/>
                             <p:resetInput target=":formManageContent:manage-content"/>
                         </p:commandButton>
-                        <p:commandButton icon="pi pi-trash" process="@this"
+<!--                        <p:commandButton icon="pi pi-trash" process="@this"
                                          oncomplete="PF('deleteDialog').show()">
                             <f:setPropertyActionListener value="#{studentEntity}" target="#{studentManagementBean.selectedStudentEntity}"/>
-                        </p:commandButton>
+                        </p:commandButton>-->
                     </p:column>
 
                 </p:dataTable>
@@ -184,13 +183,13 @@
             </p:dialog>
 
             <!--Confirm Dialogs-->
-            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
+<!--            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
                              message="Delete student user?" header="Confirm" severity="alert" appendTo="@(body)">
                 <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{studentManagementBean.deleteSelectedUser}"
                                  process="@this" oncomplete="PF('deleteDialog').hide()"/>
                 <p:commandButton value="No" type="button" icon="pi pi-times"
                                  onclick="PF('deleteDialog').hide()"/>
-            </p:confirmDialog>
+            </p:confirmDialog>-->
 
             <p:confirmDialog global="true" showEffect="fade" width="300">
                 <p:commandButton value="Yes" type="button" icon="pi pi-check"

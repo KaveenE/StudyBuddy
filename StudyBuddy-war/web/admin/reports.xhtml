@@ -21,7 +21,7 @@
             <h:form id="form">
 
                 <!--Buttons for create and mass delete-->
-                <p:toolbar>
+<!--                <p:toolbar>
                     <p:toolbarGroup>
                         <p:commandButton id="delete-multiple-button" value="#{reportManagementManagedBean.deleteButtonMessage}"
                                          icon="pi pi-trash" actionListener="#{reportManagementManagedBean.deleteSelectedReports}"
@@ -30,7 +30,7 @@
                             <p:confirm header="Confirmation" message="Delete the selected reports?" icon="pi pi-exclamation-triangle"/>
                         </p:commandButton>
                     </p:toolbarGroup>
-                </p:toolbar>
+                </p:toolbar>-->
                 <br/>
 
                 <!--DataTable-->
@@ -39,7 +39,6 @@
                              filteredValue="#{reportManagementManagedBean.filteredReportEntities}"
                              globalFilterFunction="#{reportManagementManagedBean.globalFilterFunction}"
                              selection="#{reportManagementManagedBean.selectedReportEntities}"
-                             selectionMode="multiple"
                              reflow="true" tableStyle="table-layout:auto"
                              paginator="true" 
                              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
@@ -54,13 +53,13 @@
                         </p:outputPanel>
                     </f:facet>
 
-                    <p:ajax event="rowSelect" update=":form:delete-multiple-button"/>
+<!--                <p:ajax event="rowSelect" update=":form:delete-multiple-button"/>
                     <p:ajax event="rowUnselect" update=":form:delete-multiple-button"/>
                     <p:ajax event="rowSelectCheckbox" update=":form:delete-multiple-button"/>
                     <p:ajax event="rowUnselectCheckbox" update=":form:delete-multiple-button"/>
-                    <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>
+                    <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>-->
 
-                    <p:column selectionMode="multiple" exportable="false" width="25" style ="text-align: center;"></p:column>
+                    <p:column selectionMode="single" exportable="false" width="25" style ="text-align: center;"></p:column>
 
                     <p:column headerText="ID" sortBy="#{reportEntity.reportId}">
                         <h:outputText value="#{reportEntity.reportId}"/>
@@ -84,7 +83,7 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column headerText="Resolved" sortBy="#{reportEntity.isResolved}" style="width:50px;text-align: center;">
+                    <p:column headerText="Resolved" sortBy="#{reportEntity.isResolved}" filterBy="#{reportEntity.isResolved}" style="width:50px;text-align: center;">
                         <p:selectBooleanCheckbox value="#{reportEntity.isResolved}" disabled="true" />
                     </p:column>
 
@@ -95,10 +94,10 @@
                             <f:setPropertyActionListener value="#{reportEntity}" target="#{reportManagementManagedBean.selectedReportEntity}"/>
                             <p:resetInput target=":formManageContent:manage-content"/>
                         </p:commandButton>
-                        <p:commandButton icon="pi pi-trash" process="@this"
+<!--                        <p:commandButton icon="pi pi-trash" process="@this"
                                          oncomplete="PF('deleteDialog').show()">
                             <f:setPropertyActionListener value="#{reportEntity}" target="#{reportManagementManagedBean.selectedReportEntity}"/>
-                        </p:commandButton>
+                        </p:commandButton>-->
                     </p:column>
 
                 </p:dataTable>
@@ -135,13 +134,13 @@
             </p:dialog>
 
             <!--Confirm Dialogs-->
-            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
+<!--            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
                              message="Delete the school?" header="Confirm" severity="alert" appendTo="@(body)">
                 <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{reportManagementManagedBean.deleteSelectedReport}"
                                  process="@this" oncomplete="PF('deleteDialog').hide()"/>
                 <p:commandButton value="No" type="button" icon="pi pi-times"
                                  onclick="PF('deleteDialog').hide()"/>
-            </p:confirmDialog>
+            </p:confirmDialog>-->
 
             <p:confirmDialog global="true" showEffect="fade" width="300">
                 <p:commandButton value="Yes" type="button" icon="pi pi-check"
