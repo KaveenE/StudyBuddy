@@ -29,9 +29,9 @@ import util.helper.JSFHelper;
  *
  * @author enkav
  */
-@Named(value = "moduleManagementBean")
+@Named(value = "moduleManagedBean")
 @ViewScoped
-public class ModuleManagementBean implements Serializable {
+public class ModuleManagedBean implements Serializable {
 
     @EJB
     private ModuleSessionBeanLocal moduleSessionBean;
@@ -46,7 +46,7 @@ public class ModuleManagementBean implements Serializable {
     private List<SchoolEntity> schoolEntities;
     private SchoolEntity selectedSchoolEntity;
 
-    public ModuleManagementBean() {
+    public ModuleManagedBean() {
     }
 
     @PostConstruct

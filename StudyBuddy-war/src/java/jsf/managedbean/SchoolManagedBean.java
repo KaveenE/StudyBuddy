@@ -10,15 +10,11 @@ import entities.SchoolEntity;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import org.primefaces.PrimeFaces;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
@@ -30,9 +26,9 @@ import util.helper.JSFHelper;
  *
  * @author enkav
  */
-@Named(value = "schoolManagementBean")
+@Named(value = "schoolManagedBean")
 @ViewScoped
-public class SchoolManagementBean implements Serializable {
+public class SchoolManagedBean implements Serializable {
 
     @EJB
     private SchoolSessionBeanLocal schoolSessionBean;
@@ -42,7 +38,7 @@ public class SchoolManagementBean implements Serializable {
     private List<SchoolEntity> selectedSchoolEntities;
     private SchoolEntity selectedSchoolEntity;
     
-    public SchoolManagementBean() {
+    public SchoolManagedBean() {
     }
     
     @PostConstruct

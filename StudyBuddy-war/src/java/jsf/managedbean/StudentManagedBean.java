@@ -28,10 +28,10 @@ import util.helper.JSFHelper;
  *
  * @author wenting
  */
-@Named(value = "studentManagementBean")
+@Named(value = "studentManagedBean")
 @ViewScoped
 
-public class StudentManagementBean implements Serializable {
+public class StudentManagedBean implements Serializable {
 
     @EJB
     private StudentSessionBeanLocal studentSessionBean;
@@ -42,7 +42,7 @@ public class StudentManagementBean implements Serializable {
     private List<StudentEntity> selectedStudentEntities;
     private StudentEntity selectedStudentEntity;
     
-    public StudentManagementBean() {
+    public StudentManagedBean() {
     }
     
     @PostConstruct

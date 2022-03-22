@@ -27,14 +27,14 @@ import util.helper.JSFHelper;
  */
 @Named(value = "adminManagementManagedBean")
 @RequestScoped
-public class AdminManagementManagedBean {
+public class AdminManagedBean {
 
     @EJB(name = "AdminSessionBeanLocal")
     private AdminSessionBeanLocal adminSessionBeanLocal;
 
     private AdminEntity newAdminEntity;
 
-    public AdminManagementManagedBean() {
+    public AdminManagedBean() {
         newAdminEntity = new AdminEntity();
     }
 

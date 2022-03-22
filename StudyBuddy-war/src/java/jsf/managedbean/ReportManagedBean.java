@@ -30,9 +30,9 @@ import util.helper.JSFHelper;
  *
  * @author SCXY
  */
-@Named(value = "reportManagementManagedBean")
+@Named(value = "reportManagedBean")
 @ViewScoped
-public class ReportManagementManagedBean implements Serializable {
+public class ReportManagedBean implements Serializable {
 
     @EJB
     private ReportSessionBeanLocal reportSessionBean;
@@ -51,7 +51,7 @@ public class ReportManagementManagedBean implements Serializable {
     private StudentEntity reportedStudentEntity;
     private StudentEntity reportingStudentEntity;
 
-    public ReportManagementManagedBean() {
+    public ReportManagedBean() {
     }
 
     @PostConstruct
