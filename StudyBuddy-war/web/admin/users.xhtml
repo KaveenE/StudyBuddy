@@ -76,7 +76,7 @@
                         </p:commandButton>
                         <p:commandButton icon="pi pi-user-edit" actionListener="#{studentManagedBean.disableStudent}">
                             <f:attribute value="#{studentEntity}" name="studentEntityToDisable"/>
-                            <p:confirm header="Confirm" message="Disable / Enable student user?" icon="ui-icon-alert"/>
+                            <p:confirm header="Confirm" message="#{studentEntity.isEnabled ? 'Disable':'Enable'} student?" icon="ui-icon-alert"/>
                         </p:commandButton>
                     </p:column>
 
