@@ -32,7 +32,7 @@ public interface StudentSessionBeanLocal {
 
     public StudentEntity studentLogin(String username, String password) throws InvalidLoginCredentialException;
 
-    public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, AccountNotFoundException, DoesNotExistException;
+    public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException;
 
     
 }

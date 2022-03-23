@@ -12,7 +12,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.security.auth.login.AccountNotFoundException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -73,7 +72,7 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
 
     //Password deliberately not updated as only the account owner can change the password
     @Override
-    public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, AccountNotFoundException, DoesNotExistException {
+    public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(studentEntity);
 
         StudentEntity accountToUpdateStudent = retrieveStudentById(studentEntity.getAccountId());
