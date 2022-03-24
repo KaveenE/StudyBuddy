@@ -7,7 +7,11 @@ a:hover {
     cursor: hand;
 }
 
-
+.logoOfSB {
+    position:fixed; 
+    top:0; 
+    left:0; 
+}
 
 /* PrimeFaces styling elements below this comment */
 
@@ -52,5 +56,5 @@ a:hover {
 }
 
 div.ui-growl {
-   left: 10;
+    left: 10;
 }
