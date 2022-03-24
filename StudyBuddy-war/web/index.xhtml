@@ -11,10 +11,22 @@
 
         <h:panelGroup rendered="#{sessionScope.isLogin == false}">
             <article>
-                <h3 style = "text-align: center; font-weight: bold;">StudyBuddy Admin</h3>
-                <p style = "text-align: center"> 
+                <img src="#{resource['images/adminPicture.png']}" width="450" height="450" style="float: right;"/>
+                <h1 style = "font-size: 60px; text-align: center; font-weight: bold; color:#804825">StudyBuddy Admin</h1>
+<!--                <p style = "text-align: center; font-size: 30px;"> 
                     New here? <p:commandLink value="Register" process="@this" onclick="PF('registerNewAdmin').show()"/>   now !                  
-                </p>
+                </p>-->
+                
+                <p style = "text-align: center; font-size: 25px;"> Don't Have An Account? </p>
+                <div style="text-align: center;">
+                <p:commandButton value="REGISTER HERE" 
+                                 
+                                 update=":registerNewAdminForm" oncomplete="PF('registerNewAdmin').show()"
+                                
+                                 style="width: 220px; height:50px; font-size: 18px; border-radius: 2rem; color: #804825; background-color: red">
+                    <p:resetInput target=":registerNewAdminForm"/>
+                </p:commandButton>
+                </div>
             </article>
         </h:panelGroup>
 
