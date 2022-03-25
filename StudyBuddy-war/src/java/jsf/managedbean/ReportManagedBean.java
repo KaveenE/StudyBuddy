@@ -48,8 +48,6 @@ public class ReportManagedBean implements Serializable {
     private ReportEntity selectedReportEntity;
 
     private List<StudentEntity> studentEntities;
-    private StudentEntity reportedStudentEntity;
-    private StudentEntity reportingStudentEntity;
 
     public ReportManagedBean() {
     }
@@ -73,45 +71,18 @@ public class ReportManagedBean implements Serializable {
                 || report.getReportedStudent().getUsername().toLowerCase().contains(filterText);
     }
 
-    public void createNew() {
-        this.selectedReportEntity = new ReportEntity();
-        this.setReportedStudentEntity(new StudentEntity());
-        this.setReportingStudentEntity(new StudentEntity());
-    }
-
-    public void saveReport() {
-
-        if (this.selectedReportEntity.getReportId() == null) {
-
-            try {
-                reportSessionBean.createNewReport(selectedReportEntity, reportedStudentEntity.getAccountId(), reportingStudentEntity.getAccountId());
-
-            } catch (DoesNotExistException | AlreadyExistsException | InputDataValidationException | UnknownPersistenceException ex) {
-                JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while creating the new report: " + ex.getMessage());
-                System.out.println(ex.getMessage());
-
-            }
-
-            System.out.println(selectedReportEntity.getReportId());
-
-            this.reportEntities.add(this.selectedReportEntity);
-            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Report Added");
-        } else {
-            try {
-                reportSessionBean.updateReport(selectedReportEntity);
-            } catch (DoesNotExistException | InputDataValidationException ex) {
-                JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while updating: " + ex);
-            }
+    public void updateReport(ActionEvent event) {
+        try {
+            reportSessionBean.updateReport(selectedReportEntity);
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Report Updated");
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while updating: " + ex);
+        } finally {
+            PrimeFaces.current().ajax().update("growl", "form:dataTableAllReports");
         }
-
-        PrimeFaces.current().executeScript("PF('manageDialog').hide()");
-        PrimeFaces.current().executeScript("PF('manageNewDialog').hide()");
-        PrimeFaces.current().ajax().update("growl", "form:dataTableAllReports");
-
     }
-    
-        public void deleteSelectedReport() {
+
+    public void deleteSelectedReport() {
         //TODO: Only deletes from page, not DB!
         //Replace below line with method from EJB
         this.reportEntities.remove(this.selectedReportEntity);
@@ -139,25 +110,13 @@ public class ReportManagedBean implements Serializable {
 
         return "Delete";
     }
-    
+
     public boolean hasMultipleSelectedReports() {
         return this.getSelectedReportEntities() != null && !this.selectedReportEntities.isEmpty();
     }
-    
+
     public void doUpdateReport(ActionEvent event) {
         selectedReportEntity = (ReportEntity) event.getComponent().getAttributes().get("selectedReportEntity");
-    }
-
-    //currently supports updating of the isResolved attribute 
-    public void updateReport(ActionEvent event) {
-        try {
-            reportSessionBean.updateReport(selectedReportEntity);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Report updated successfully", null));
-        } catch (DoesNotExistException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating report: " + ex.getMessage(), null));
-        } catch (InputDataValidationException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
-        }
     }
 
     public List<ReportEntity> getReportEntities() {
@@ -230,34 +189,6 @@ public class ReportManagedBean implements Serializable {
      */
     public void setStudentEntities(List<StudentEntity> studentEntities) {
         this.studentEntities = studentEntities;
-    }
-
-    /**
-     * @return the reportedStudentEntity
-     */
-    public StudentEntity getReportedStudentEntity() {
-        return reportedStudentEntity;
-    }
-
-    /**
-     * @param reportedStudentEntity the reportedStudentEntity to set
-     */
-    public void setReportedStudentEntity(StudentEntity reportedStudentEntity) {
-        this.reportedStudentEntity = reportedStudentEntity;
-    }
-
-    /**
-     * @return the reportingStudentEntity
-     */
-    public StudentEntity getReportingStudentEntity() {
-        return reportingStudentEntity;
-    }
-
-    /**
-     * @param reportingStudentEntity the reportingStudentEntity to set
-     */
-    public void setReportingStudentEntity(StudentEntity reportingStudentEntity) {
-        this.reportingStudentEntity = reportingStudentEntity;
     }
 
 }

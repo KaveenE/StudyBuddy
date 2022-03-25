@@ -21,16 +21,16 @@
             <h:form id="form">
 
                 <!--Buttons for create and mass delete-->
-<!--                <p:toolbar>
-                    <p:toolbarGroup>
-                        <p:commandButton id="delete-multiple-button" value="#{reportManagedBean.deleteButtonMessage}"
-                                         icon="pi pi-trash" actionListener="#{reportManagedBean.deleteSelectedReports}"
-                                         disabled="#{!reportManagedBean.hasMultipleSelectedReports()}" 
-                                         update="@this">
-                            <p:confirm header="Confirmation" message="Delete the selected reports?" icon="pi pi-exclamation-triangle"/>
-                        </p:commandButton>
-                    </p:toolbarGroup>
-                </p:toolbar>-->
+                <!--                <p:toolbar>
+                                    <p:toolbarGroup>
+                                        <p:commandButton id="delete-multiple-button" value="#{reportManagedBean.deleteButtonMessage}"
+                                                         icon="pi pi-trash" actionListener="#{reportManagedBean.deleteSelectedReports}"
+                                                         disabled="#{!reportManagedBean.hasMultipleSelectedReports()}" 
+                                                         update="@this">
+                                            <p:confirm header="Confirmation" message="Delete the selected reports?" icon="pi pi-exclamation-triangle"/>
+                                        </p:commandButton>
+                                    </p:toolbarGroup>
+                                </p:toolbar>-->
                 <br/>
 
                 <!--DataTable-->
@@ -53,11 +53,11 @@
                         </p:outputPanel>
                     </f:facet>
 
-<!--                <p:ajax event="rowSelect" update=":form:delete-multiple-button"/>
-                    <p:ajax event="rowUnselect" update=":form:delete-multiple-button"/>
-                    <p:ajax event="rowSelectCheckbox" update=":form:delete-multiple-button"/>
-                    <p:ajax event="rowUnselectCheckbox" update=":form:delete-multiple-button"/>
-                    <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>-->
+                    <!--                <p:ajax event="rowSelect" update=":form:delete-multiple-button"/>
+                                        <p:ajax event="rowUnselect" update=":form:delete-multiple-button"/>
+                                        <p:ajax event="rowSelectCheckbox" update=":form:delete-multiple-button"/>
+                                        <p:ajax event="rowUnselectCheckbox" update=":form:delete-multiple-button"/>
+                                        <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>-->
 
                     <p:column selectionMode="single" exportable="false" width="25" style ="text-align: center;"></p:column>
 
@@ -94,10 +94,10 @@
                             <f:setPropertyActionListener value="#{reportEntity}" target="#{reportManagedBean.selectedReportEntity}"/>
                             <p:resetInput target=":formManageContent:manage-content"/>
                         </p:commandButton>
-<!--                        <p:commandButton icon="pi pi-trash" process="@this"
-                                         oncomplete="PF('deleteDialog').show()">
-                            <f:setPropertyActionListener value="#{reportEntity}" target="#{reportManagedBean.selectedReportEntity}"/>
-                        </p:commandButton>-->
+                        <!--                        <p:commandButton icon="pi pi-trash" process="@this"
+                                                                 oncomplete="PF('deleteDialog').show()">
+                                                    <f:setPropertyActionListener value="#{reportEntity}" target="#{reportManagedBean.selectedReportEntity}"/>
+                                                </p:commandButton>-->
                     </p:column>
 
                 </p:dataTable>
@@ -112,42 +112,42 @@
                             <h:outputText value="#{reportManagedBean.selectedReportEntity.reportId}" />
 
                             <h:outputLabel value="Reporter: " />
-                            <h:outputText value="#{reportManagedBean.reportingStudentEntity.username}" />
+                            <h:outputText value="#{reportManagedBean.selectedReportEntity.studentWhoReported.username}" />
 
                             <h:outputLabel value="Reported: " />
-                            <h:outputText value="#{reportManagedBean.reportedStudentEntity.username}"/>
+                            <h:outputText value="#{reportManagedBean.selectedReportEntity.reportedStudent.username}"/>
 
                             <h:outputLabel value="Report Date: " />
                             <h:outputText value="#{reportManagedBean.selectedReportEntity.dateTimeCreated}" >
                                 <f:convertDateTime type="localDateTime" dateStyle="medium" timeStyle="short"/>
                             </h:outputText>
-                            
+
                             <h:outputLabel value="Resolve report? : " />
                             <p:selectBooleanCheckbox value="#{reportManagedBean.selectedReportEntity.isResolved}"/>
                         </p:panelGrid>
                     </p:outputPanel>
 
-                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{reportManagedBean.saveReport}"                                  
-                                     update="manage-content" process="manage-content @this" />
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{reportManagedBean.updateReport}"                                  
+                                     update="manage-content" process="manage-content @this" onclick="PF('manageDialog').hide()"/>
                     <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageDialog').hide()"/>                   
                 </h:form>
             </p:dialog>
 
             <!--Confirm Dialogs-->
-<!--            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
-                             message="Delete the school?" header="Confirm" severity="alert" appendTo="@(body)">
-                            <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{reportManagedBean.deleteSelectedReport}"
-                                 process="@this" oncomplete="PF('deleteDialog').hide()"/>
-                <p:commandButton value="No" type="button" icon="pi pi-times"
-                                 onclick="PF('deleteDialog').hide()"/>
-            </p:confirmDialog>-->
-
-            <p:confirmDialog global="true" showEffect="fade" width="300">
-                <p:commandButton value="Yes" type="button" icon="pi pi-check"
-                                 styleClass="ui-confirmdialog-yes"/>
-                <p:commandButton value="No" type="button"  icon="pi pi-times" 
-                                 styleClass="ui-confirmdialog-no ui-button-secondary"/>
-            </p:confirmDialog>
+            <!--            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
+                                         message="Delete the school?" header="Confirm" severity="alert" appendTo="@(body)">
+                                        <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{reportManagedBean.deleteSelectedReport}"
+                                             process="@this" oncomplete="PF('deleteDialog').hide()"/>
+                            <p:commandButton value="No" type="button" icon="pi pi-times"
+                                             onclick="PF('deleteDialog').hide()"/>
+                        </p:confirmDialog>
+            
+                        <p:confirmDialog global="true" showEffect="fade" width="300">
+                            <p:commandButton value="Yes" type="button" icon="pi pi-check"
+                                             styleClass="ui-confirmdialog-yes"/>
+                            <p:commandButton value="No" type="button"  icon="pi pi-times" 
+                                             styleClass="ui-confirmdialog-no ui-button-secondary"/>
+                        </p:confirmDialog>-->
 
         </div>
 
