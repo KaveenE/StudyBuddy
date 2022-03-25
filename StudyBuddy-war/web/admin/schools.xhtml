@@ -58,11 +58,11 @@
                         </p:outputPanel>
                     </f:facet>
 
-<!--                <p:ajax event="rowSelect" update=":form:delete-multiple-button"/>
-                    <p:ajax event="rowUnselect" update=":form:delete-multiple-button"/>
-                    <p:ajax event="rowSelectCheckbox" update=":form:delete-multiple-button"/>
-                    <p:ajax event="rowUnselectCheckbox" update=":form:delete-multiple-button"/>
-                    <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>-->
+                    <!--                <p:ajax event="rowSelect" update=":form:delete-multiple-button"/>
+                                        <p:ajax event="rowUnselect" update=":form:delete-multiple-button"/>
+                                        <p:ajax event="rowSelectCheckbox" update=":form:delete-multiple-button"/>
+                                        <p:ajax event="rowUnselectCheckbox" update=":form:delete-multiple-button"/>
+                                        <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>-->
 
                     <p:column selectionMode="single" exportable="false" width="25" style ="text-align: center;"></p:column>
 
@@ -81,10 +81,10 @@
                             <f:setPropertyActionListener value="#{schoolEntity}" target="#{schoolManagedBean.selectedSchoolEntity}"/>
                             <p:resetInput target=":formManageContent:manage-content"/>
                         </p:commandButton>
-<!--                        <p:commandButton icon="pi pi-trash" process="@this"
-                                         oncomplete="PF('deleteDialog').show()">
-                            <f:setPropertyActionListener value="#{schoolEntity}" target="#{schoolManagedBean.selectedSchoolEntity}"/>
-                        </p:commandButton>-->
+                        <!--                        <p:commandButton icon="pi pi-trash" process="@this"
+                                                                 oncomplete="PF('deleteDialog').show()">
+                                                    <f:setPropertyActionListener value="#{schoolEntity}" target="#{schoolManagedBean.selectedSchoolEntity}"/>
+                                                </p:commandButton>-->
                     </p:column>
 
                 </p:dataTable>
@@ -106,8 +106,8 @@
                         </p:panelGrid>
                     </p:outputPanel>
 
-                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagedBean.saveSchool}"                                  
-                                     update="manage-content" process="manage-content @this" />
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagedBean.updateSchool}"                                  
+                                     update="manage-content" process="manage-content @this" onclick="PF('manageDialog').hide()"/>
                     <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageDialog').hide()"/>                   
                 </h:form>
             </p:dialog>
@@ -126,28 +126,28 @@
                         </p:panelGrid>      
                     </p:outputPanel>
 
-                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagedBean.saveSchool}"                                  
-                                     update="manage-new-content" process="manage-new-content @this"/>
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagedBean.createNewSchool}"                                  
+                                     update="manage-new-content" process="manage-new-content @this" onclick="PF('manageNewDialog').hide()"/>
                     <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageNewDialog').hide()"/>
 
                 </h:form>
             </p:dialog>
 
             <!--Confirm Dialogs-->
-<!--            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
-                             message="Delete the school?" header="Confirm" severity="alert" appendTo="@(body)">
-                            <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{schoolManagedBean.deleteSelectedSchool}"
-                                 process="@this" oncomplete="PF('deleteDialog').hide()"/>
-                <p:commandButton value="No" type="button" icon="pi pi-times"
-                                 onclick="PF('deleteDialog').hide()"/>
-            </p:confirmDialog>-->
-
-            <p:confirmDialog global="true" showEffect="fade" width="300">
-                <p:commandButton value="Yes" type="button" icon="pi pi-check"
-                                 styleClass="ui-confirmdialog-yes"/>
-                <p:commandButton value="No" type="button"  icon="pi pi-times" 
-                                 styleClass="ui-confirmdialog-no ui-button-secondary"/>
-            </p:confirmDialog>
+            <!--            <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
+                                         message="Delete the school?" header="Confirm" severity="alert" appendTo="@(body)">
+                                        <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{schoolManagedBean.deleteSelectedSchool}"
+                                             process="@this" oncomplete="PF('deleteDialog').hide()"/>
+                            <p:commandButton value="No" type="button" icon="pi pi-times"
+                                             onclick="PF('deleteDialog').hide()"/>
+                        </p:confirmDialog>
+            
+                        <p:confirmDialog global="true" showEffect="fade" width="300">
+                            <p:commandButton value="Yes" type="button" icon="pi pi-check"
+                                             styleClass="ui-confirmdialog-yes"/>
+                            <p:commandButton value="No" type="button"  icon="pi pi-times" 
+                                             styleClass="ui-confirmdialog-no ui-button-secondary"/>
+                        </p:confirmDialog>-->
 
         </div>
 

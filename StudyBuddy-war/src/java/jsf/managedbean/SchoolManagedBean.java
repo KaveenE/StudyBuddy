@@ -15,6 +15,7 @@ import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.event.ActionEvent;
 import org.primefaces.PrimeFaces;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
@@ -32,20 +33,20 @@ public class SchoolManagedBean implements Serializable {
 
     @EJB
     private SchoolSessionBeanLocal schoolSessionBean;
-    
+
     private List<SchoolEntity> schoolEntities;
     private List<SchoolEntity> filteredSchoolEntities;
     private List<SchoolEntity> selectedSchoolEntities;
     private SchoolEntity selectedSchoolEntity;
-    
+
     public SchoolManagedBean() {
     }
-    
+
     @PostConstruct
     public void postConstruct() {
         schoolEntities = schoolSessionBean.retrieveAllSchools();
     }
-    
+
     public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
         String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
         if (filterText == null || filterText.isEmpty()) {
@@ -53,51 +54,48 @@ public class SchoolManagedBean implements Serializable {
         }
 
         SchoolEntity school = (SchoolEntity) value;
-        
+
         return school.getSchoolId().toString().contains(filterText)
-                || school.getName().toLowerCase().contains(filterText);     
+                || school.getName().toLowerCase().contains(filterText);
     }
-    
+
     public void createNew() {
         this.selectedSchoolEntity = new SchoolEntity();
     }
-    
-    public void saveSchool() {
-        if (this.selectedSchoolEntity.getSchoolId()== null) {
-            
-            try {
-                schoolSessionBean.createNewSchool(selectedSchoolEntity);
-            } catch (AlreadyExistsException | InputDataValidationException | UnknownPersistenceException ex) {
-                JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while creating the new school: "+ex);
-            }
-            
+
+    public void createNewSchool(ActionEvent event) {
+        try {
+            schoolSessionBean.createNewSchool(selectedSchoolEntity);
             this.schoolEntities.add(this.selectedSchoolEntity);
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "School Added");
+        } catch (AlreadyExistsException | InputDataValidationException | UnknownPersistenceException ex) {
+            JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while creating the new school: " + ex);
+        } finally {
+            PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools");
         }
-        else {
-            try {
-                schoolSessionBean.updateSchool(selectedSchoolEntity);
-            } catch (DoesNotExistException | InputDataValidationException ex) {
-                JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while updating: "+ex);
-            }
-            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "School Updated");
-        }
-
-        PrimeFaces.current().executeScript("PF('manageDialog').hide()");
-        PrimeFaces.current().executeScript("PF('manageNewDialog').hide()");
-        PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools");
     }
-    
+
+    public void updateSchool(ActionEvent event) {
+        try {
+            schoolSessionBean.updateSchool(selectedSchoolEntity);
+            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "School Updated");
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while updating: " + ex);
+        } finally {
+            PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools");
+        }
+    }
+
     public void deleteSelectedSchool() {
         //TODO: Only deletes from page, not DB!
         //Replace below line with method from EJB
         this.schoolEntities.remove(this.selectedSchoolEntity);
         this.selectedSchoolEntity = null;
         JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "School Removed");
-        PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools","form:delete-multiple-button");
-        
+        PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools", "form:delete-multiple-button");
+
     }
-    
+
     public void deleteSelectedSchools() {
         //TODO: Only deletes from page, not DB!
         //Replace below line with method from EJB
@@ -107,20 +105,20 @@ public class SchoolManagedBean implements Serializable {
         PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools");
         PrimeFaces.current().executeScript("PF('dataTableAllSchools').clearFilters()");
     }
-    
+
     public String getDeleteButtonMessage() {
         if (hasMultipleSelectedSchools()) {
             int size = this.selectedSchoolEntities.size();
             return size > 1 ? size + " schools selected" : "1 school selected";
         }
-        
+
         return "Delete";
     }
-    
+
     public boolean hasMultipleSelectedSchools() {
         return this.selectedSchoolEntities != null && !this.selectedSchoolEntities.isEmpty();
     }
-    
+
     public List<SchoolEntity> getSchoolEntities() {
         return schoolEntities;
     }
@@ -149,8 +147,8 @@ public class SchoolManagedBean implements Serializable {
         return selectedSchoolEntity;
     }
 
-    public void setSelectedSchoolEntity(SchoolEntity selectedSchoolEntity) {  
+    public void setSelectedSchoolEntity(SchoolEntity selectedSchoolEntity) {
         this.selectedSchoolEntity = selectedSchoolEntity;
     }
-    
+
 }
