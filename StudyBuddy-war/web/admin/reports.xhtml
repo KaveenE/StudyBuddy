@@ -74,7 +74,7 @@
                     </p:column>
 
                     <p:column headerText="Description" sortBy="#{reportEntity.description}">
-                        <h:outputText value="#{reportEntity.description}"/>
+                        <h:outputText value="#{reportEntity.description.length() gt 50 ? reportEntity.description.substring(0,47).concat('...') : reportEntity.description}"/>
                     </p:column>
 
                     <p:column headerText="ReportDate" sortBy="#{reportEntity.dateTimeCreated}">
@@ -104,10 +104,10 @@
             </h:form>
             <!--EDIT-->
             <p:dialog header="Edit Report Details" showEffect="fade" modal="true"
-                      widgetVar="manageDialog" responsive="true" appendTo="@(body)" resizable="false">
+                      widgetVar="manageDialog" responsive="true" appendTo="@(body)" resizable="false" >
                 <h:form id ="formManageContent">
                     <p:outputPanel id="manage-content" >
-                        <p:panelGrid columns="2" rendered="#{not empty reportManagedBean.selectedReportEntity}" styleClass="ui-noborder" >
+                        <p:panelGrid columns="2" rendered="#{not empty reportManagedBean.selectedReportEntity}" styleClass="ui-noborder" style="table-layout: fixed; width: 500px;">
                             <h:outputLabel value="Report ID: " />
                             <h:outputText value="#{reportManagedBean.selectedReportEntity.reportId}" />
 
@@ -115,7 +115,10 @@
                             <h:outputText value="#{reportManagedBean.selectedReportEntity.studentWhoReported.username}" />
 
                             <h:outputLabel value="Reported: " />
-                            <h:outputText value="#{reportManagedBean.selectedReportEntity.reportedStudent.username}"/>
+                            <h:outputText value="#{reportManagedBean.selectedReportEntity.reportedStudent.username}" />
+                            
+                            <h:outputLabel value="Description:" />
+                            <h:outputText style="word-wrap: break-word;" value="#{reportManagedBean.selectedReportEntity.description}" />
 
                             <h:outputLabel value="Report Date: " />
                             <h:outputText value="#{reportManagedBean.selectedReportEntity.dateTimeCreated}" >
