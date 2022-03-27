@@ -70,9 +70,9 @@ public class SchoolManagedBean implements Serializable {
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "School Added");
         } catch (AlreadyExistsException | InputDataValidationException | UnknownPersistenceException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while creating the new school: " + ex);
-        } finally {
-            PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools");
         }
+        PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools");
+
     }
 
     public void updateSchool(ActionEvent event) {
@@ -81,9 +81,9 @@ public class SchoolManagedBean implements Serializable {
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "School Updated");
         } catch (DoesNotExistException | InputDataValidationException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while updating: " + ex);
-        } finally {
-            PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools");
         }
+        PrimeFaces.current().ajax().update("growl", "form:dataTableAllSchools");
+
     }
 
     public void deleteSelectedSchool() {

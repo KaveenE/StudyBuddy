@@ -77,9 +77,9 @@ public class ReportManagedBean implements Serializable {
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Report Updated");
         } catch (DoesNotExistException | InputDataValidationException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while updating: " + ex);
-        } finally {
-            PrimeFaces.current().ajax().update("growl", "form:dataTableAllReports");
         }
+        PrimeFaces.current().ajax().update("growl", "form:dataTableAllReports");
+
     }
 
     public void deleteSelectedReport() {
