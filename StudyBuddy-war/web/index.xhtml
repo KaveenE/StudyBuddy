@@ -16,7 +16,7 @@
 
                 <p style = "text-align: center; font-size: 25px;"> Don't Have An Account? </p>
                 <div style="text-align: center;">
-                    <p:commandButton value="Register Here" update=":registerNewAdminForm" oncomplete="PF('registerNewAdmin').show()"
+                    <p:commandButton value="Register Here" update=":registerNewAdminForm" oncomplete="PF('registerNewAdmin').show()" process="@this"
                                      style="width: 220px; height:50px; font-size: 18px; border-radius: 2rem; color: #804825; background-color: red">
                         <p:resetInput target="registerNewAdminForm"/>
                     </p:commandButton>
