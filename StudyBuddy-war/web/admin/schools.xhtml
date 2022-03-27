@@ -107,7 +107,7 @@
                     </p:outputPanel>
 
                     <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagedBean.updateSchool}"                                  
-                                     update="manage-content" process="manage-content @this" onclick="PF('manageDialog').hide()"/>
+                                     update="manage-content" process="manage-content @this" />
                     <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageDialog').hide()"/>                   
                 </h:form>
             </p:dialog>
@@ -127,7 +127,7 @@
                     </p:outputPanel>
 
                     <p:commandButton value="Save" icon="pi pi-check" actionListener="#{schoolManagedBean.createNewSchool}"                                  
-                                     update="manage-new-content" process="manage-new-content @this" onclick="PF('manageNewDialog').hide()"/>
+                                     update="manage-new-content" process="manage-new-content @this" />
                     <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageNewDialog').hide()"/>
 
                 </h:form>

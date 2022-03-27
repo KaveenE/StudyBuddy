@@ -68,6 +68,8 @@ public class SchoolManagedBean implements Serializable {
             schoolSessionBean.createNewSchool(selectedSchoolEntity);
             this.schoolEntities.add(this.selectedSchoolEntity);
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "School Added");
+            PrimeFaces.current().executeScript("PF('manageNewDialog').hide()");
+
         } catch (AlreadyExistsException | InputDataValidationException | UnknownPersistenceException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while creating the new school: " + ex);
         }
@@ -79,6 +81,8 @@ public class SchoolManagedBean implements Serializable {
         try {
             schoolSessionBean.updateSchool(selectedSchoolEntity);
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "School Updated");
+            PrimeFaces.current().executeScript("PF('manageDialog').hide()");
+            
         } catch (DoesNotExistException | InputDataValidationException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while updating: " + ex);
         }

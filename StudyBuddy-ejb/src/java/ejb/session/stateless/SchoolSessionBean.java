@@ -60,6 +60,7 @@ public class SchoolSessionBean implements SchoolSessionBeanLocal {
         return newSchoolEntity.getSchoolId();
     }
 
+    @Override
     public void updateSchool(SchoolEntity schoolEntity) throws InputDataValidationException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(schoolEntity);
 

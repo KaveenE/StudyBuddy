@@ -63,10 +63,10 @@ public class StudentManagedBean implements Serializable {
             studentSessionBean.updateAccountStudent(selectedStudentEntity);
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Student Updated");
         } catch (DoesNotExistException | InputDataValidationException ex) {
-
-        } finally {
-            PrimeFaces.current().ajax().update("growl", "form:dataTableAllUsers");
+            JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while retrieving the student details: " + ex.getMessage());
         }
+        PrimeFaces.current().ajax().update("growl", "form:dataTableAllUsers");
+
     }
 
     public void disableStudent(ActionEvent event) {
@@ -77,9 +77,9 @@ public class StudentManagedBean implements Serializable {
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Student Disabled");
         } catch (InputDataValidationException | DoesNotExistException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while retrieving the student details: " + ex.getMessage());
-        } finally {
-            PrimeFaces.current().ajax().update("growl", "form:dataTableAllUsers");
         }
+        PrimeFaces.current().ajax().update("growl", "form:dataTableAllUsers");
+
     }
 
     public List<StudentEntity> getStudentEntities() {
