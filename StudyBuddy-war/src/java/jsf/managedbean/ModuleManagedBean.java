@@ -73,50 +73,40 @@ public class ModuleManagedBean implements Serializable {
         this.selectedModuleEntity = new ModuleEntity();
     }
 
-    public void saveModule() {
-
-        if (this.selectedModuleEntity.getModuleId() == null) {
-
-            try {
-                moduleSessionBean.createNewModule(selectedModuleEntity, selectedSchoolEntity.getSchoolId());
-
-            } catch (DoesNotExistException | AlreadyExistsException | InputDataValidationException | UnknownPersistenceException ex) {
-                JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while creating the new module: " + ex.getMessage());
-                System.out.println(ex.getMessage());
-
-            }
-
-            System.out.println(selectedModuleEntity.getName() + " " + selectedModuleEntity.getCode());
-
+    public void createNewModule(ActionEvent event) {
+        try {
+            moduleSessionBean.createNewModule(selectedModuleEntity, selectedSchoolEntity.getSchoolId());
             this.moduleEntities.add(this.selectedModuleEntity);
             JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Module Added");
-        } else {
-            try {
-                moduleSessionBean.updateModule(selectedModuleEntity);
-            } catch (DoesNotExistException | InputDataValidationException ex) {
-                JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while updating: " + ex);
-            }
-            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Module Updated");
+            PrimeFaces.current().executeScript("PF('manageNewDialog').hide()");
+        } catch (DoesNotExistException | AlreadyExistsException | InputDataValidationException | UnknownPersistenceException ex) {
+            JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while creating the new module: " + ex.getMessage());
         }
-
-        PrimeFaces.current().executeScript("PF('manageDialog').hide()");
-        PrimeFaces.current().executeScript("PF('manageNewDialog').hide()");
         PrimeFaces.current().ajax().update("growl", "form:dataTableAllModules");
-
     }
 
-    public void deleteSelectedModule() {
+    public void updateModule(ActionEvent event) {
         try {
-            moduleSessionBean.deleteModule(selectedModuleEntity.getModuleId());
-            moduleEntities.remove(selectedModuleEntity);
+            moduleSessionBean.updateModule(selectedModuleEntity);
+            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Module Updated");
+            PrimeFaces.current().executeScript("PF('manageDialog').hide()");
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while updating: " + ex);
+        }
+        PrimeFaces.current().ajax().update("growl", "form:dataTableAllModules");
+    }
+
+    public void deleteSelectedModule(ActionEvent event) {
+        try {
+            selectedModuleEntity = (ModuleEntity) event.getComponent().getAttributes().get("moduleEntityToDisable");
+            selectedModuleEntity.setIsDeleted(!selectedModuleEntity.getIsDeleted());
+            moduleSessionBean.updateModule(selectedModuleEntity);
+            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Module Updated");
         } catch (DoesNotExistException | InputDataValidationException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while deleting: " + ex);
         }
 
-        this.selectedModuleEntity = null;
-        JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Module Removed");
         PrimeFaces.current().ajax().update("growl", "form:dataTableAllModules", "form:delete-multiple-button");
-
     }
 
     public void deleteSelectedModules() {
@@ -124,7 +114,7 @@ public class ModuleManagedBean implements Serializable {
         //Replace below line with method from EJB
         selectedModuleEntities.forEach(mod -> {
             try {
-                moduleSessionBean.deleteModule(mod.getModuleId());
+                moduleSessionBean.updateModule(selectedModuleEntity);
                 moduleEntities.remove(mod);
             } catch (DoesNotExistException | InputDataValidationException ex) {
                 JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while deleting: " + ex);

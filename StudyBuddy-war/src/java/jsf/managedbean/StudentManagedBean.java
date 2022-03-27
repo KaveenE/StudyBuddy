@@ -74,12 +74,11 @@ public class StudentManagedBean implements Serializable {
             selectedStudentEntity = (StudentEntity) event.getComponent().getAttributes().get("studentEntityToDisable");
             selectedStudentEntity.setIsEnabled(!selectedStudentEntity.getIsEnabled());
             studentSessionBean.updateAccountStudent(selectedStudentEntity);
-            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Student Disabled");
+            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Student Updated");
         } catch (InputDataValidationException | DoesNotExistException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while retrieving the student details: " + ex.getMessage());
         }
         PrimeFaces.current().ajax().update("growl", "form:dataTableAllUsers");
-
     }
 
     public List<StudentEntity> getStudentEntities() {

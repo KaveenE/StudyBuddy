@@ -46,7 +46,7 @@ import entities.ReportEntity;
 @Startup
 public class DataInitSessionBean {
 
-    @EJB(name = "ReportSessionBeanLocal")
+    @EJB
     private ReportSessionBeanLocal reportSessionBeanLocal;
 
     @EJB

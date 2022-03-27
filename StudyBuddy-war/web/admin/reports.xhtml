@@ -59,8 +59,6 @@
                                         <p:ajax event="rowUnselectCheckbox" update=":form:delete-multiple-button"/>
                                         <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>-->
 
-                    <p:column selectionMode="single" exportable="false" width="25" style ="text-align: center;"></p:column>
-
                     <p:column headerText="ID" sortBy="#{reportEntity.reportId}">
                         <h:outputText value="#{reportEntity.reportId}"/>
                     </p:column>

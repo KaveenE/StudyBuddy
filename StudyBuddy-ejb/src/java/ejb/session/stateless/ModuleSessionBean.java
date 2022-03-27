@@ -84,10 +84,4 @@ public class ModuleSessionBean implements ModuleSessionBeanLocal {
         moduleEntityToUpdate.setCode(moduleEntity.getCode());
     }
 
-    @Override
-    public void deleteModule(Long moduleId) throws DoesNotExistException, InputDataValidationException {
-        ModuleEntity moduleEntityToDelete = retrieveModuleById(moduleId);
-
-        moduleEntityToDelete.setIsDeleted(true);
-    }
 }
