@@ -68,15 +68,35 @@
         </p:dialog>
 
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
-            <article>
-                <ul>Display some crap here like
-                    <li>Number of reports to resolve today?</li>         
-                    <li>message of day (if so i guess copy prof)?</li>  
-                    <li>etc</li>  
-                </ul> 
-            </article>
+	<div style="height:500px">
+		<h:form>
+			<p:growl id="msgs" showDetail="true" />
+			<h:panelGrid columns="2">
+				<p:dashboard id="board" model="#{dashboardManagedBean.model}">
+					<p:ajax event="reorder" listener="#{dashboardManagedBean.handleReorder}" update="msgs" />
+					<p:panel id="Others" header="Others" closable="true" toggleable="true">
+						<h:outputText value="NIL"></h:outputText>
+					</p:panel>
+                                        <p:panel id="ImportantAnnouncements" header="Important Announcements" closable="true" toggleable="true" style="background-color: orange">
+						<h:outputText value="Meeting with ALL admins at 10pm"></h:outputText>
+					</p:panel>
+					
+					<p:panel id="Updates" header="Updates" closable="true" toggleable="true">
+						<h:outputText value="Software Update Tomorrow"></h:outputText>
+					</p:panel>
+					<p:panel id="ToDos" header="List Of To Dos" closable="true" toggleable="true">
+						<h:outputText value="Settle Outstanding Reports"></h:outputText>
+					</p:panel>
+				</p:dashboard>
+				<p:panel id="draggable">
+                                    <h:inputText value = "Type content and drag into dashboard" style="width: 350px"></h:inputText>
+				</p:panel>
+				<p:draggable for="draggable" helper="clone" dashboard="board"></p:draggable>
+			</h:panelGrid>
 
-            <p:calendar id="inline" mode="inline" />
+		</h:form>
+		</div>
+
 
         </h:panelGroup>
 
