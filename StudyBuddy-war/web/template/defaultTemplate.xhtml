@@ -9,6 +9,7 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>StudyBuddy</title>
+        <link rel="shortcut icon" type="image/png" href="#{request.contextPath}/resources/images/logo.png" />
         <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
         <h:outputStylesheet library="css" name="default.css" />
     </h:head>
@@ -17,7 +18,7 @@
         <p:layout fullPage="true">
 
             <p:layoutUnit position="north" size="120">
-                <img src="#{resource['images/girlWithBigPencil.jpg']}" width="110" height="110" style="float: left;"/>
+                <img src="#{resource['images/logo.png']}" width="110" height="110" style="float: left;"/>
                 <h1 style="text-align:center;visibility:#{sessionScope.isLogin ? 'visible':'hidden'}">StudyBuddy Admin</h1>
     
                 <ui:insert name="header">
