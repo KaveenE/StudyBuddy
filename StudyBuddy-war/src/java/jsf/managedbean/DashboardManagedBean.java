@@ -45,7 +45,7 @@ public class DashboardManagedBean implements Serializable {
 		// Add columns into your model
 		this.model.addColumn(column1);
 		this.model.addColumn(column2);
-		this.model.addColumn(column3);
+
 
 	}
 

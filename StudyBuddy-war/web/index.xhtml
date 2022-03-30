@@ -5,6 +5,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/template/defaultTemplate.xhtml"
                 xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
                 xmlns:p="http://primefaces.org/ui">
     
     <ui:define name="content">
@@ -68,7 +69,7 @@
         </p:dialog>
 
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
-            <div style="height:500px">
+<!--            <div style="height:500px">
                 <h:form>
                     <p:growl id="msgs" showDetail="true" />
                     <h:panelGrid columns="2">
@@ -95,9 +96,124 @@
                     </h:panelGrid>
 
                 </h:form>
+            </div>-->
+
+<ui:define name="metadata">
+        <f:metadata>
+            <f:viewAction action="#{taskHome.init()}" />
+        </f:metadata>
+    </ui:define>
+        <h:form>
+            <div class="row">
+                <div class="col-md-4 col-xs-12">
+                    <div class="card" >
+                        <!-- Default panel contents -->
+                        <div class="card-header">
+                            <span class="fa fa-list-alt" aria-hidden="true"></span>
+                            TODO
+                        </div>
+                        <div class="card-body">
+                            <p>Tasks newly added in the backlog.</p>
+                        </div>
+
+                        <!-- List group -->
+                        <ui:fragment rendered="#{not empty taskHome.todotasks}">
+
+                            <ul id="todotasks" class="list-group">
+                                <ui:repeat var="task" value="#{taskHome.todotasks}">
+                                    <li class="list-group-item">
+                                        <h4>
+                                            <span>##{task.id} #{task.name}</span> 
+                                            <span class="pull-right">
+                                                <h:link outcome="/details.xhtml">
+                                                    <f:param name="id" value="#{task.id}"></f:param>
+                                                    <span class="fa fa-file-text-o" aria-hidden="true"></span>
+                                                </h:link> 
+                                                <h:link outcome="/form.xhtml">
+                                                    <f:param name="id" value="#{task.id}"></f:param>
+                                                    <span class="fa fa-pencil" aria-hidden="true"></span>
+                                                </h:link>
+                                            </span>
+                                        </h4>
+                                        <p>#{task.description}</p>
+                                        <p>
+                                            <h:commandLink action="#{taskHome.markTaskDoing(task.id)}"
+                                                           styleClass="btn btn-sm btn-success">
+                                                <span class="fa fa-play" aria-hidden="true"></span>START								
+                                            </h:commandLink>
+                                        </p>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+
+                        </ui:fragment>
+                    </div>
+                </div>
+
+                <div id="doingtasks" class="col-md-4 col-xs-12">
+                    <div class="card">
+                        <!-- Default panel contents -->
+                        <div class="card-header">
+                            <span class="fa fa-hourglass-start" aria-hidden="true"></span>
+                            WORK IN PROGRESS
+                        </div>
+                        <div class="card-body">
+                            <p>Tasks had been assigned and started.</p>
+                        </div>
+
+                        <!-- List group -->
+                        <ui:fragment  rendered="#{not empty taskHome.doingtasks}">
+                            <ul id="doingtasks" class="list-group">
+                                <ui:repeat var="task" value="#{taskHome.doingtasks}">
+                                    <li class="list-group-item">
+                                        <h4>##{task.id} #{task.name}</h4>
+                                        <p>#{task.description}</p>
+                                        <p>
+                                            <h:commandLink action="#{taskHome.markTaskDone(task.id)}"
+                                                           styleClass="btn btn-sm btn-info">
+                                                <span class="fa fa-check" aria-hidden="true"></span>
+                                                DONE
+                                            </h:commandLink>
+                                        </p>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </ui:fragment>
+                    </div>
+                </div>
+                <div id="donetasks" class="col-md-4 col-xs-12">
+                    <div class="card">
+                        <!-- Default panel contents -->
+                        <div class="card-header">
+                            <span class="fa fa-check-circle-o" aria-hidden="true"></span>
+                            DONE
+                        </div>
+                        <div class="card-body">
+                            <p>Tasks had been done successfully.</p>
+                        </div>
+
+                        <!-- List group -->
+                        <ui:fragment rendered="#{not empty taskHome.donetasks}">
+                            <ul id="donetasks" class="list-group">
+                                <ui:repeat var="task" value="#{taskHome.donetasks}">
+                                    <li class="list-group-item">
+                                        <h4>##{task.id} #{task.name}</h4>
+                                        <p>#{task.description}</p>
+                                        <p>
+
+                                            <h:commandLink action="#{taskHome.deleteTask(task.id)}"
+                                                           styleClass="btn btn-sm btn-danger">
+                                                <span class="fa fa-trash" aria-hidden="true"></span> DELETE
+                                            </h:commandLink>
+                                        </p>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </ui:fragment>
+                    </div>
+                </div>
             </div>
-
-
+        </h:form>
         </h:panelGroup>
 
     </ui:define>
