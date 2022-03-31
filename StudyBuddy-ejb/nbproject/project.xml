@@ -9,7 +9,6 @@
             <included-library dirs="200">libs.jsf20.classpath</included-library>
             <included-library dirs="200">file.reference.json-20211205.jar</included-library>
             <included-library dirs="200">file.reference.is3106.jar</included-library>
-            <included-library dirs="200">file.reference.is3106.jar-1</included-library>
             <source-roots>
                 <root id="src.dir" name="Source Packages"/>
             </source-roots>
