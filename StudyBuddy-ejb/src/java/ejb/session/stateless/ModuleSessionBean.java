@@ -38,7 +38,16 @@ public class ModuleSessionBean implements ModuleSessionBeanLocal {
 
     @Override
     public List<ModuleEntity> retrieveAllModules() {
-        Query query = em.createQuery("SELECT m FROM ModuleEntity m WHERE m.isDeleted = false");
+        Query query = em.createQuery("SELECT m FROM ModuleEntity m");
+
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<ModuleEntity> retrieveAllModulesBySchoolName(String schoolName) {
+        Query query = em.createQuery("SELECT m FROM ModuleEntity m WHERE m.isDeleted = FALSE AND m.school.name =:schoolName");
+
+        query.setParameter("schoolName", schoolName);
 
         return query.getResultList();
     }

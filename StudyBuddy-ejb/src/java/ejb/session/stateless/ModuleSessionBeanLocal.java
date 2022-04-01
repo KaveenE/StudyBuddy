@@ -22,6 +22,8 @@ public interface ModuleSessionBeanLocal {
 
     public List<ModuleEntity> retrieveAllModules();
 
+    public List<ModuleEntity> retrieveAllModulesBySchoolName(String schoolName);
+
     public Long createNewModule(ModuleEntity newModuleEntity, Long schoolId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException;
 
     public ModuleEntity retrieveModuleById(Long moduleId) throws InputDataValidationException, DoesNotExistException;
