@@ -82,6 +82,7 @@ public class ModuleSessionBean implements ModuleSessionBeanLocal {
 
         moduleEntityToUpdate.setName(moduleEntity.getName());
         moduleEntityToUpdate.setCode(moduleEntity.getCode());
+        moduleEntityToUpdate.setIsDeleted(moduleEntity.getIsDeleted());
     }
 
 }

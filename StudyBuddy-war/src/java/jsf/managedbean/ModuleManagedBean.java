@@ -114,8 +114,8 @@ public class ModuleManagedBean implements Serializable {
         //Replace below line with method from EJB
         selectedModuleEntities.forEach(mod -> {
             try {
-                moduleSessionBean.updateModule(selectedModuleEntity);
-                moduleEntities.remove(mod);
+                mod.setIsDeleted(!mod.getIsDeleted());
+                moduleSessionBean.updateModule(mod);
             } catch (DoesNotExistException | InputDataValidationException ex) {
                 JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while deleting: " + ex);
             }
