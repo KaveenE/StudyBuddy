@@ -36,15 +36,17 @@ public class DashboardManagedBean implements Serializable {
 
 		// Add widgets into column1
 		column1.addWidget("ImportantAnnouncements");
-		column1.addWidget("ToDos");
+		
 		// Add widgets into column2
 		column2.addWidget("Updates");
-		column2.addWidget("Others");
-
-
+                
+                // Add widgets into column3
+		column3.addWidget("Reports");
+                
 		// Add columns into your model
 		this.model.addColumn(column1);
 		this.model.addColumn(column2);
+                this.model.addColumn(column3);
 
 
 	}

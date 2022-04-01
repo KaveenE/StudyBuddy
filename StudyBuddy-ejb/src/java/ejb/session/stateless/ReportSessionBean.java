@@ -44,6 +44,15 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     }
 
     @Override
+    public String retrieveAllReportsSizeInString() {
+        Query query = em.createQuery("SELECT r FROM ReportEntity r");
+
+        List<ReportEntity> a= query.getResultList();
+        int sizeOfa = a.size();
+        return Integer.toString(sizeOfa);
+    }
+    
+    @Override
     public ReportEntity retrieveReporyById(Long reportId) throws InputDataValidationException, DoesNotExistException {
         ReportEntity report = em.find(ReportEntity.class, reportId);
         EJBHelper.requireNonNull(report, new ReportDoesNotExistException());

@@ -45,6 +45,7 @@ public class ReportManagedBean implements Serializable {
     private ReportEntity selectedReportEntity;
 
     private List<StudentEntity> studentEntities;
+    private String sizeInString;
 
     public ReportManagedBean() {
     }
@@ -53,6 +54,7 @@ public class ReportManagedBean implements Serializable {
     public void postConstruct() {
         reportEntities = reportSessionBean.retrieveAllReports();
         studentEntities = studentSessionBean.retrieveAllStudents();
+        setSizeInString(reportSessionBean.retrieveAllReportsSizeInString());
     }
 
     public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -79,6 +81,10 @@ public class ReportManagedBean implements Serializable {
 
     }
 
+    public List<ReportEntity> retrieveAllReports() {
+        return reportSessionBean.retrieveAllReports();
+    }
+    
     public void deleteSelectedReport() {
         //TODO: Only deletes from page, not DB!
         //Replace below line with method from EJB
@@ -186,6 +192,20 @@ public class ReportManagedBean implements Serializable {
      */
     public void setStudentEntities(List<StudentEntity> studentEntities) {
         this.studentEntities = studentEntities;
+    }
+
+    /**
+     * @return the sizeInString
+     */
+    public String getSizeInString() {
+        return sizeInString;
+    }
+
+    /**
+     * @param sizeInString the sizeInString to set
+     */
+    public void setSizeInString(String sizeInString) {
+        this.sizeInString = sizeInString;
     }
 
 }
