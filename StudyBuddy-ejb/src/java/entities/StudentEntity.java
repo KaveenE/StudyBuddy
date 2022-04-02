@@ -45,7 +45,13 @@ public class StudentEntity extends AccountEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean optLocation;
+    
+    @OneToMany(mappedBy = "ratee")
+    private List<RatingEntity> ratingByOthers;
 
+    @OneToMany(mappedBy = "rater")
+    private List<RatingEntity> ratingOthers;
+    
     @OneToMany(mappedBy = "poster")
     private List<GroupEntity> groupsPosted;
 
@@ -227,6 +233,30 @@ public class StudentEntity extends AccountEntity implements Serializable {
      */
     public void setReportReceived(List<ReportEntity> reportReceived) {
         this.reportReceived = reportReceived;
+    }
+
+    public List<RatingEntity> getRatingByOthers() {
+        return ratingByOthers;
+    }
+
+    public void setRatingByOthers(List<RatingEntity> ratingByOthers) {
+        this.ratingByOthers = ratingByOthers;
+    }
+
+    public List<RatingEntity> getRatingOthers() {
+        return ratingOthers;
+    }
+
+    public void setRatingOthers(List<RatingEntity> ratingOthers) {
+        this.ratingOthers = ratingOthers;
+    }
+
+    public List<ReportEntity> getReportsSubmitted() {
+        return reportsSubmitted;
+    }
+
+    public void setReportsSubmitted(List<ReportEntity> reportsSubmitted) {
+        this.reportsSubmitted = reportsSubmitted;
     }
 
 }

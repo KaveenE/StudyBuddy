@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entities.AccountEntity;
 import entities.RatingEntity;
+import entities.StudentEntity;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -30,8 +31,10 @@ import util.helper.EJBHelper;
 @Stateless
 public class RatingSessionBean implements RatingSessionBeanLocal {
 
-    @EJB(name = "AccountSessionBeanLocal")
-    private AccountSessionBeanLocal accountSessionBeanLocal;
+    @EJB(name = "StudentSessionBeanLocal")
+    private StudentSessionBeanLocal studentSessionBeanLocal;
+
+    
 
     @PersistenceContext(unitName = "StudyBuddy-ejbPU")
     private EntityManager em;
@@ -60,8 +63,8 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
             EJBHelper.requireNonNull(rateeId, new AccountDoesNotExistException("The new rating must be associated with a ratee"));
             EJBHelper.requireNonNull(raterId, new AccountDoesNotExistException("The new rating must be associated with a rater"));
 
-            AccountEntity raterAccount = accountSessionBeanLocal.retrieveAccountById(raterId);
-            AccountEntity rateeAccount = accountSessionBeanLocal.retrieveAccountById(rateeId);
+            StudentEntity raterAccount = studentSessionBeanLocal.retrieveStudentById(raterId);
+            StudentEntity rateeAccount = studentSessionBeanLocal.retrieveStudentById(rateeId);
             em.persist(newRatingEntity);
             raterAccount.getRatingOthers().add(newRatingEntity);
             newRatingEntity.setRater(raterAccount);
