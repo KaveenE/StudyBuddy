@@ -10,15 +10,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ejb.session.stateless.ModuleSessionBeanLocal;
 import entities.ModuleEntity;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import util.exception.DoesNotExistException;
@@ -37,12 +32,12 @@ public class ModuleResource {
         moduleSessionBean = new SessionBeanLookup().lookupModuleSessionBeanLocal();
     }
 
-    @Path("retrieveModulesBySchool/{school}")
+    @Path("retrieveModulesBySchool")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveModulesBySchool(@PathParam("school") String school) {
+    public Response retrieveModulesBySchool(@QueryParam("schoolName") String schoolName) {
         try {
-            List<ModuleEntity> Modules = moduleSessionBean.retrieveAllModulesBySchoolName(school);
+            List<ModuleEntity> Modules = moduleSessionBean.retrieveAllModulesBySchoolName(schoolName);
             String result = new ObjectMapper().writeValueAsString(Modules);
             return Response.ok(result, MediaType.APPLICATION_JSON).build();
         } catch (JsonProcessingException ex) {
@@ -50,12 +45,12 @@ public class ModuleResource {
         }
     }
 
-    @Path("retrieveModule/{id}")
+    @Path("retrieveModule")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveModule(@PathParam("id") Long id) {
+    public Response retrieveModule(@QueryParam("moduleId") Long moduleId) {
         try {
-            ModuleEntity Module = moduleSessionBean.retrieveModuleById(id);
+            ModuleEntity Module = moduleSessionBean.retrieveModuleById(moduleId);
             String result = new ObjectMapper().writeValueAsString(Module);
             return Response.ok(result, MediaType.APPLICATION_JSON).build();
         } catch (DoesNotExistException | InputDataValidationException ex) {

@@ -78,6 +78,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     }
 
     //Only poster is allowed to change name and description
+    @Override
     public void updateGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException, AccessRightsException {
         EJBHelper.throwValidationErrorsIfAny(groupEntity);
 

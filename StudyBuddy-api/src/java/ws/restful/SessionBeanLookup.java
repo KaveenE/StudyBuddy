@@ -5,6 +5,7 @@
  */
 package ws.restful;
 
+import ejb.session.stateless.GroupEntitySessionBeanLocal;
 import ejb.session.stateless.ModuleSessionBeanLocal;
 import ejb.session.stateless.SchoolSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
@@ -50,6 +51,16 @@ public class SessionBeanLookup {
         try {
             Context c = new InitialContext();
             return (ModuleSessionBeanLocal) c.lookup(ejbModuleJndiPath + "ModuleSessionBean!ejb.session.stateless.ModuleSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+    
+    public GroupEntitySessionBeanLocal lookupGroupEntitySessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (GroupEntitySessionBeanLocal) c.lookup("java:global/StudyBuddy/StudyBuddy-ejb/GroupEntitySessionBean!ejb.session.stateless.GroupEntitySessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);
