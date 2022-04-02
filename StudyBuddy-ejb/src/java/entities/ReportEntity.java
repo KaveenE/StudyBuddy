@@ -38,7 +38,6 @@ public class ReportEntity implements Serializable {
     
     @Column(nullable = false)
     @NotNull
-    @Temporal(TemporalType.TIME)
     private LocalDateTime dateTimeCreated;
     
     @Column(nullable = false)

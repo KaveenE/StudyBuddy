@@ -36,7 +36,6 @@ public class MessageEntity implements Serializable {
 
     @Column(nullable = false)
     @NotNull
-    @Temporal(TemporalType.TIME)
     private LocalDateTime dateTimeCreated;
 
     @JoinColumn(nullable = false)

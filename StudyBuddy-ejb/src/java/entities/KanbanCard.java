@@ -44,10 +44,8 @@ public class KanbanCard implements Serializable {
     @Size(min = 0, max = 10_000)
     private String description;
 
-    @Temporal(TemporalType.TIME)
     private LocalDateTime deadlineStart;
 
-    @Temporal(TemporalType.TIME)
     private LocalDateTime deadlineEnd;
 
     @JoinColumn(nullable = false)
