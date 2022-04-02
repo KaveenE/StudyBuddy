@@ -5,7 +5,6 @@
  */
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,31 +47,24 @@ public class StudentEntity extends AccountEntity implements Serializable {
     private Boolean optLocation;
 
     @OneToMany(mappedBy = "poster")
-    @JsonIgnore
     private List<GroupEntity> groupsPosted;
 
     @ManyToMany(mappedBy = "candidates")
-    @JsonIgnore
     private List<GroupEntity> groupsApplied;
 
     @ManyToMany(mappedBy = "groupMembers")
-    @JsonIgnore
     private List<GroupEntity> groups;
 
     @OneToMany(mappedBy = "sender")
-    @JsonIgnore
     private List<MessageEntity> messages;
 
     @OneToMany(mappedBy = "studentWhoReported")
-    @JsonIgnore
     private List<ReportEntity> reportsSubmitted;
 
     @ManyToMany(mappedBy = "assignedStudents")
-    @JsonIgnore
     private List<KanbanCard> assignedCards;
 
     @OneToMany(mappedBy = "reportedStudent")
-    @JsonIgnore
     private List<ReportEntity> reportReceived;
 
     {
