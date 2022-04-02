@@ -39,8 +39,6 @@ public class StudentResource {
 
     StudentSessionBeanLocal studentSessionBean = lookupStudentSessionBeanLocal();
 
-    
-
     @Context
     private UriInfo context;
 
@@ -48,8 +46,9 @@ public class StudentResource {
      * Creates a new instance of StudentResource
      */
     public StudentResource() {
+        studentSessionBean = lookupStudentSessionBeanLocal();
     }
-    
+
     @Path("studentLogin")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,7 +63,7 @@ public class StudentResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("studentRegister")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -89,5 +88,5 @@ public class StudentResource {
             throw new RuntimeException(ne);
         }
     }
-    
+
 }
