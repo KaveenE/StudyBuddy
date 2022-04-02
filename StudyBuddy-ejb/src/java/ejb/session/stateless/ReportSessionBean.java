@@ -42,15 +42,6 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
 
         return query.getResultList();
     }
-
-    @Override
-    public String retrieveAllReportsSizeInString() {
-        Query query = em.createQuery("SELECT r FROM ReportEntity r");
-
-        List<ReportEntity> a= query.getResultList();
-        int sizeOfa = a.size();
-        return Integer.toString(sizeOfa);
-    }
     
     @Override
     public ReportEntity retrieveReporyById(Long reportId) throws InputDataValidationException, DoesNotExistException {

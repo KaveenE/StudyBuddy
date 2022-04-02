@@ -45,7 +45,6 @@ public class ReportManagedBean implements Serializable {
     private ReportEntity selectedReportEntity;
 
     private List<StudentEntity> studentEntities;
-    private String sizeInString;
 
     public ReportManagedBean() {
     }
@@ -54,7 +53,6 @@ public class ReportManagedBean implements Serializable {
     public void postConstruct() {
         reportEntities = reportSessionBean.retrieveAllReports();
         studentEntities = studentSessionBean.retrieveAllStudents();
-        setSizeInString(reportSessionBean.retrieveAllReportsSizeInString());
     }
 
     public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -197,15 +195,8 @@ public class ReportManagedBean implements Serializable {
     /**
      * @return the sizeInString
      */
-    public String getSizeInString() {
-        return sizeInString;
-    }
-
-    /**
-     * @param sizeInString the sizeInString to set
-     */
-    public void setSizeInString(String sizeInString) {
-        this.sizeInString = sizeInString;
+    public Long getUnsolvedReportsSize() {
+        return reportEntities.stream().filter(report -> !report.getIsResolved()).count();
     }
 
 }

@@ -59,7 +59,6 @@ public abstract class AccountEntity implements Serializable {
 
     public AccountEntity() {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
-        System.out.println("salt generated: " + salt);
         this.ratingByOthers = new ArrayList<>();
         this.ratingOthers = new ArrayList<>();
     }
