@@ -75,7 +75,7 @@ public class DataInitSessionBean {
     public void postConstruct() {
         System.out.println("Singleton postconstruct");
         try {
-            adminSessionBean.retrieveAdminById(1l);
+            adminSessionBean.retrieveAdminById(4l);
         } catch (DoesNotExistException ex) {
             initData();
         } catch (InputDataValidationException ex) {

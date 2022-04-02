@@ -15,6 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -43,11 +44,11 @@ public class GroupResource {
         groupEntitySessionBean = new SessionBeanLookup().lookupGroupEntitySessionBeanLocal();
     }
 
-    @Path("createGroup")
+    @Path("createGroup/{moduleId}")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createGroup(GroupEntity newGroupEntity, Long moduleId) {
+    public Response createGroup(GroupEntity newGroupEntity,@PathParam("moduleId") Long moduleId) {
         try {
             Long groupId = groupEntitySessionBean.createNewGroupEntity(newGroupEntity, moduleId);
             return Response.status(Status.OK).entity(groupId).build();
@@ -58,10 +59,10 @@ public class GroupResource {
         }
     }
     
-    @Path("updateGroup")
+    @Path("updateGroup/{studentId}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateGroup(GroupEntity groupEntityToUpdate, Long studentId) {
+    public Response updateGroup(GroupEntity groupEntityToUpdate,@PathParam("studentId") Long studentId) {
         try {
             groupEntitySessionBean.updateGroup(groupEntityToUpdate, studentId);
             return Response.status(Status.OK).build();
