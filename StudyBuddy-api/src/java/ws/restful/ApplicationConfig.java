@@ -6,6 +6,7 @@
 package ws.restful;
 
 import java.util.Set;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 /**
  *
@@ -18,6 +19,7 @@ public class ApplicationConfig extends javax.ws.rs.core.Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new java.util.HashSet<>();
         addRestResourceClasses(resources);
+        resources.add(MultiPartFeature.class);
         return resources;
     }
 
