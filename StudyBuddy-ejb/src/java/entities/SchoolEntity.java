@@ -5,6 +5,7 @@
  */
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class SchoolEntity implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "school")
+    @JsonIgnore
     private List<ModuleEntity> moduleEntities;
 
     public SchoolEntity() {
