@@ -37,7 +37,7 @@ import util.exception.UnknownPersistenceException;
 @Path("Student")
 public class StudentResource {
 
-    StudentSessionBeanLocal studentSessionBean = lookupStudentSessionBeanLocal();
+    StudentSessionBeanLocal studentSessionBean;
 
     @Context
     private UriInfo context;
@@ -46,7 +46,7 @@ public class StudentResource {
      * Creates a new instance of StudentResource
      */
     public StudentResource() {
-        studentSessionBean = lookupStudentSessionBeanLocal();
+        studentSessionBean = new SessionBeanLookup().lookupStudentSessionBeanLocal();
     }
 
     @Path("studentLogin")
@@ -76,16 +76,6 @@ public class StudentResource {
             return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         } catch (UnknownPersistenceException ex) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-        }
-    }
-
-    private StudentSessionBeanLocal lookupStudentSessionBeanLocal() {
-        try {
-            javax.naming.Context c = new InitialContext();
-            return (StudentSessionBeanLocal) c.lookup("java:global/StudyBuddy/StudyBuddy-ejb/StudentSessionBean!ejb.session.stateless.StudentSessionBeanLocal");
-        } catch (NamingException ne) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
-            throw new RuntimeException(ne);
         }
     }
 

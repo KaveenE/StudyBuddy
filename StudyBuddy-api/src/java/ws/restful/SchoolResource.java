@@ -32,13 +32,13 @@ import util.exception.InputDataValidationException;
 @Path("School")
 public class SchoolResource {
 
-    SchoolSessionBeanLocal schoolSessionBean = lookupSchoolSessionBeanLocal();
+    SchoolSessionBeanLocal schoolSessionBean;
 
     @javax.ws.rs.core.Context
     private UriInfo context;
 
     public SchoolResource() {
-        schoolSessionBean = lookupSchoolSessionBeanLocal();
+        schoolSessionBean = new SessionBeanLookup().lookupSchoolSessionBeanLocal();
     }
 
     @Path("retrieveAllSchools")
@@ -67,16 +67,6 @@ public class SchoolResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         } catch (JsonProcessingException ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-        }
-    }
-
-    private SchoolSessionBeanLocal lookupSchoolSessionBeanLocal() {
-        try {
-            Context c = new InitialContext();
-            return (SchoolSessionBeanLocal) c.lookup("java:global/StudyBuddy/StudyBuddy-ejb/SchoolSessionBean!ejb.session.stateless.SchoolSessionBeanLocal");
-        } catch (NamingException ne) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
-            throw new RuntimeException(ne);
         }
     }
 

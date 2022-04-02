@@ -31,10 +31,10 @@ import util.exception.InputDataValidationException;
 @Path("Module")
 public class ModuleResource {
 
-    ModuleSessionBeanLocal moduleSessionBean = lookupModuleSessionBeanLocal();
+    ModuleSessionBeanLocal moduleSessionBean;
 
     public ModuleResource() {
-        moduleSessionBean = lookupModuleSessionBeanLocal();
+        moduleSessionBean = new SessionBeanLookup().lookupModuleSessionBeanLocal();
     }
 
     @Path("retrieveModulesBySchool/{school}")
@@ -64,15 +64,4 @@ public class ModuleResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-
-    private ModuleSessionBeanLocal lookupModuleSessionBeanLocal() {
-        try {
-            Context c = new InitialContext();
-            return (ModuleSessionBeanLocal) c.lookup("java:global/StudyBuddy/StudyBuddy-ejb/ModuleSessionBean!ejb.session.stateless.ModuleSessionBeanLocal");
-        } catch (NamingException ne) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
-            throw new RuntimeException(ne);
-        }
-    }
-
 }
