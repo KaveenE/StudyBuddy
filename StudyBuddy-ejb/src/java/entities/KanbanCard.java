@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -31,28 +33,30 @@ public class KanbanCard implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long kanbanCardId;
-    
+
     @Column(nullable = false, length = 64)
     @NotNull
     @Size(min = 1, max = 64)
     private String title;
-    
+
     @Column(nullable = false, length = 10_000)
     @NotNull
     @Size(min = 0, max = 10_000)
     private String description;
-    
+
+    @Temporal(TemporalType.TIME)
     private LocalDateTime deadlineStart;
-    
+
+    @Temporal(TemporalType.TIME)
     private LocalDateTime deadlineEnd;
-    
+
     @JoinColumn(nullable = false)
     @ManyToOne
     private StudentEntity author;
-    
+
     @ManyToMany
     private List<StudentEntity> assignedStudents;
-    
+
     @JoinColumn(nullable = false)
     @ManyToOne
     private KanbanList kanbanList;
@@ -69,12 +73,12 @@ public class KanbanCard implements Serializable {
         this.deadlineEnd = deadlineEnd;
         this.author = author;
     }
-    
+
     public KanbanCard(String title, String description, LocalDateTime deadlineStart, LocalDateTime deadlineEnd, StudentEntity author, KanbanList kanbanList) {
         this(title, description, deadlineStart, deadlineEnd, author);
         this.kanbanList = kanbanList;
     }
-    
+
     public Long getKanbanCardId() {
         return kanbanCardId;
     }
@@ -205,5 +209,5 @@ public class KanbanCard implements Serializable {
     public String toString() {
         return "entities.kanbanCard[ id=" + kanbanCardId + " ]";
     }
-    
+
 }
