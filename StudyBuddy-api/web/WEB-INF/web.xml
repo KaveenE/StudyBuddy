@@ -35,4 +35,16 @@
         <local>ejb.session.stateless.ModuleSessionBeanLocal</local>
         <ejb-link>StudyBuddy-ejb.jar#ModuleSessionBean</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>RatingSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.RatingSessionBeanLocal</local>
+        <ejb-link>StudyBuddy-ejb.jar#RatingSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>ReportSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.ReportSessionBeanLocal</local>
+        <ejb-link>StudyBuddy-ejb.jar#ReportSessionBean</ejb-link>
+    </ejb-local-ref>
 </web-app>
