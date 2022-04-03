@@ -12,6 +12,7 @@ import entities.StudentEntity;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Path;
@@ -61,21 +62,6 @@ public class StudentResource {
         }
     }
 
-    @Path("studentRegister")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response studentRegister(StudentEntity student) {
-        try {
-            Long id = studentSessionBean.createNewStudent(student);
-            return Response.status(Status.OK).entity(id).build();
-        } catch (AlreadyExistsException | InputDataValidationException ex) {
-            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
-        } catch (UnknownPersistenceException ex) {
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-        }
-    }
-
     @Path("retrieveStudentById")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -91,4 +77,44 @@ public class StudentResource {
         }
     }
 
+    @Path("studentRegister")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response studentRegister(StudentEntity student) {
+        try {
+            Long id = studentSessionBean.createNewStudent(student);
+            return Response.status(Status.OK).entity(id).build();
+        } catch (AlreadyExistsException | InputDataValidationException ex) {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (UnknownPersistenceException ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+
+    @Path("studentPurchasePremium")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response studentPurchasePremium(StudentEntity student) {
+        try {
+            studentSessionBean.updateAccountPremium(student);
+            return Response.status(Status.OK).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+
+    @Path("studentPurchaseCredits")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response studentPurchaseCredits(StudentEntity student, @QueryParam("credits") Long credits) {
+        try {
+            studentSessionBean.updateAccountPurchaseCredits(student, credits);
+            return Response.status(Status.OK).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
 }

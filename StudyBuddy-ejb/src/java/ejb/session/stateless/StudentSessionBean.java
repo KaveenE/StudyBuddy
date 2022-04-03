@@ -87,4 +87,16 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         accountToUpdateStudent.setCreditBalance(studentEntity.getCreditBalance());
     }
 
+    @Override
+    public void updateAccountPremium(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException {
+        studentEntity.setIsPremium(true);
+        updateAccountStudent(studentEntity);
+    }
+
+    @Override
+    public void updateAccountPurchaseCredits(StudentEntity studentEntity, Long creditBalance) throws InputDataValidationException, DoesNotExistException {
+        studentEntity.setCreditBalance(creditBalance);
+        updateAccountStudent(studentEntity);
+    }
+
 }

@@ -7,10 +7,6 @@ package ws.restful;
 
 import ejb.session.stateless.GroupEntitySessionBeanLocal;
 import entities.GroupEntity;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
