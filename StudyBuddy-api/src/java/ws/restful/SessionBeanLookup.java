@@ -6,6 +6,7 @@
 package ws.restful;
 
 import ejb.session.stateless.GroupEntitySessionBeanLocal;
+import ejb.session.stateless.KanbanSessionBeanLocal;
 import ejb.session.stateless.ModuleSessionBeanLocal;
 import ejb.session.stateless.RatingSessionBeanLocal;
 import ejb.session.stateless.ReportSessionBeanLocal;
@@ -83,6 +84,16 @@ public class SessionBeanLookup {
         try {
             Context c = new InitialContext();
             return (ReportSessionBeanLocal) c.lookup("java:global/StudyBuddy/StudyBuddy-ejb/ReportSessionBean!ejb.session.stateless.ReportSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+    
+    public KanbanSessionBeanLocal lookupKanbanSessionBeanLocal() {
+        try {
+            Context c = new InitialContext();
+            return (KanbanSessionBeanLocal) c.lookup("java:global/StudyBuddy/StudyBuddy-ejb/KanbanSessionBean!ejb.session.stateless.KanbanSessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

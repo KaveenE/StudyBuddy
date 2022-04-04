@@ -73,6 +73,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         if(groupEntity.getIsDeleted()){
             throw new GroupEntityDoesNotExistException();
         }
+        groupEntity.getKanbanBoards().size();
         EJBHelper.requireNonNull(groupEntity, new GroupEntityDoesNotExistException());
         return groupEntity;
     }

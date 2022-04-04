@@ -14,8 +14,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 
@@ -28,6 +30,9 @@ public class ModuleResource {
 
     ModuleSessionBeanLocal moduleSessionBean;
 
+    @Context
+    private UriInfo context;
+    
     public ModuleResource() {
         moduleSessionBean = new SessionBeanLookup().lookupModuleSessionBeanLocal();
     }
