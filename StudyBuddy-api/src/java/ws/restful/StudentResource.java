@@ -77,14 +77,14 @@ public class StudentResource {
         }
     }
 
-    @Path("studentRegister")
+    @Path("registerStudent")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response studentRegister(StudentEntity student) {
+    public Response registerStudent(StudentEntity student) {
         try {
             Long id = studentSessionBean.createNewStudent(student);
-            return Response.status(Status.OK).entity(id).build();
+             return this.retrieveStudentById(id);
         } catch (AlreadyExistsException | InputDataValidationException ex) {
             return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         } catch (UnknownPersistenceException ex) {
