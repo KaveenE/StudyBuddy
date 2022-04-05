@@ -30,6 +30,7 @@ public class ApplicationConfig extends javax.ws.rs.core.Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(ws.restful.CorsFilter.class);
         resources.add(ws.restful.GroupResource.class);
         resources.add(ws.restful.KanbanResource.class);
         resources.add(ws.restful.ModuleResource.class);
