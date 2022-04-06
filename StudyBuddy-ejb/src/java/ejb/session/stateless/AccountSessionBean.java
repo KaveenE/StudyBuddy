@@ -6,7 +6,9 @@
 package ejb.session.stateless;
 
 import entities.AccountEntity;
+import entities.StudentEntity;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -17,10 +19,13 @@ import javax.persistence.Query;
 import javax.security.auth.login.AccountNotFoundException;
 import util.exception.AccountAlreadyExistsException;
 import util.exception.AccountDoesNotExistException;
+import util.exception.AdminAlreadyExistsException;
+import util.exception.AdminDoesNotExistException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.StudentAlreadyExistsException;
 import util.exception.UnknownPersistenceException;
 import util.helper.EJBHelper;
 import util.security.CryptographicHelper;
@@ -31,6 +36,9 @@ import util.security.CryptographicHelper;
  */
 @Stateless
 public class AccountSessionBean implements AccountSessionBeanLocal {
+
+    @EJB(name = "StudentSessionBeanLocal")
+    private StudentSessionBeanLocal studentSessionBeanLocal;
 
     @PersistenceContext(unitName = "StudyBuddy-ejbPU")
     private EntityManager em;
@@ -73,12 +81,17 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
     @Override
     public Long createNewAccount(AccountEntity newAccountEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException {
         EJBHelper.throwValidationErrorsIfAny(newAccountEntity);
-
+        
+        errorMsgForDupEmailUsername(newAccountEntity);
+        
         try {
             em.persist(newAccountEntity);
             em.flush();
         } catch (PersistenceException ex) {
-            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new AccountAlreadyExistsException());
+            if(newAccountEntity instanceof StudentEntity) {
+                AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex,new StudentAlreadyExistsException());
+            }
+            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex,new AdminAlreadyExistsException());
         }
 
         return newAccountEntity.getAccountId();
@@ -93,13 +106,13 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
             if (accountEntity.getPassword().equals(passwordHash)) {
                 return accountEntity;
             } else {
-                throw new InvalidLoginCredentialException();
+                throw new InvalidLoginCredentialException("Invalid password");
             }
         } catch (AccountDoesNotExistException ex) {
-            throw new InvalidLoginCredentialException();
+            throw new InvalidLoginCredentialException("Invalid username");
         }
     }
-    
+
     //Only accessible by account owner!
     @Override
     public void updatePassword(AccountEntity accountToUpdatePassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException {
@@ -110,5 +123,27 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
         String newSalt = CryptographicHelper.getInstance().generateRandomString(32);
         account.setSalt(newSalt);
         account.setPassword(accountToUpdatePassword.getPassword());
+    }
+    
+    //Couldn't refactor createAccount to include specific messages properly due to some bug (or i suck)
+    //So had to create separate method, iterate thru the entities again..
+    //Poor performance
+    private void errorMsgForDupEmailUsername(AccountEntity newAccountEntity) throws StudentAlreadyExistsException {
+        String errorMsg = "";
+        List<StudentEntity> students = studentSessionBeanLocal.retrieveAllStudents();
+        boolean dupEmail = students.stream().anyMatch(stud -> stud.getEmail().equals(newAccountEntity.getEmail()));
+        boolean dupUsername = students.stream().anyMatch(stud -> stud.getUsername().equals(newAccountEntity.getUsername()));
+
+        if (dupEmail) {
+            errorMsg = "You have already registered with this email";
+        }
+
+        if (dupUsername) {
+            errorMsg = "Username has already been taken";
+        }
+        
+        if(!errorMsg.isEmpty()) {
+            throw new StudentAlreadyExistsException(errorMsg);
+        }
     }
 }
