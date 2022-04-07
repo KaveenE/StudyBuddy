@@ -53,7 +53,7 @@ public class SchoolResource {
     @Path("retrieveSchool/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveBook(@PathParam("id") Long id) {
+    public Response retrieveSchool(@PathParam("id") Long id) {
         try {
             SchoolEntity school = schoolSessionBean.retrieveSchoolById(id);
             String result = new ObjectMapper().writeValueAsString(school);

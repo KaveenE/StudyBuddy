@@ -17,6 +17,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -47,9 +48,9 @@ public class GroupResource {
     @Path("retrieveAllOpenGroups")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllOpenGroups() {
+    public Response retrieveAllOpenGroups(@QueryParam("schoolId") Long schoolId) {
         try {
-            List<GroupEntity> groups = groupEntitySessionBean.retrieveAllOpenGroups();
+            List<GroupEntity> groups = groupEntitySessionBean.retrieveAllOpenGroups(schoolId);
             String result = new ObjectMapper().writeValueAsString(groups);
             return Response.ok(result, MediaType.APPLICATION_JSON).build();
         } catch (JsonProcessingException ex) {

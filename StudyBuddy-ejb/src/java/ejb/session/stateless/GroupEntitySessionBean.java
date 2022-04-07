@@ -8,16 +8,13 @@ package ejb.session.stateless;
 import entities.GroupEntity;
 import entities.ModuleEntity;
 import entities.StudentEntity;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import util.exception.AccessRightsException;
 import util.exception.AdvertismentAlreadyExistsException;
 import util.exception.AlreadyExistsException;
@@ -51,11 +48,11 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     }
 
     @Override
-    public List<GroupEntity> retrieveAllOpenGroups() {
-        List<GroupEntity> groups = retrieveAllGroupEntity();
-        return groups.stream()
-                .filter(g -> g.getIsOpen())
-                .collect(Collectors.toCollection(ArrayList::new));
+    public List<GroupEntity> retrieveAllOpenGroups(Long schoolId) {
+        Query query = em.createQuery("SELECT g FROM GroupEntity g WHERE g.moduleEntity.school.schoolId = :schoolId AND g.isOpen = TRUE");
+        query.setParameter("schoolId", schoolId);
+        
+        return query.getResultList();
     }
 
     @Override
