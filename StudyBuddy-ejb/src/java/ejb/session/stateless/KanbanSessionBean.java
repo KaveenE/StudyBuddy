@@ -183,8 +183,8 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
                 throw new KanbanCardDoesNotExistException("This kanban card does not exist!");
             }
 
-            kanbanCardToUpdate.setDeadlineStart(kanbanCard.getDeadlineStart());
-            kanbanCardToUpdate.setDeadlineEnd(kanbanCard.getDeadlineEnd());
+            kanbanCardToUpdate.setCreatedAt(kanbanCard.getCreatedAt());
+            kanbanCardToUpdate.setDeadline(kanbanCard.getDeadline());
             kanbanCardToUpdate.setTitle(kanbanCard.getTitle());
             kanbanCardToUpdate.setDescription(kanbanCard.getDescription());
 
@@ -297,7 +297,10 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
             board.getKanbanLists().add(new KanbanList("Finished", board));
             board.getKanbanLists().add(new KanbanList("Archive", board));
 
-            board.getKanbanLists().forEach(l -> l.getKanbanCards().add(new KanbanCard("New Card", "", null, null, poster, l)));
+            board.getKanbanLists().forEach(list -> {
+                KanbanCard newCard = new KanbanCard("New Card", "", poster);
+                newCard.setKanbanList(list);
+            });
             
             EJBHelper.throwValidationErrorsIfAny(board);
             
