@@ -31,4 +31,8 @@ public interface GroupEntitySessionBeanLocal {
 
     public void updateGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException, AccessRightsException;
 
+    public List<GroupEntity> retrieveAllOpenGroups();
+
+    public void applyToGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException;
+
 }
