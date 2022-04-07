@@ -92,26 +92,13 @@ public class StudentResource {
         }
     }
 
-    @Path("studentPurchasePremium")
+    @Path("updateStudent")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response studentPurchasePremium(StudentEntity student) {
+    public Response updateStudent(StudentEntity student) {
         try {
-            studentSessionBean.updateAccountPremium(student);
-            return Response.status(Status.OK).build();
-        } catch (DoesNotExistException | InputDataValidationException ex) {
-            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
-        }
-    }
-
-    @Path("studentPurchaseCredits")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response studentPurchaseCredits(StudentEntity student, @QueryParam("credits") Long credits) {
-        try {
-            studentSessionBean.updateAccountPurchaseCredits(student, credits);
+            studentSessionBean.updateAccountStudent(student);
             return Response.status(Status.OK).build();
         } catch (DoesNotExistException | InputDataValidationException ex) {
             return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();

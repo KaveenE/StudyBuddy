@@ -33,8 +33,4 @@ public interface StudentSessionBeanLocal {
 
     public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException;
 
-    public void updateAccountPremium(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException;
-
-    public void updateAccountPurchaseCredits(StudentEntity studentEntity, Long creditBalance) throws InputDataValidationException, DoesNotExistException;
-
 }
