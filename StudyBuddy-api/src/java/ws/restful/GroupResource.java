@@ -45,10 +45,10 @@ public class GroupResource {
         groupEntitySessionBean = new SessionBeanLookup().lookupGroupEntitySessionBeanLocal();
     }
 
-    @Path("retrieveAllOpenGroups")
+    @Path("retrieveAllOpenGroups/{schoolId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllOpenGroups(@QueryParam("schoolId") Long schoolId) {
+    public Response retrieveAllOpenGroups(@PathParam("schoolId") Long schoolId) {
         try {
             List<GroupEntity> groups = groupEntitySessionBean.retrieveAllOpenGroups(schoolId);
             String result = new ObjectMapper().writeValueAsString(groups);
