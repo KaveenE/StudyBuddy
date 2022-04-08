@@ -33,6 +33,6 @@ public interface GroupEntitySessionBeanLocal {
 
     public List<GroupEntity> retrieveAllOpenGroups(Long schoolId);
 
-    public void applyToGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException;
+    public void applyToGroup(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException;
 
 }
