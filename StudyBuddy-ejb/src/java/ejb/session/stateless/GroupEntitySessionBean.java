@@ -6,14 +6,15 @@
 package ejb.session.stateless;
 
 import entities.GroupEntity;
-import entities.KanbanBoard;
 import entities.ModuleEntity;
+import entities.StudentEntity;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import util.exception.AccessRightsException;
 import util.exception.AdvertismentAlreadyExistsException;
 import util.exception.AlreadyExistsException;
@@ -32,6 +33,8 @@ import util.helper.EJBHelper;
 @Stateless
 public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
 
+    @EJB(name = "StudentSessionBeanLocal")
+    private StudentSessionBeanLocal studentSessionBeanLocal;
     @EJB(name = "ModuleSessionBeanLocal")
     private ModuleSessionBeanLocal moduleSessionBeanLocal;
 
@@ -45,6 +48,14 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     }
 
     @Override
+    public List<GroupEntity> retrieveAllOpenGroups(Long schoolId) {
+        Query query = em.createQuery("SELECT g FROM GroupEntity g WHERE g.moduleEntity.school.schoolId = :schoolId AND g.isOpen = TRUE");
+        query.setParameter("schoolId", schoolId);
+        
+        return query.getResultList();
+    }
+
+    @Override
     public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newGroupEntity);
 
@@ -54,10 +65,8 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
             ModuleEntity moduleEntity = moduleSessionBeanLocal.retrieveModuleById(moduleId);
             newGroupEntity.setModuleEntity(moduleEntity);
             moduleEntity.getGroups().add(newGroupEntity);
-            
-//          Set up kanban board
-            
 
+//          Set up kanban board
             em.persist(newGroupEntity);
             em.flush();
         } catch (PersistenceException ex) {
@@ -70,14 +79,25 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     @Override
     public GroupEntity retrieveGroupEntityById(Long groupId) throws InputDataValidationException, DoesNotExistException {
         GroupEntity groupEntity = em.find(GroupEntity.class, groupId);
-        if(groupEntity.getIsDeleted()){
+        if (groupEntity.getIsDeleted()) {
             throw new GroupEntityDoesNotExistException();
         }
+        groupEntity.getKanbanBoards().size();
         EJBHelper.requireNonNull(groupEntity, new GroupEntityDoesNotExistException());
         return groupEntity;
     }
 
+    @Override
+    public void applyToGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException {
+        GroupEntity group = retrieveGroupEntityById(groupEntity.getGroupId());
+        StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
+        group.getCandidates().add(studentEntity);
+        studentEntity.getGroupsApplied().add(group);
+        em.flush();
+    }
+
     //Only poster is allowed to change name and description
+    @Override
     public void updateGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException, AccessRightsException {
         EJBHelper.throwValidationErrorsIfAny(groupEntity);
 

@@ -8,7 +8,6 @@ package ejb.session.stateless;
 import entities.StudentEntity;
 import java.util.List;
 import javax.ejb.Local;
-import javax.security.auth.login.AccountNotFoundException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -34,5 +33,4 @@ public interface StudentSessionBeanLocal {
 
     public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException;
 
-    
 }

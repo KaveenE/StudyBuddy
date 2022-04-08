@@ -5,7 +5,6 @@
  */
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,33 +45,32 @@ public class StudentEntity extends AccountEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean optLocation;
+    
+    @OneToMany(mappedBy = "ratee")
+    private List<RatingEntity> ratingByOthers;
 
+    @OneToMany(mappedBy = "rater")
+    private List<RatingEntity> ratingOthers;
+    
     @OneToMany(mappedBy = "poster")
-    @JsonIgnore
     private List<GroupEntity> groupsPosted;
 
     @ManyToMany(mappedBy = "candidates")
-    @JsonIgnore
     private List<GroupEntity> groupsApplied;
 
     @ManyToMany(mappedBy = "groupMembers")
-    @JsonIgnore
     private List<GroupEntity> groups;
 
     @OneToMany(mappedBy = "sender")
-    @JsonIgnore
     private List<MessageEntity> messages;
 
     @OneToMany(mappedBy = "studentWhoReported")
-    @JsonIgnore
     private List<ReportEntity> reportsSubmitted;
 
     @ManyToMany(mappedBy = "assignedStudents")
-    @JsonIgnore
     private List<KanbanCard> assignedCards;
 
     @OneToMany(mappedBy = "reportedStudent")
-    @JsonIgnore
     private List<ReportEntity> reportReceived;
 
     {
@@ -235,6 +233,30 @@ public class StudentEntity extends AccountEntity implements Serializable {
      */
     public void setReportReceived(List<ReportEntity> reportReceived) {
         this.reportReceived = reportReceived;
+    }
+
+    public List<RatingEntity> getRatingByOthers() {
+        return ratingByOthers;
+    }
+
+    public void setRatingByOthers(List<RatingEntity> ratingByOthers) {
+        this.ratingByOthers = ratingByOthers;
+    }
+
+    public List<RatingEntity> getRatingOthers() {
+        return ratingOthers;
+    }
+
+    public void setRatingOthers(List<RatingEntity> ratingOthers) {
+        this.ratingOthers = ratingOthers;
+    }
+
+    public List<ReportEntity> getReportsSubmitted() {
+        return reportsSubmitted;
+    }
+
+    public void setReportsSubmitted(List<ReportEntity> reportsSubmitted) {
+        this.reportsSubmitted = reportsSubmitted;
     }
 
 }

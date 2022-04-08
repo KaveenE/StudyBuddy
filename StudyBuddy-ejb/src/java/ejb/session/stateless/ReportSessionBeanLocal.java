@@ -28,6 +28,4 @@ public interface ReportSessionBeanLocal {
 
     public void updateReport(ReportEntity reportEntity) throws InputDataValidationException, DoesNotExistException;
 
-    public String retrieveAllReportsSizeInString();
-
 }

@@ -5,6 +5,8 @@
  */
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,9 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "accountId")
 public abstract class AccountEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,17 +56,9 @@ public abstract class AccountEntity implements Serializable {
     @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String salt;
 
-    @OneToMany(mappedBy = "ratee")
-    private List<RatingEntity> ratingByOthers;
-
-    @OneToMany(mappedBy = "rater")
-    private List<RatingEntity> ratingOthers;
-
     public AccountEntity() {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
-        System.out.println("salt generated: " + salt);
-        this.ratingByOthers = new ArrayList<>();
-        this.ratingOthers = new ArrayList<>();
+
     }
 
     public AccountEntity(String email, String username, String password) {
@@ -131,22 +128,6 @@ public abstract class AccountEntity implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public List<RatingEntity> getRatingByOthers() {
-        return ratingByOthers;
-    }
-
-    public void setRatingByOthers(List<RatingEntity> ratingByOthers) {
-        this.ratingByOthers = ratingByOthers;
-    }
-
-    public List<RatingEntity> getRatingOthers() {
-        return ratingOthers;
-    }
-
-    public void setRatingOthers(List<RatingEntity> ratingOthers) {
-        this.ratingOthers = ratingOthers;
     }
 
     public String getSalt() {

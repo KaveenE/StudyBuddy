@@ -45,21 +45,21 @@ public class RatingEntity implements Serializable {
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
-    private AccountEntity ratee;
+    private StudentEntity ratee;
     
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
-    private AccountEntity rater;
+    private StudentEntity rater;
 
         
     public RatingEntity() {
     }
     
-    public RatingEntity(Integer rating, AccountEntity ratee, AccountEntity rater) {
+    public RatingEntity(Integer rating, StudentEntity ratee, StudentEntity rater) {
         this(rating, "", ratee, rater);
     }
 
-    public RatingEntity(Integer rating, String ratingDescription, AccountEntity ratee, AccountEntity rater) {
+    public RatingEntity(Integer rating, String ratingDescription, StudentEntity ratee, StudentEntity rater) {
         this.rating = rating;
         this.ratingDescription = ratingDescription;
         this.ratee = ratee;
@@ -95,7 +95,7 @@ public class RatingEntity implements Serializable {
     /**
      * @param ratee the ratee to set
      */
-    public void setRatee(AccountEntity ratee) {
+    public void setRatee(StudentEntity ratee) {
         this.ratee = ratee;
     }
 
@@ -109,7 +109,7 @@ public class RatingEntity implements Serializable {
     /**
      * @param rater the rater to set
      */
-    public void setRater(AccountEntity rater) {
+    public void setRater(StudentEntity rater) {
         this.rater = rater;
     }
 

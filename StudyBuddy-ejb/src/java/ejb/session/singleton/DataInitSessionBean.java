@@ -75,7 +75,7 @@ public class DataInitSessionBean {
     public void postConstruct() {
         System.out.println("Singleton postconstruct");
         try {
-            adminSessionBean.retrieveAdminById(1l);
+            adminSessionBean.retrieveAdminById(4l);
         } catch (DoesNotExistException ex) {
             initData();
         } catch (InputDataValidationException ex) {
@@ -86,9 +86,9 @@ public class DataInitSessionBean {
     public void initData() {
         try {
             System.out.println("Data Initialization Start");
-            studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "password", "Freshman"));
-            studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "password", "Freshman"));
-            studentEntitySessionBean.createNewStudent(new StudentEntity("stud3@gmail.com", "stud3", "password", "Freshman"));
+            studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "password", "Y1S1"));
+            studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "password", "Y1S2"));
+            studentEntitySessionBean.createNewStudent(new StudentEntity("stud3@gmail.com", "stud3", "password", "Y1S1"));
 
             adminSessionBean.createNewAdminEntity(new AdminEntity("admin@stubud.xyz", "admin", "password"));
 

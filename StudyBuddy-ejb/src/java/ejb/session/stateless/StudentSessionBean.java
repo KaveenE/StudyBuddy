@@ -86,5 +86,4 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         accountToUpdateStudent.setIsPremium(studentEntity.getIsPremium());
         accountToUpdateStudent.setCreditBalance(studentEntity.getCreditBalance());
     }
-
 }

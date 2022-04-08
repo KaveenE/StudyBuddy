@@ -10,7 +10,6 @@ import entities.KanbanBoard;
 import entities.KanbanCard;
 import entities.KanbanList;
 import entities.StudentEntity;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -129,7 +128,7 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
         EJBHelper.throwValidationErrorsIfAny(kanbanList);
         KanbanList kanbanListToUpdate = em.find(KanbanList.class, kanbanList.getKanbanListId());
         EJBHelper.requireNonNull(kanbanListToUpdate, new KanbanListDoesNotExistException());
-        //So what to update?
+        kanbanListToUpdate.setHeading(kanbanList.getHeading());
     }
 
     @Override
@@ -184,8 +183,8 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
                 throw new KanbanCardDoesNotExistException("This kanban card does not exist!");
             }
 
-            kanbanCardToUpdate.setDeadlineStart(kanbanCard.getDeadlineStart());
-            kanbanCardToUpdate.setDeadlineEnd(kanbanCard.getDeadlineEnd());
+            kanbanCardToUpdate.setCreatedAt(kanbanCard.getCreatedAt());
+            kanbanCardToUpdate.setDeadline(kanbanCard.getDeadline());
             kanbanCardToUpdate.setTitle(kanbanCard.getTitle());
             kanbanCardToUpdate.setDescription(kanbanCard.getDescription());
 
@@ -241,7 +240,7 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
         KanbanBoard board = em.find(KanbanBoard.class, kanbanBoardId);
         EJBHelper.requireNonNull(board, new KanbanBoardDoesNotExistException());
 
-        board.getKanbanLists();
+        board.getKanbanLists().size();
 
         return board;
 
@@ -260,6 +259,7 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
     @Override
     public KanbanList retrieveKanbanListById(Long kanbanListId) throws DoesNotExistException {
         KanbanList list = em.find(KanbanList.class, kanbanListId);
+        list.getKanbanCards().size();
         EJBHelper.requireNonNull(list, new KanbanListDoesNotExistException());
         return list;
     }
@@ -297,7 +297,10 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
             board.getKanbanLists().add(new KanbanList("Finished", board));
             board.getKanbanLists().add(new KanbanList("Archive", board));
 
-            board.getKanbanLists().forEach(l -> l.getKanbanCards().add(new KanbanCard("New Card", "", null, null, poster, l)));
+            board.getKanbanLists().forEach(list -> {
+                KanbanCard newCard = new KanbanCard("New Card", "", poster);
+                newCard.setKanbanList(list);
+            });
             
             EJBHelper.throwValidationErrorsIfAny(board);
             

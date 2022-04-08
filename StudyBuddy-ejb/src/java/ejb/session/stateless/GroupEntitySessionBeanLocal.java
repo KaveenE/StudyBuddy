@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entities.GroupEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.AccessRightsException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -27,5 +28,11 @@ public interface GroupEntitySessionBeanLocal {
     public GroupEntity retrieveGroupEntityById(Long groupId) throws InputDataValidationException, DoesNotExistException;
 
     public void deleteGroup(Long groupId) throws DoesNotExistException, InputDataValidationException;
+
+    public void updateGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException, AccessRightsException;
+
+    public List<GroupEntity> retrieveAllOpenGroups(Long schoolId);
+
+    public void applyToGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException;
 
 }

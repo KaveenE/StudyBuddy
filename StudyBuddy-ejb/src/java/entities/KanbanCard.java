@@ -5,6 +5,8 @@
  */
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ import javax.validation.constraints.Size;
  * @author larby
  */
 @Entity
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "kanbanCardId")
 public class KanbanCard implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,10 +48,10 @@ public class KanbanCard implements Serializable {
     @NotNull
     @Size(min = 0, max = 10_000)
     private String description;
+    
+    private LocalDateTime createdAt;
 
-    private LocalDateTime deadlineStart;
-
-    private LocalDateTime deadlineEnd;
+    private LocalDateTime deadline;
 
     @JoinColumn(nullable = false)
     @ManyToOne
@@ -61,20 +66,18 @@ public class KanbanCard implements Serializable {
 
     public KanbanCard() {
         this.assignedStudents = new ArrayList<>();
+        this.createdAt = LocalDateTime.now();
     }
-
-    public KanbanCard(String title, String description, LocalDateTime deadlineStart, LocalDateTime deadlineEnd, StudentEntity author) {
+    public KanbanCard(String title, String description, StudentEntity author) {
         this();
         this.title = title;
         this.description = description;
-        this.deadlineStart = deadlineStart;
-        this.deadlineEnd = deadlineEnd;
         this.author = author;
     }
 
-    public KanbanCard(String title, String description, LocalDateTime deadlineStart, LocalDateTime deadlineEnd, StudentEntity author, KanbanList kanbanList) {
-        this(title, description, deadlineStart, deadlineEnd, author);
-        this.kanbanList = kanbanList;
+    public KanbanCard(String title, String description, LocalDateTime deadline, StudentEntity author) {
+        this(title,description,author);
+        this.deadline = deadline;
     }
 
     public Long getKanbanCardId() {
@@ -114,31 +117,31 @@ public class KanbanCard implements Serializable {
     }
 
     /**
-     * @return the deadlineStart
+     * @return the createdAt
      */
-    public LocalDateTime getDeadlineStart() {
-        return deadlineStart;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     /**
-     * @param deadlineStart the deadlineStart to set
+     * @param createdAt the createdAt to set
      */
-    public void setDeadlineStart(LocalDateTime deadlineStart) {
-        this.deadlineStart = deadlineStart;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     /**
-     * @return the deadlineEnd
+     * @return the deadline
      */
-    public LocalDateTime getDeadlineEnd() {
-        return deadlineEnd;
+    public LocalDateTime getDeadline() {
+        return deadline;
     }
 
     /**
-     * @param deadlineEnd the deadlineEnd to set
+     * @param deadline the deadline to set
      */
-    public void setDeadlineEnd(LocalDateTime deadlineEnd) {
-        this.deadlineEnd = deadlineEnd;
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
     }
 
     /**
