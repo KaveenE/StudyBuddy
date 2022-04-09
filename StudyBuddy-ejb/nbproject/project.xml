@@ -9,6 +9,8 @@
             <included-library dirs="200">libs.jsf20.classpath</included-library>
             <included-library dirs="200">file.reference.json-20211205.jar</included-library>
             <included-library dirs="200">file.reference.jackson-annotations-2.9.7.jar</included-library>
+            <included-library dirs="200">file.reference.jackson-core-2.13.2.jar</included-library>
+            <included-library dirs="200">file.reference.jackson-databind-2.13.2.2.jar</included-library>
             <source-roots>
                 <root id="src.dir" name="Source Packages"/>
             </source-roots>
