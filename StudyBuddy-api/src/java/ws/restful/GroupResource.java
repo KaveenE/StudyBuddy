@@ -55,7 +55,7 @@ public class GroupResource {
         studentSessionBean = new SessionBeanLookup().lookupStudentSessionBeanLocal();
     }
 
-    @Path("retrieveGroupByStudentId/{studentId}")
+    @Path("retrieveGroupsByStudentId/{studentId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveGroupsByStudentId(@PathParam("studentId") Long studentId) {
