@@ -8,8 +8,14 @@ package ws.restful;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ejb.session.stateless.GroupEntitySessionBeanLocal;
+import ejb.session.stateless.StudentSessionBeanLocal;
 import entities.GroupEntity;
+import entities.StudentEntity;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,7 +23,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,6 +41,8 @@ import util.exception.UnknownPersistenceException;
 @Path("Group")
 public class GroupResource {
 
+    StudentSessionBeanLocal studentSessionBean = lookupStudentSessionBeanLocal();
+
     GroupEntitySessionBeanLocal groupEntitySessionBean;
 
     @Context
@@ -43,6 +50,39 @@ public class GroupResource {
 
     public GroupResource() {
         groupEntitySessionBean = new SessionBeanLookup().lookupGroupEntitySessionBeanLocal();
+    }
+
+    @Path("retrieveGroupByStudentId/{studentId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveGroupsByStudentId(@PathParam("studentId") Long studentId) {
+        StudentEntity student;
+        try {
+            student = studentSessionBean.retrieveStudentById(studentId);
+            List<GroupEntity> groups = student.getGroups();
+            String result = new ObjectMapper().writeValueAsString(groups);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {            
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("groupById/{groupId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveGroupById(@PathParam("groupId") Long groupId) {
+        try {
+            GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
+            
+            String res = new ObjectMapper().writeValueAsString(group);
+            return Response.ok(res, MediaType.APPLICATION_JSON).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {            
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
     }
 
     @Path("retrieveAllOpenGroups/{schoolId}")
@@ -95,6 +135,16 @@ public class GroupResource {
             return Response.status(Status.OK).build();
         } catch (AccessRightsException | DoesNotExistException | InputDataValidationException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+
+    private StudentSessionBeanLocal lookupStudentSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (StudentSessionBeanLocal) c.lookup("java:global/StudyBuddy/StudyBuddy-ejb/StudentSessionBean!ejb.session.stateless.StudentSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
         }
     }
 
