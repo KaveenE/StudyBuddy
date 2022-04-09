@@ -60,15 +60,19 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     }
 
     @Override
-    public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
+    public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId, Long studentId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newGroupEntity);
 
         try {
             EJBHelper.requireNonNull(moduleId, new ModuleDoesNotExistException("The new group must be associated with a module"));
-
+            StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
             ModuleEntity moduleEntity = moduleSessionBeanLocal.retrieveModuleById(moduleId);
             newGroupEntity.setModuleEntity(moduleEntity);
             moduleEntity.getGroups().add(newGroupEntity);
+            newGroupEntity.setPoster(studentEntity);
+            studentEntity.getGroupsPosted().add(newGroupEntity);
+            studentEntity.getGroups().add(newGroupEntity);
+            newGroupEntity.getGroupMembers().add(studentEntity);
 
 //          Set up kanban board
             em.persist(newGroupEntity);

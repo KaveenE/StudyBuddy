@@ -131,13 +131,11 @@ public class DataInitSessionBean {
             groupEntity.setDateTimeCreated(LocalDateTime.now());
             groupEntity.setPoster(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroupsPosted().add(groupEntity);
-            groupEntitySessionBean.createNewGroupEntity(groupEntity, 1l);
+            groupEntitySessionBean.createNewGroupEntity(groupEntity, 1l, 1l);
 
             groupEntity.getCandidates().add(studentEntitySessionBean.retrieveStudentById(2l));
             studentEntitySessionBean.retrieveStudentById(2l).getGroupsApplied().add(groupEntity);
             groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(3l));
-            groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(1l));
-            studentEntitySessionBean.retrieveStudentById(1l).getGroups().add(groupEntity);
             studentEntitySessionBean.retrieveStudentById(3l).getGroups().add(groupEntity);
             
             reportSessionBeanLocal.createNewReport(new ReportEntity("test"), 1L, 2L);

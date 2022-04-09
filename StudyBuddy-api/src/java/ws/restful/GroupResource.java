@@ -13,8 +13,6 @@ import entities.GroupEntity;
 import entities.MessageEntity;
 import entities.StudentEntity;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -28,7 +26,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.core.UriInfo;
 import util.exception.AccessRightsException;
 import util.exception.AlreadyExistsException;
@@ -104,13 +101,13 @@ public class GroupResource {
         }
     }
 
-    @Path("createGroup/{moduleId}")
+    @Path("createGroup")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createGroup(GroupEntity newGroupEntity, @PathParam("moduleId") Long moduleId) {
+    public Response createGroup(GroupEntity newGroupEntity, @QueryParam("moduleId") Long moduleId, @QueryParam("studentId") Long studentId) {
         try {
-            Long groupId = groupEntitySessionBean.createNewGroupEntity(newGroupEntity, moduleId);
+            Long groupId = groupEntitySessionBean.createNewGroupEntity(newGroupEntity, moduleId, studentId);
             return Response.status(Status.OK).entity(groupId).build();
         } catch (InputDataValidationException | AlreadyExistsException | DoesNotExistException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();

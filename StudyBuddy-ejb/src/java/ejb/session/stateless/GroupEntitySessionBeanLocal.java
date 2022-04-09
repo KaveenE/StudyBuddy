@@ -25,7 +25,7 @@ public interface GroupEntitySessionBeanLocal {
 
     public List<GroupEntity> retrieveAllGroupEntity();
 
-    public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException;
+    public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId, Long studentId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException;
 
     public GroupEntity retrieveGroupEntityById(Long groupId) throws InputDataValidationException, DoesNotExistException;
 
