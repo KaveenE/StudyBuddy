@@ -73,12 +73,13 @@ public class GroupResource {
         }
     }
 
-    @Path("applyToGroup/{studentId}")
+    @Path("applyToGroup")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response applyToGroup(@PathParam("studentId") Long studentId, GroupEntity group) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response applyToGroup(GroupEntity groupToUpdate) {
         try {
-            groupEntitySessionBean.applyToGroup(group.getGroupId(), studentId);
+            groupEntitySessionBean.applyToGroup(groupToUpdate.getGroupId(), groupToUpdate.getPoster().getAccountId());
             return Response.status(Status.OK).build();
         } catch (DoesNotExistException | InputDataValidationException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
