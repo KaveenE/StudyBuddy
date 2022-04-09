@@ -88,8 +88,8 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     }
 
     @Override
-    public void applyToGroup(GroupEntity groupEntity, Long studentId) throws InputDataValidationException, DoesNotExistException {
-        GroupEntity group = retrieveGroupEntityById(groupEntity.getGroupId());
+    public void applyToGroup(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException {
+        GroupEntity group = retrieveGroupEntityById(groupId);
         StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
         group.getCandidates().add(studentEntity);
         studentEntity.getGroupsApplied().add(group);
