@@ -7,7 +7,7 @@ package ejb.session.stateless;
 
 import entities.KanbanBoard;
 import entities.KanbanCard;
-import entities.KanbanList;
+import entities.KanbanCard;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AlreadyExistsException;
@@ -36,31 +36,21 @@ public interface KanbanSessionBeanLocal {
 
     public void deleteKanbanBoard(Long kanbanBoardId) throws DoesNotExistException;
 
-    public Long createNewKanbanList(KanbanList newKanbanList, Long kanbanBoardId) throws UnknownPersistenceException, AlreadyExistsException, DoesNotExistException, InputDataValidationException;
-
-    public List<KanbanList> retrieveAllKanbanLists();
-
-    public KanbanList retrieveKanbanListById(Long kanbanListId) throws DoesNotExistException;
-
-    public List<KanbanList> retrieveKanbanListsBykanbanBoardId(Long kanbanBoardId) throws DoesNotExistException;
-
-    public void updateKanbanList(KanbanList kanbanList) throws DoesNotExistException, InputDataValidationException;
-
-    public void deleteKanbanList(Long kanbanListId) throws DoesNotExistException;
-
-    public Long createNewKanbanCard(KanbanCard newKanbanCard, Long kanbanListId, Long authorStudentId) throws UnknownPersistenceException, DoesNotExistException, DoesNotExistException, AlreadyExistsException, InputDataValidationException;
-
     public List<KanbanCard> retrieveAllKanbanCards();
 
     public KanbanCard retrieveKanbanCardById(Long kanbanCardId) throws DoesNotExistException;
 
-    public List<KanbanCard> retrieveKanbanCardsBykanbanListId(Long kanbanListId) throws DoesNotExistException;
+    public List<KanbanCard> retrieveKanbanCardByBoardId(Long kanbanBoardId) throws DoesNotExistException;
 
-    public List<KanbanCard> retrieveKanbanCardsAssignedToStudents(Long StudentId) throws DoesNotExistException, InputDataValidationException;
-
-    public void updateKanbanCard(KanbanCard KanbanCard) throws KanbanCardDoesNotExistException, InputDataValidationException;
+    public void updateKanbanCard(KanbanCard kanbanCard) throws DoesNotExistException, InputDataValidationException;
 
     public void deleteKanbanCard(Long kanbanCardId) throws DoesNotExistException;
 
+    public Long createNewKanbanCard(KanbanCard newKanbanCard, Long kanbanBoardId, Long authorStudentId) throws UnknownPersistenceException, DoesNotExistException, DoesNotExistException, AlreadyExistsException, InputDataValidationException;
+
+    public List<KanbanCard> retrieveKanbanCardsAssignedToStudents(Long StudentId) throws DoesNotExistException, InputDataValidationException;
+
     public Long createDefaultKanbanBoard(Long GroupId) throws GroupEntityDoesNotExistException;
+
+    
 }

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ejb.session.stateless.KanbanSessionBeanLocal;
 import entities.KanbanBoard;
 import entities.KanbanCard;
-import entities.KanbanList;
+import entities.KanbanCard;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -113,53 +113,13 @@ public class KanbanResource {
         }
     }
     
-    @Path("createNewKanbanList")
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewKanbanList(KanbanList newKanbanList, @QueryParam("kanbanBoardId") Long kanbanBoardId) {
-        try {
-            Long kanbanListId = kanbanSessionBean.createNewKanbanList(newKanbanList, kanbanBoardId);
-            return Response.status(Response.Status.OK).entity(kanbanListId).build();
-        } catch (DoesNotExistException | InputDataValidationException | AlreadyExistsException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
-        } catch (UnknownPersistenceException ex) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-        }
-    }
-    
-    @Path("updateKanbanList")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateKanbanList(KanbanList kanbanList) {
-        try {
-            kanbanSessionBean.updateKanbanList(kanbanList);
-            return Response.status(Response.Status.OK).build();
-        } catch (DoesNotExistException | InputDataValidationException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
-        }
-    }
-    
-    @Path("deleteKanbanList")
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteKanbanList(@QueryParam("kanbanBoardId") Long kanbanListId) {
-        try {
-            kanbanSessionBean.deleteKanbanList(kanbanListId);
-            return Response.status(Response.Status.OK).build();
-        } catch (DoesNotExistException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
-        }
-    }
-    
     @Path("createNewKanbanCard")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewKanbanCard(KanbanCard newKanbanCard, @QueryParam("kanbanBoardId") Long kanbanListId, @QueryParam("kanbanBoardId") Long authorStudentId) {
+    public Response createNewKanbanCard(KanbanCard newKanbanCard, @QueryParam("kanbanBoardId") Long kanbanBoardId, @QueryParam("authorStudentId") Long authorStudentId) {
         try {
-            Long kanbanCardId = kanbanSessionBean.createNewKanbanCard(newKanbanCard, kanbanListId, authorStudentId);
+            Long kanbanCardId = kanbanSessionBean.createNewKanbanCard(newKanbanCard, authorStudentId, authorStudentId);
             return Response.status(Response.Status.OK).entity(kanbanCardId).build();
         } catch (DoesNotExistException | InputDataValidationException | AlreadyExistsException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
