@@ -18,6 +18,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -72,10 +73,10 @@ public class KanbanResource {
         }
     }
 
-    @Path("retrieveKanbanBoardsByGroupId")
+    @Path("retrieveKanbanBoardsByGroupId/{groupId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveKanbanBoardsByGroupId(@QueryParam("groupId") Long groupId) {
+    public Response retrieveKanbanBoardsByGroupId(@PathParam("groupId") Long groupId) {
         try {
             List<KanbanBoard> kanbanBoards = kanbanSessionBean.retrieveKanbanBoardsByGroupId(groupId);
             String result = new ObjectMapper().writeValueAsString(kanbanBoards);
