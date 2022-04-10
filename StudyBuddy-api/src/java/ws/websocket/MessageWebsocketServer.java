@@ -47,10 +47,8 @@ public class MessageWebsocketServer {
 
     @OnMessage
     public void handleMessage(String message, Session session) {
-        System.out.println(message);
         try (JsonReader reader = Json.createReader(new StringReader(message))) {
             JsonObject jsonMessage = reader.readObject();
-            System.out.println("jsonMessage: " + jsonMessage);
             
             String action = jsonMessage.getString("action");
             Long studentId = jsonMessage.getJsonNumber("studentId").longValue();
