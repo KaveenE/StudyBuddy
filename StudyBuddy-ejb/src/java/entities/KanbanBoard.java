@@ -49,10 +49,10 @@ public class KanbanBoard implements Serializable {
     @OneToMany(mappedBy = "kanbanBoard",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<KanbanList> kanbanLists;
+    private List<KanbanCard> kanbanCards;
 
     public KanbanBoard() {
-        this.kanbanLists = new ArrayList<>();
+        this.kanbanCards = new ArrayList<>();
     }
     
     public KanbanBoard(String heading, GroupEntity group) {
@@ -97,18 +97,12 @@ public class KanbanBoard implements Serializable {
         this.group = group;
     }
 
-    /**
-     * @return the kanbanList
-     */
-    public List<KanbanList> getKanbanLists() {
-        return kanbanLists;
+    public List<KanbanCard> getKanbanCards() {
+        return kanbanCards;
     }
 
-    /**
-     * @param kanbanList the kanbanList to set
-     */
-    public void setKanbanLists(List<KanbanList> kanbanLists) {
-        this.kanbanLists = kanbanLists;
+    public void setKanbanCards(List<KanbanCard> kanbanCards) {
+        this.kanbanCards = kanbanCards;
     }
 
     @Override
