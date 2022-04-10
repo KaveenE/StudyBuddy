@@ -54,6 +54,14 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         
         return query.getResultList();
     }
+    
+    @Override
+    public List<GroupEntity> retrieveAllMyGroups(Long studentId) {
+        Query query = em.createQuery("SELECT g FROM GroupEntity g WHERE g.poster.accountId = :studentId AND g.isOpen = TRUE");
+        query.setParameter("studentId", studentId);
+        
+        return query.getResultList();
+    }
 
     @Override
     public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
@@ -95,6 +103,28 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         studentEntity.getGroupsApplied().add(group);
         em.flush();
     }
+    
+    @Override
+    public void approveReq(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException {
+        GroupEntity group = retrieveGroupEntityById(groupId);
+        StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
+        group.getGroupMembers().add(studentEntity);
+        //remove student as group candidate
+        group.getCandidates().remove(studentEntity);
+        studentEntity.getGroups().add(group);
+        studentEntity.getGroupsApplied().remove(group);
+        em.flush();
+    }
+    
+    @Override
+    public void disapproveReq(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException {
+        GroupEntity group = retrieveGroupEntityById(groupId);
+        StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
+        group.getCandidates().remove(studentEntity);
+        studentEntity.getGroupsApplied().remove(group);
+        em.flush();
+    }
+
 
     //Only poster is allowed to change name and description
     @Override

@@ -33,4 +33,6 @@ public interface StudentSessionBeanLocal {
 
     public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException;
 
+    public List<StudentEntity> retrieveAllCandidates(Long groupId);
+
 }

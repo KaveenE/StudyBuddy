@@ -53,4 +53,10 @@
         <local>ejb.session.stateless.KanbanSessionBeanLocal</local>
         <ejb-link>StudyBuddy-ejb.jar#KanbanSessionBean</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>StudentSessionBean3</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.StudentSessionBeanLocal</local>
+        <ejb-link>StudyBuddy-ejb.jar#StudentSessionBean</ejb-link>
+    </ejb-local-ref>
 </web-app>

@@ -8,8 +8,14 @@ package ws.restful;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ejb.session.stateless.GroupEntitySessionBeanLocal;
+import ejb.session.stateless.StudentSessionBeanLocal;
 import entities.GroupEntity;
+import entities.StudentEntity;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -36,6 +42,8 @@ import util.exception.UnknownPersistenceException;
 @Path("Group")
 public class GroupResource {
 
+    StudentSessionBeanLocal studentSessionBean;
+
     GroupEntitySessionBeanLocal groupEntitySessionBean;
 
     @Context
@@ -52,6 +60,32 @@ public class GroupResource {
         try {
             List<GroupEntity> groups = groupEntitySessionBean.retrieveAllOpenGroups(schoolId);
             String result = new ObjectMapper().writeValueAsString(groups);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("retrieveAllMyGroups/{studentId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllMyGroups(@PathParam("studentId") Long studentId) {
+        try {
+            List<GroupEntity> groups = groupEntitySessionBean.retrieveAllMyGroups(studentId);
+            String result = new ObjectMapper().writeValueAsString(groups);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("retrieveAllCandidates/{groupId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllCandidates(@PathParam("groupId") Long groupId) {
+        try {
+            List<StudentEntity> students = studentSessionBean.retrieveAllCandidates(groupId);
+            String result = new ObjectMapper().writeValueAsString(students);
             return Response.ok(result, MediaType.APPLICATION_JSON).build();
         } catch (JsonProcessingException ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
@@ -85,6 +119,30 @@ public class GroupResource {
         }
     }
 
+    @Path("approveReq")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response approveReq(@QueryParam("studentId") Long studentId, @QueryParam("groupId") Long groupId) {
+        try {
+            groupEntitySessionBean.approveReq(groupId, studentId);
+            return Response.status(Status.OK).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("disapproveReq")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response disapproveReq(@QueryParam("studentId") Long studentId, @QueryParam("groupId") Long groupId) {
+        try {
+            groupEntitySessionBean.disapproveReq(groupId, studentId);
+            return Response.status(Status.OK).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+    
     @Path("updateGroup/{studentId}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -94,6 +152,16 @@ public class GroupResource {
             return Response.status(Status.OK).build();
         } catch (AccessRightsException | DoesNotExistException | InputDataValidationException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+
+    private StudentSessionBeanLocal lookupStudentSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (StudentSessionBeanLocal) c.lookup("java:global/StudyBuddy/StudyBuddy-ejb/StudentSessionBean!ejb.session.stateless.StudentSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
         }
     }
 

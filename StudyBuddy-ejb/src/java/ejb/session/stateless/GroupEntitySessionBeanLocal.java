@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entities.GroupEntity;
+import entities.StudentEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AccessRightsException;
@@ -35,4 +36,11 @@ public interface GroupEntitySessionBeanLocal {
 
     public void applyToGroup(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException;
 
+    public void disapproveReq(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException;
+
+    public void approveReq(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException;
+
+    public List<GroupEntity> retrieveAllMyGroups(Long studentId);
+
+  
 }

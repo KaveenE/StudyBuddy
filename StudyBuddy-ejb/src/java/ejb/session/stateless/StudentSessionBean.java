@@ -12,6 +12,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -85,5 +86,13 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         accountToUpdateStudent.setIsEnabled(studentEntity.getIsEnabled());
         accountToUpdateStudent.setIsPremium(studentEntity.getIsPremium());
         accountToUpdateStudent.setCreditBalance(studentEntity.getCreditBalance());
+    }
+
+    @Override
+    public List<StudentEntity> retrieveAllCandidates(Long groupId) {
+        Query query = em.createQuery("SELECT s FROM StudentEntity s WHERE s.groupsApplied = :groupId");
+        query.setParameter("groupId", groupId);
+
+        return query.getResultList();
     }
 }
