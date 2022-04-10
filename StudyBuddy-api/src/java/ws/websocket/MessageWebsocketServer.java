@@ -22,7 +22,7 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-    
+
 @ApplicationScoped
 @ServerEndpoint("/messages")
 public class MessageWebsocketServer {
@@ -32,10 +32,12 @@ public class MessageWebsocketServer {
 
     @OnOpen
     public void open(Session session) {
+        System.out.println("New Session opened: " + session.getId());
     }
 
     @OnClose
     public void close(Session session) {
+        System.out.println("Session closed: " + session.getId());
     }
 
     @OnError
@@ -45,23 +47,28 @@ public class MessageWebsocketServer {
 
     @OnMessage
     public void handleMessage(String message, Session session) {
+        System.out.println(message);
         try (JsonReader reader = Json.createReader(new StringReader(message))) {
             JsonObject jsonMessage = reader.readObject();
-
-            if ("register".equals(jsonMessage.getString("type"))) {
-                Long studentId = Long.valueOf(jsonMessage.getString("studentId"));
-                Long groupId = Long.valueOf(jsonMessage.getString("groupId"));
+            System.out.println("jsonMessage: " + jsonMessage);
+            
+            String action = jsonMessage.getString("action");
+            Long studentId = jsonMessage.getJsonNumber("studentId").longValue();
+            Long groupId = jsonMessage.getJsonNumber("groupId").longValue();
+            
+            System.out.printf("%s from student[%d] to group [%d]", action, studentId, groupId);
+            
+            if ("register".equals(action)) {
                 messageSessionHandler.addSession(studentId, groupId, session);
             }
-            if ("close".equals(jsonMessage.getString("type"))) {
-                Long studentId = Long.valueOf(jsonMessage.getString("studentId"));
+            if ("close".equals(action)) {
                 messageSessionHandler.removeSession(studentId);
-            } else if ("send".equals(jsonMessage.getString("type"))) {
+            } else if ("send".equals(action)) {
                 MessageEntity messageEntity = new MessageEntity();
                 GroupEntity group = new GroupEntity();
                 StudentEntity sender = new StudentEntity();
-                group.setGroupId(Long.valueOf(jsonMessage.getJsonObject("group").getString("groupId")));
-                sender.setAccountId(Long.valueOf(jsonMessage.getJsonObject("sender").getString("accountId")));
+                sender.setAccountId(studentId);
+                group.setGroupId(groupId);
 
                 messageEntity.setGroup(group);
                 messageEntity.setSender(sender);
