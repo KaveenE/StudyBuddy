@@ -86,9 +86,9 @@ public class DataInitSessionBean {
     public void initData() {
         try {
             System.out.println("Data Initialization Start");
-            studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "password", "Y1S1"));
-            studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "password", "Y1S2"));
-            studentEntitySessionBean.createNewStudent(new StudentEntity("stud3@gmail.com", "stud3", "password", "Y1S1"));
+            studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "password", "Y1S1", "stud1name"));
+            studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "password", "Y1S2", "stud2name"));
+            studentEntitySessionBean.createNewStudent(new StudentEntity("stud3@gmail.com", "stud3", "password", "Y1S1", "stud3name"));
 
             adminSessionBean.createNewAdminEntity(new AdminEntity("admin@stubud.xyz", "admin", "password"));
 
@@ -131,13 +131,11 @@ public class DataInitSessionBean {
             groupEntity.setDateTimeCreated(LocalDateTime.now());
             groupEntity.setPoster(studentEntitySessionBean.retrieveStudentById(1l));
             studentEntitySessionBean.retrieveStudentById(1l).getGroupsPosted().add(groupEntity);
-            groupEntitySessionBean.createNewGroupEntity(groupEntity, 1l);
+            groupEntitySessionBean.createNewGroupEntity(groupEntity, 1l, 1l);
 
             groupEntity.getCandidates().add(studentEntitySessionBean.retrieveStudentById(2l));
             studentEntitySessionBean.retrieveStudentById(2l).getGroupsApplied().add(groupEntity);
             groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(3l));
-            groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(1l));
-            studentEntitySessionBean.retrieveStudentById(1l).getGroups().add(groupEntity);
             studentEntitySessionBean.retrieveStudentById(3l).getGroups().add(groupEntity);
             
             reportSessionBeanLocal.createNewReport(new ReportEntity("test"), 1L, 2L);

@@ -6,9 +6,12 @@
 package ejb.session.stateless;
 
 import entities.GroupEntity;
+import entities.MessageEntity;
 import entities.ModuleEntity;
 import entities.StudentEntity;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -23,6 +26,7 @@ import util.exception.GroupAccessRightsException;
 import util.exception.GroupEntityDoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.ModuleDoesNotExistException;
+import util.exception.SystemException;
 import util.exception.UnknownPersistenceException;
 import util.helper.EJBHelper;
 
@@ -64,15 +68,19 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     }
 
     @Override
-    public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
+    public Long createNewGroupEntity(GroupEntity newGroupEntity, Long moduleId, Long studentId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(newGroupEntity);
 
         try {
             EJBHelper.requireNonNull(moduleId, new ModuleDoesNotExistException("The new group must be associated with a module"));
-
+            StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
             ModuleEntity moduleEntity = moduleSessionBeanLocal.retrieveModuleById(moduleId);
             newGroupEntity.setModuleEntity(moduleEntity);
             moduleEntity.getGroups().add(newGroupEntity);
+            newGroupEntity.setPoster(studentEntity);
+            studentEntity.getGroupsPosted().add(newGroupEntity);
+            studentEntity.getGroups().add(newGroupEntity);
+            newGroupEntity.getGroupMembers().add(studentEntity);
 
 //          Set up kanban board
             em.persist(newGroupEntity);
@@ -147,5 +155,88 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
 
         groupEntityToDelete.setIsDeleted(true);
     }
+
+    @Override
+    public void approveMemberToGroup(Long groupId, Long studentId) throws DoesNotExistException {
+        try {
+            GroupEntity group = retrieveGroupEntityById(groupId);
+            StudentEntity student = studentSessionBeanLocal.retrieveStudentById(studentId);
+            
+            if (!group.getGroupMembers().contains(student) || group.getCandidates().contains(student)) {
+                group.getGroupMembers().add(student);
+                student.getGroups().add(group);
+                group.getCandidates().remove(student);
+                student.getGroupsApplied().remove(group);
+            }
+        } catch (InputDataValidationException ex) {
+            Logger.getLogger(GroupEntitySessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
+    public void rejectCandidateFromGroup(Long groupId, Long studentId) throws DoesNotExistException {
+        try {
+            GroupEntity group = retrieveGroupEntityById(groupId);
+            StudentEntity student = studentSessionBeanLocal.retrieveStudentById(studentId);
+            
+            if (group.getCandidates().contains(student)) {
+                group.getCandidates().remove(student);
+                student.getGroupsApplied().remove(group);
+            }
+        } catch (InputDataValidationException ex) {
+            Logger.getLogger(GroupEntitySessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void leaveGroup(Long groupId, Long studentId) throws DoesNotExistException, SystemException {
+        try {
+            GroupEntity group = retrieveGroupEntityById(groupId);
+            StudentEntity student = studentSessionBeanLocal.retrieveStudentById(studentId);
+            
+            if (group.getGroupMembers().contains(student) && !group.getPoster().equals(student)) {
+                group.getGroupMembers().remove(student);
+                student.getGroups().remove(group);
+            } else {
+                throw new SystemException("The Group Poster cannot leave!");
+            }
+        } catch (InputDataValidationException ex) {
+            Logger.getLogger(GroupEntitySessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void cancelApplicationToGroup(Long groupId, Long studentId) throws DoesNotExistException {
+        rejectCandidateFromGroup(groupId, studentId);
+    }
+
+    @Override
+    public void closeGroup(Long groupId) throws DoesNotExistException {
+        try {
+            GroupEntity group = retrieveGroupEntityById(groupId);
+            group.setIsOpen(Boolean.FALSE);
+        } catch (InputDataValidationException ex) {
+            Logger.getLogger(GroupEntitySessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void addNewMessage(MessageEntity messageEntity) throws DoesNotExistException, InputDataValidationException {
+        GroupEntity group = retrieveGroupEntityById(messageEntity.getGroup().getGroupId());
+        StudentEntity sender = studentSessionBeanLocal.retrieveStudentById(messageEntity.getSender().getAccountId());
+        
+        MessageEntity message = new MessageEntity(messageEntity.getContent(), group, sender);
+        
+        em.persist(message);
+    }
+
+    @Override
+    public List<MessageEntity> retrieveMessagesByGroupId(Long groupId) throws DoesNotExistException {
+        return em.createQuery("SELECT m FROM MessageEntity m JOIN m.group g WHERE g.groupId = :groupId")
+                .setParameter("groupId", groupId)
+                .getResultList();
+    }
+    
+
 
 }

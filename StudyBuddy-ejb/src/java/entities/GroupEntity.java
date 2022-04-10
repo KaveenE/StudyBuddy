@@ -6,6 +6,7 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -61,6 +62,7 @@ public class GroupEntity implements Serializable {
     private ModuleEntity moduleEntity;
 
     @OneToMany(mappedBy = "group")
+    @JsonIgnore
     private List<MessageEntity> messages;
 
     @JoinColumn(nullable = false)
@@ -76,6 +78,7 @@ public class GroupEntity implements Serializable {
     private List<StudentEntity> groupMembers;
     
     @OneToMany(mappedBy = "group")
+    @JsonIgnore
     private List<KanbanBoard> kanbanBoards;
 
     public GroupEntity() {

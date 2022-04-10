@@ -47,6 +47,10 @@
                         <h:outputText value="#{studentEntity.username}" />
                     </p:column>
 
+                    <p:column headerText="Username" sortBy="#{studentEntity.fullName}">
+                        <h:outputText value="#{studentEntity.fullName}" />
+                    </p:column>
+
                     <p:column headerText="Year Of Study" sortBy="#{studentEntity.yearOfStudy}">
                         <h:outputText value="#{studentEntity.yearOfStudy}" />
                     </p:column>

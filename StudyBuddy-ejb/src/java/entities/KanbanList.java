@@ -49,8 +49,7 @@ public class KanbanList implements Serializable {
     
     @OneToMany(mappedBy = "kanbanList",
             cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
+            orphanRemoval = true)
     private List<KanbanCard> kanbanCards;
 
     public KanbanList() {
