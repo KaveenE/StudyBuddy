@@ -47,7 +47,7 @@ public interface GroupEntitySessionBeanLocal {
     
     public void closeGroup(Long groupId) throws DoesNotExistException;
     
-    public void addNewMessage(MessageEntity messageEntity) throws DoesNotExistException, InputDataValidationException;
+    public Long addNewMessage(MessageEntity messageEntity) throws DoesNotExistException, InputDataValidationException;
     
     public List<MessageEntity> retrieveMessagesByGroupId(Long groupId) throws DoesNotExistException;
 }

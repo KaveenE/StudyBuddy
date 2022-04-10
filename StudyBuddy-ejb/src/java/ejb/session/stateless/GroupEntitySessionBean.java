@@ -187,13 +187,15 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     }
 
     @Override
-    public void addNewMessage(MessageEntity messageEntity) throws DoesNotExistException, InputDataValidationException {
+    public Long addNewMessage(MessageEntity messageEntity) throws DoesNotExistException, InputDataValidationException {
         GroupEntity group = retrieveGroupEntityById(messageEntity.getGroup().getGroupId());
         StudentEntity sender = studentSessionBeanLocal.retrieveStudentById(messageEntity.getSender().getAccountId());
         
         MessageEntity message = new MessageEntity(messageEntity.getContent(), group, sender);
         
         em.persist(message);
+        em.flush();
+        return messageEntity.getMessageId();
     }
 
     @Override
