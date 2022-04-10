@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -45,13 +46,18 @@ public class StudentEntity extends AccountEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean optLocation;
-    
+
+    @Column(nullable = false)
+    @NotNull
+    @Size(max = 128)
+    private String fullName;
+
     @OneToMany(mappedBy = "ratee")
     private List<RatingEntity> ratingByOthers;
 
     @OneToMany(mappedBy = "rater")
     private List<RatingEntity> ratingOthers;
-    
+
     @OneToMany(mappedBy = "poster")
     private List<GroupEntity> groupsPosted;
 
@@ -92,9 +98,18 @@ public class StudentEntity extends AccountEntity implements Serializable {
         System.out.println("Student Entity Default Constructor!");
     }
 
-    public StudentEntity(String email, String username, String password, String yearOfStudy) {
+    public StudentEntity(String email, String username, String password, String yearOfStudy, String fullName) {
         super(email, username, password);
         this.yearOfStudy = yearOfStudy;
+        this.fullName = fullName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     /**
