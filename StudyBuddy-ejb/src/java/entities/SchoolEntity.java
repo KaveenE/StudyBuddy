@@ -41,7 +41,6 @@ public class SchoolEntity implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "school")
-    @JsonIgnore
     private List<ModuleEntity> moduleEntities;
 
     public SchoolEntity() {
