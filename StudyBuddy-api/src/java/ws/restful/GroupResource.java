@@ -84,7 +84,6 @@ public class GroupResource {
     public Response retrieveGroupById(@PathParam("groupId") Long groupId) {
         try {
             GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
-
             String res = new ObjectMapper().writeValueAsString(group);
             return Response.ok(res, MediaType.APPLICATION_JSON).build();
         } catch (DoesNotExistException | InputDataValidationException ex) {
@@ -143,7 +142,7 @@ public class GroupResource {
     public Response createGroup(GroupEntity newGroupEntity, @QueryParam("moduleId") Long moduleId, @QueryParam("studentId") Long studentId) {
         try {
             Long groupId = groupEntitySessionBean.createNewGroupEntity(newGroupEntity, moduleId, studentId);
-            return Response.status(Status.OK).entity(groupId).build();
+            return this.retrieveGroupById(groupId);
         } catch (InputDataValidationException | AlreadyExistsException | DoesNotExistException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         } catch (UnknownPersistenceException ex) {
