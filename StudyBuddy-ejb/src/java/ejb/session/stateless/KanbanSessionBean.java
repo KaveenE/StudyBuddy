@@ -11,6 +11,7 @@ import entities.KanbanCard;
 import entities.KanbanList;
 import entities.StudentEntity;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -252,7 +253,6 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
 
         GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
         kanbanBoards = group.getKanbanBoards();
-
         return kanbanBoards;
     }
 
@@ -290,6 +290,7 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
             StudentEntity poster = group.getPoster();
 
             KanbanBoard board = new KanbanBoard(String.format("%s's Kanban Board", group.getGroupName()), group);
+            group.setKanbanBoards(new ArrayList<>(Arrays.asList(board)));
 
             board.getKanbanLists().add(new KanbanList("Back log", board));
             board.getKanbanLists().add(new KanbanList("Tasks", board));
@@ -298,12 +299,13 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
             board.getKanbanLists().add(new KanbanList("Archive", board));
 
             board.getKanbanLists().forEach(list -> {
-                KanbanCard newCard = new KanbanCard("New Card", "", poster);
+                KanbanCard newCard = new KanbanCard("New Card", "Description", poster);
                 newCard.setKanbanList(list);
+                list.setKanbanCards(new ArrayList<>(Arrays.asList(newCard)));
             });
-            
+
             EJBHelper.throwValidationErrorsIfAny(board);
-            
+
             for (KanbanList l : board.getKanbanLists()) {
                 EJBHelper.throwValidationErrorsIfAny(l);
                 for (KanbanCard c : l.getKanbanCards()) {
