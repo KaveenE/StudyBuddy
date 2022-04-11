@@ -84,7 +84,7 @@ public class GroupResource {
     public Response retrieveGroupById(@PathParam("groupId") Long groupId) {
         try {
             GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
-
+            group.getModuleEntity().getSchool().getModuleEntities().clear();
             String res = new ObjectMapper().writeValueAsString(group);
             return Response.ok(res, MediaType.APPLICATION_JSON).build();
         } catch (DoesNotExistException | InputDataValidationException ex) {
@@ -279,6 +279,15 @@ public class GroupResource {
     public Response getMessage(@QueryParam("groupId") Long groupId) {
         try {
             List<MessageEntity> messages = groupEntitySessionBean.retrieveMessagesByGroupId(groupId);
+            messages.forEach(m -> {
+                GroupEntity group = new GroupEntity();
+                StudentEntity student = new StudentEntity();
+                group.setGroupId(m.getGroup().getGroupId());
+                student.setAccountId(m.getSender().getAccountId());
+                m.setGroup(group);
+                m.setSender(student);
+            });
+            
             String res = new ObjectMapper().writeValueAsString(messages);
             return Response.ok(res, MediaType.APPLICATION_JSON).build();
         } catch (DoesNotExistException ex) {

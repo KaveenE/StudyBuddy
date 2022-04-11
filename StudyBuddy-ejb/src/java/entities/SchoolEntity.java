@@ -5,8 +5,8 @@
  */
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,6 +41,7 @@ public class SchoolEntity implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "school")
+    @JsonBackReference
     private List<ModuleEntity> moduleEntities;
 
     public SchoolEntity() {

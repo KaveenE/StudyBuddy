@@ -5,8 +5,8 @@
  */
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,8 +19,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -29,9 +27,6 @@ import javax.validation.constraints.Size;
  * @author larby
  */
 @Entity
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "kanbanCardId")
 public class KanbanCard implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,7 +43,7 @@ public class KanbanCard implements Serializable {
     @NotNull
     @Size(min = 0, max = 10_000)
     private String description;
-    
+
     private LocalDateTime createdAt;
 
     private LocalDateTime deadline;
@@ -58,16 +53,19 @@ public class KanbanCard implements Serializable {
     private StudentEntity author;
 
     @ManyToMany
+    @JsonManagedReference
     private List<StudentEntity> assignedStudents;
 
     @JoinColumn(nullable = false)
     @ManyToOne
+    @JsonBackReference
     private KanbanList kanbanList;
 
     public KanbanCard() {
         this.assignedStudents = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
     }
+
     public KanbanCard(String title, String description, StudentEntity author) {
         this();
         this.title = title;
@@ -76,7 +74,7 @@ public class KanbanCard implements Serializable {
     }
 
     public KanbanCard(String title, String description, LocalDateTime deadline, StudentEntity author) {
-        this(title,description,author);
+        this(title, description, author);
         this.deadline = deadline;
     }
 

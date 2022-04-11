@@ -5,6 +5,7 @@
  */
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,18 +26,17 @@ import javax.validation.constraints.Size;
 @Entity
 public class RatingEntity implements Serializable {
 
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ratingId;
-        
+
     @Column(nullable = false)
     @NotNull
     @Min(1)
     @Max(5)
     private Integer rating;
-    
+
     //should description be optional? ye but they can give empty string
     @Column(nullable = false)
     @NotNull
@@ -45,16 +45,17 @@ public class RatingEntity implements Serializable {
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
+    @JsonBackReference
     private StudentEntity ratee;
-    
+
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
+    @JsonBackReference
     private StudentEntity rater;
 
-        
     public RatingEntity() {
     }
-    
+
     public RatingEntity(Integer rating, StudentEntity ratee, StudentEntity rater) {
         this(rating, "", ratee, rater);
     }
@@ -126,7 +127,7 @@ public class RatingEntity implements Serializable {
     public void setRatingId(Long ratingId) {
         this.ratingId = ratingId;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -159,5 +160,5 @@ public class RatingEntity implements Serializable {
     public void setratingId(Long ratingId) {
         this.ratingId = ratingId;
     }
-    
+
 }

@@ -5,9 +5,8 @@
  */
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,9 +29,6 @@ import javax.validation.constraints.Size;
  * @author SCXY
  */
 @Entity
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "groupId")
 public class GroupEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,6 +55,7 @@ public class GroupEntity implements Serializable {
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
+    @JsonManagedReference
     private ModuleEntity moduleEntity;
 
     @OneToMany(mappedBy = "group")
@@ -67,18 +64,22 @@ public class GroupEntity implements Serializable {
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
+    @JsonManagedReference
     private StudentEntity poster;
 
     @ManyToMany
     @JoinTable(name = "groupApplied_candidates", joinColumns = @JoinColumn(name = "groupApplied_groupid"), inverseJoinColumns = @JoinColumn(name = "candidate_studentid"))
+    @JsonManagedReference
     private List<StudentEntity> candidates;
 
     @ManyToMany
     @JoinTable(name = "groups_groupMembers", joinColumns = @JoinColumn(name = "groups_groupid"), inverseJoinColumns = @JoinColumn(name = "groupMember_studentid"))
+    @JsonManagedReference
     private List<StudentEntity> groupMembers;
-    
+
     @OneToMany(mappedBy = "group")
     @JsonIgnore
+    @JsonManagedReference
     private List<KanbanBoard> kanbanBoards;
 
     public GroupEntity() {

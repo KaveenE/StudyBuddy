@@ -5,6 +5,8 @@
  */
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,30 +55,39 @@ public class StudentEntity extends AccountEntity implements Serializable {
     private String fullName;
 
     @OneToMany(mappedBy = "ratee")
+    @JsonManagedReference
     private List<RatingEntity> ratingByOthers;
 
     @OneToMany(mappedBy = "rater")
+    @JsonManagedReference
     private List<RatingEntity> ratingOthers;
 
     @OneToMany(mappedBy = "poster")
+    @JsonBackReference
     private List<GroupEntity> groupsPosted;
 
     @ManyToMany(mappedBy = "candidates")
+    @JsonBackReference
     private List<GroupEntity> groupsApplied;
 
     @ManyToMany(mappedBy = "groupMembers")
+    @JsonBackReference
     private List<GroupEntity> groups;
 
     @OneToMany(mappedBy = "sender")
+    @JsonBackReference
     private List<MessageEntity> messages;
 
     @OneToMany(mappedBy = "studentWhoReported")
+    @JsonBackReference
     private List<ReportEntity> reportsSubmitted;
 
     @ManyToMany(mappedBy = "assignedStudents")
+    @JsonBackReference
     private List<KanbanCard> assignedCards;
 
     @OneToMany(mappedBy = "reportedStudent")
+    @JsonBackReference
     private List<ReportEntity> reportReceived;
 
     {
@@ -226,14 +237,6 @@ public class StudentEntity extends AccountEntity implements Serializable {
 
     public void setMessages(List<MessageEntity> messages) {
         this.messages = messages;
-    }
-
-    public List<ReportEntity> getReports() {
-        return reportsSubmitted;
-    }
-
-    public void setReports(List<ReportEntity> reports) {
-        this.reportsSubmitted = reports;
     }
 
     /**

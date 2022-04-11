@@ -75,6 +75,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
             EJBHelper.requireNonNull(moduleId, new ModuleDoesNotExistException("The new group must be associated with a module"));
             StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
             ModuleEntity moduleEntity = moduleSessionBeanLocal.retrieveModuleById(moduleId);
+            
             newGroupEntity.setModuleEntity(moduleEntity);
             moduleEntity.getGroups().add(newGroupEntity);
             newGroupEntity.setPoster(studentEntity);
@@ -222,6 +223,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
 
     @Override
     public Long addNewMessage(MessageEntity messageEntity) throws DoesNotExistException, InputDataValidationException {
+        System.out.println("Finding group with id: " + messageEntity.getGroup().getGroupId());
         GroupEntity group = retrieveGroupEntityById(messageEntity.getGroup().getGroupId());
         StudentEntity sender = studentSessionBeanLocal.retrieveStudentById(messageEntity.getSender().getAccountId());
         
@@ -229,7 +231,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         
         em.persist(message);
         em.flush();
-        return messageEntity.getMessageId();
+        return message.getMessageId();
     }
 
     @Override

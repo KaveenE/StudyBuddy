@@ -11,6 +11,7 @@ import entities.GroupEntity;
 import entities.MessageEntity;
 import entities.StudentEntity;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +32,11 @@ import ws.restful.SessionBeanLookup;
 @ApplicationScoped
 public class MessageSessionHandler {
 
-    private GroupEntitySessionBeanLocal groupEntitySessionBean;
+    private final GroupEntitySessionBeanLocal groupEntitySessionBean;
 
-    private Map<Long, Session> sessions = new HashMap<>();
-    private Map<Long, Long> groups = new HashMap<>();
-    private Map<Long, List<MessageEntity>> activeChats = new HashMap<>();
+    private final Map<Long, Session> sessions = new HashMap<>();
+    private final Map<Long, Long> groups = new HashMap<>();
+    private final Map<Long, List<MessageEntity>> activeChats = new HashMap<>();
 
     public MessageSessionHandler() {
         this.groupEntitySessionBean = new SessionBeanLookup().lookupGroupEntitySessionBeanLocal();
@@ -78,13 +79,26 @@ public class MessageSessionHandler {
 
     private void sendMessage(Long studentId, Session session, MessageEntity message) {
         try {
-            JsonObject response = Json.createObjectBuilder()
-                    .add("action", "response")
-                    .add("studentId", message.getSender().getAccountId())
-                    .add("groupId", message.getGroup().getGroupId())
-                    .add("content", message.getContent())
+            JsonObject sender = Json.createObjectBuilder()
+                    .add("accountId", message.getSender().getAccountId())
                     .build();
-            session.getBasicRemote().sendText(response.toString());
+            JsonObject group = Json.createObjectBuilder()
+                    .add("groupId", message.getGroup().getGroupId())
+                    .build();
+            
+            System.out.println(message);
+            
+            String response = Json.createObjectBuilder()
+                    .add("messageId", message.getMessageId())
+                    .add("action", "response")
+                    .add("sender", sender)
+                    .add("groupId", group)
+                    .add("content", message.getContent())
+                    .build().toString();
+            
+//            String response = new ObjectMapper().writeValueAsString(message);
+            
+            session.getBasicRemote().sendText(response);
             System.out.println(response);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(MessageSessionHandler.class.getName()).log(Level.SEVERE, null, ex);

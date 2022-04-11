@@ -51,8 +51,8 @@ public class MessageWebsocketServer {
             JsonObject jsonMessage = reader.readObject();
             
             String action = jsonMessage.getString("action");
-            Long studentId = jsonMessage.getJsonNumber("studentId").longValue();
-            Long groupId = jsonMessage.getJsonNumber("groupId").longValue();
+            Long studentId = jsonMessage.getJsonObject("sender").getJsonNumber("accountId").longValue();
+            Long groupId = jsonMessage.getJsonObject("group").getJsonNumber("groupId").longValue();
             
             System.out.printf("%s from student[%d] to group [%d]", action, studentId, groupId);
             

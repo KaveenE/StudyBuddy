@@ -5,8 +5,8 @@
  */
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,34 +27,33 @@ import javax.validation.constraints.Size;
  * @author larby
  */
 @Entity
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "kanbanBoardId")
 public class KanbanBoard implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long kanbanBoardId;
-    
+
     @Column(nullable = false)
     @Size(min = 1, max = 125)
     @NotNull
     private String heading;
-    
+
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
+    @JsonBackReference
     private GroupEntity group;
-    
+
     @OneToMany(mappedBy = "kanbanBoard",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
+    @JsonManagedReference
     private List<KanbanList> kanbanLists;
 
     public KanbanBoard() {
         this.kanbanLists = new ArrayList<>();
     }
-    
+
     public KanbanBoard(String heading, GroupEntity group) {
         this();
         this.heading = heading;
@@ -135,5 +134,5 @@ public class KanbanBoard implements Serializable {
     public String toString() {
         return "entities.KanbanBoard[ id=" + kanbanBoardId + " ]";
     }
-    
+
 }

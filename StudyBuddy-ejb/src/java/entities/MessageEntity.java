@@ -5,6 +5,7 @@
  */
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -42,6 +43,7 @@ public class MessageEntity implements Serializable {
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
+    @JsonManagedReference
     private StudentEntity sender;
 
     public MessageEntity() {

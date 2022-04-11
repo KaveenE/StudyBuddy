@@ -5,8 +5,8 @@
  */
 package entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +26,6 @@ import javax.validation.constraints.Size;
  * @author SCXY
  */
 @Entity
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "moduleId")
 public class ModuleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,19 +48,22 @@ public class ModuleEntity implements Serializable {
 
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
+    @JsonManagedReference
     private SchoolEntity school;
-    
+
     @OneToMany
+    @JsonBackReference
     private List<GroupEntity> groups;
 
     public ModuleEntity() {
         groups = new ArrayList<>();
         this.isDeleted = false;
     }
+
     public ModuleEntity(String name, String code) {
-        this(name,code,null);
+        this(name, code, null);
     }
-    
+
     public ModuleEntity(String name, String code, SchoolEntity school) {
         this();
         this.name = name;
@@ -141,7 +141,7 @@ public class ModuleEntity implements Serializable {
 
     @Override
     public String toString() {
-        return moduleId+" "+getCode()+" "+getName();
+        return moduleId + " " + getCode() + " " + getName();
     }
 
 }
