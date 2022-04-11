@@ -35,4 +35,10 @@ public interface StudentSessionBeanLocal {
 
     public List<StudentEntity> retrieveAllCandidates(Long groupId);
 
+    public List<StudentEntity> retrieveAllGrpMembers(Long groupId);
+
+//    public void upgradeAccount(Long studentId) throws InputDataValidationException, DoesNotExistException;
+
+    public void upgradeAccount(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException;
+
 }

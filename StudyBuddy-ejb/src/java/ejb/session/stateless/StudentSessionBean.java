@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entities.AccountEntity;
 import entities.StudentEntity;
+import static java.lang.Boolean.TRUE;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -89,8 +90,28 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
 
     @Override
+    public void upgradeAccount(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException {
+        System.out.println("STUDENT ID >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + studentEntity);
+        StudentEntity studentEntityToUpgrade = retrieveStudentById(studentEntity.getAccountId());
+        if (studentEntityToUpgrade.getUsername().equals(studentEntity.getUsername())) {
+            studentEntityToUpgrade.setIsPremium(true);
+           
+        } else {
+            throw new DoesNotExistException("Username of student does not match the existing record");
+        }
+    }
+
+    @Override
     public List<StudentEntity> retrieveAllCandidates(Long groupId) {
-        Query query = em.createQuery("SELECT s FROM StudentEntity s, IN (s.groupsApplied) g WHERE g.groupId =:groupId");
+        Query query = em.createQuery("SELECT DISTINCT s FROM StudentEntity s, IN (s.groupsApplied) g WHERE g.groupId =:groupId");
+        query.setParameter("groupId", groupId);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<StudentEntity> retrieveAllGrpMembers(Long groupId) {
+        Query query = em.createQuery("SELECT DISTINCT s FROM StudentEntity s, IN (s.groups) g WHERE g.groupId =:groupId");
         query.setParameter("groupId", groupId);
 
         return query.getResultList();
