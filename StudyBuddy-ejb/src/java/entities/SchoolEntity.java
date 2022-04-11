@@ -26,18 +26,18 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class, 
-  property = "schoolId")
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "schoolId")
 public class SchoolEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long schoolId;
-    
+
     @Column(nullable = false, unique = true)
     @Size(min = 3, max = 255)
-    @NotNull 
+    @NotNull
     private String name;
 
     @OneToMany(mappedBy = "school")
@@ -99,7 +99,7 @@ public class SchoolEntity implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("ID: %d, Name:%s", schoolId,name);
+        return String.format("ID: %d, Name:%s", schoolId, name);
     }
 
 }

@@ -104,13 +104,20 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         return groupEntity;
     }
 
-    @Override
+        @Override
     public void applyToGroup(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException {
         GroupEntity group = retrieveGroupEntityById(groupId);
         StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
-        group.getCandidates().add(studentEntity);
-        studentEntity.getGroupsApplied().add(group);
-        em.flush();
+        if (group.getPoster() != studentEntity) {
+            group.getCandidates().add(studentEntity);
+            studentEntity.getGroupsApplied().add(group);
+            em.flush();
+        }
+        if (group.getCandidates().contains(studentEntity)) {
+            throw new SystemException("You already applied to this group before!");
+        } else {
+            throw new SystemException("You can't join your own group!");
+        }
     }
     
     @Override

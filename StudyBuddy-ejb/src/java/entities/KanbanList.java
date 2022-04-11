@@ -44,9 +44,7 @@ public class KanbanList implements Serializable {
     @JsonBackReference
     private KanbanBoard kanbanBoard;
 
-    @OneToMany(mappedBy = "kanbanList",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany
     @JsonManagedReference
     private List<KanbanCard> kanbanCards;
 

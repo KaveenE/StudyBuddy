@@ -65,7 +65,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
             em.persist(newReportEntity);
             reportedStudent.getReportReceived().add(newReportEntity);
             newReportEntity.setReportedStudent(reportedStudent);
-            reporterStudent.getReports().add(newReportEntity);
+            reporterStudent.getReportsSubmitted().add(newReportEntity);
             newReportEntity.setStudentWhoReported(reporterStudent);
 
             em.flush();

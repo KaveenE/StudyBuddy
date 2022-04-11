@@ -90,7 +90,7 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
 
     @Override
     public List<StudentEntity> retrieveAllCandidates(Long groupId) {
-        Query query = em.createQuery("SELECT s FROM StudentEntity s WHERE s.groupsApplied = :groupId");
+        Query query = em.createQuery("SELECT s FROM StudentEntity s, IN (s.groupsApplied) g WHERE g.groupId =:groupId");
         query.setParameter("groupId", groupId);
 
         return query.getResultList();
