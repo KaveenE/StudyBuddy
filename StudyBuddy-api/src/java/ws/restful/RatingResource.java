@@ -8,6 +8,7 @@ package ws.restful;
 import ejb.session.stateless.RatingSessionBeanLocal;
 import entities.RatingEntity;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -43,12 +44,25 @@ public class RatingResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createRating(RatingEntity ratingEntity, @QueryParam("rateeId") Long rateeId, @QueryParam("raterId") Long raterId) {
         try {
+            System.out.printf("RateeId:%d     RaterId:%d",rateeId,raterId);
             Long ratingId = ratingSessionBean.createNewRating(ratingEntity, rateeId, raterId);
             return Response.status(Response.Status.OK).entity(ratingId).build();
         } catch (InputDataValidationException | AlreadyExistsException | DoesNotExistException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         } catch (UnknownPersistenceException ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("retrieveRatingByRaterRateeId")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveRatingByRaterRateeId(@QueryParam("raterId") Long raterId, @QueryParam("rateeId") Long rateeId) {
+        try {
+            RatingEntity rating = ratingSessionBean.retrieveRatingByRaterRateeId(raterId, rateeId);
+            return Response.status(Response.Status.OK).entity(rating).build();
+        } catch (InputDataValidationException | DoesNotExistException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
 

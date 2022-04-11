@@ -28,4 +28,6 @@ public interface RatingSessionBeanLocal {
 
     public void updateRating(RatingEntity ratingEntity) throws InputDataValidationException, DoesNotExistException;
 
+    public RatingEntity retrieveRatingByRaterRateeId(Long raterId, Long rateeId) throws InputDataValidationException, DoesNotExistException;
+
 }

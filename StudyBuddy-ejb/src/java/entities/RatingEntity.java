@@ -35,7 +35,7 @@ public class RatingEntity implements Serializable {
     @NotNull
     @Min(1)
     @Max(5)
-    private Integer rating;
+    private Long rating;
 
     //should description be optional? ye but they can give empty string
     @Column(nullable = false)
@@ -56,22 +56,22 @@ public class RatingEntity implements Serializable {
     public RatingEntity() {
     }
 
-    public RatingEntity(Integer rating, StudentEntity ratee, StudentEntity rater) {
+    public RatingEntity(Long rating, StudentEntity ratee, StudentEntity rater) {
         this(rating, "", ratee, rater);
     }
 
-    public RatingEntity(Integer rating, String ratingDescription, StudentEntity ratee, StudentEntity rater) {
+    public RatingEntity(Long rating, String ratingDescription, StudentEntity ratee, StudentEntity rater) {
         this.rating = rating;
         this.ratingDescription = ratingDescription;
         this.ratee = ratee;
         this.rater = rater;
     }
 
-    public Integer getRating() {
+    public Long getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Long rating) {
         this.rating = rating;
     }
 
@@ -151,14 +151,6 @@ public class RatingEntity implements Serializable {
     @Override
     public String toString() {
         return "entities.RatingEntity[ ratingId=" + ratingId + " ]";
-    }
-
-    public Long getratingId() {
-        return ratingId;
-    }
-
-    public void setratingId(Long ratingId) {
-        this.ratingId = ratingId;
     }
 
 }
