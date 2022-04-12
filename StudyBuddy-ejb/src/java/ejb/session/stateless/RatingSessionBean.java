@@ -60,10 +60,12 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
     public RatingEntity retrieveRatingByRaterRateeId(Long raterId, Long rateeId) throws InputDataValidationException, DoesNotExistException {
         TypedQuery<RatingEntity> tq = em.createQuery("SELECT r FROM RatingEntity r WHERE r.ratee.accountId = :rateeId AND r.rater.accountId = :raterId", RatingEntity.class)
                 .setParameter("rateeId", rateeId)
-                .setParameter("raterId", raterId); 
-        System.out.printf("RaterId:%d, RateeId:%d, Result:%s", raterId,rateeId,tq);
-         try {
-            return (RatingEntity) tq.getSingleResult();
+                .setParameter("raterId", raterId);
+        System.out.printf("Retrieiving: RaterId:%d, RateeId:%d", raterId, rateeId);
+        try {
+            RatingEntity ratingByRaterOnRatee = (RatingEntity) tq.getSingleResult();
+            System.out.println("Retrieved Rating: "+ratingByRaterOnRatee);
+            return ratingByRaterOnRatee;
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new RatingDoesNotExistException("Such rating does not exist");
         }
@@ -97,7 +99,7 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
         EJBHelper.throwValidationErrorsIfAny(ratingEntity);
 
         RatingEntity ratingEntityToUpdate = retrieveRatingById(ratingEntity.getRatingId());
-        ratingEntityToUpdate.setRating(ratingEntityToUpdate.getRating());
-        ratingEntityToUpdate.setRatingDescription(ratingEntityToUpdate.getRatingDescription());
+        ratingEntityToUpdate.setRating(ratingEntity.getRating());
+        ratingEntityToUpdate.setRatingDescription(ratingEntity.getRatingDescription());
     }
 }
