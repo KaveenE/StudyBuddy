@@ -28,6 +28,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import java.util.stream.Collectors;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -50,13 +52,18 @@ import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
+import ws.websocket.MessageSessionHandler;
 
 /**
  *
  * @author SCXY
  */
+@RequestScoped
 @Path("Group")
 public class GroupResource {
+    
+    @Inject
+    private MessageSessionHandler messageSessionHandler;
 
     StudentSessionBeanLocal studentSessionBean;
 
@@ -322,6 +329,7 @@ public class GroupResource {
             MessageEntity message = new MessageEntity("", group, sender, util.enumeration.MediaType.PICTURE);
 
             Long id = groupEntitySessionBean.addNewMessage(message);
+            
 
             System.out.println("New Message Id=" + id);
 
@@ -342,6 +350,10 @@ public class GroupResource {
             groupEntitySessionBean.changeMessageContent(id, fullPath);
 
             System.out.println("Content changed");
+            
+            message.setMessageId(id);
+            message.setContent(fullPath);
+            messageSessionHandler.broadCastFileMessage(message);
 
             return Response.ok().build();
         } catch (IOException | DoesNotExistException | InputDataValidationException ex) {

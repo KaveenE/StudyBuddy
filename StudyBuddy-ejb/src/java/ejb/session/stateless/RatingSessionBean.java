@@ -12,9 +12,12 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import util.exception.AccountDoesNotExistException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
@@ -34,8 +37,6 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
     @EJB(name = "StudentSessionBeanLocal")
     private StudentSessionBeanLocal studentSessionBeanLocal;
 
-    
-
     @PersistenceContext(unitName = "StudyBuddy-ejbPU")
     private EntityManager em;
 
@@ -53,6 +54,21 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
         EJBHelper.throwValidationErrorsIfAny(rating);
 
         return rating;
+    }
+
+    @Override
+    public RatingEntity retrieveRatingByRaterRateeId(Long raterId, Long rateeId) throws InputDataValidationException, DoesNotExistException {
+        TypedQuery<RatingEntity> tq = em.createQuery("SELECT r FROM RatingEntity r WHERE r.ratee.accountId = :rateeId AND r.rater.accountId = :raterId", RatingEntity.class)
+                .setParameter("rateeId", rateeId)
+                .setParameter("raterId", raterId);
+        System.out.printf("Retrieiving: RaterId:%d, RateeId:%d", raterId, rateeId);
+        try {
+            RatingEntity ratingByRaterOnRatee = (RatingEntity) tq.getSingleResult();
+            System.out.println("Retrieved Rating: "+ratingByRaterOnRatee);
+            return ratingByRaterOnRatee;
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new RatingDoesNotExistException("Such rating does not exist");
+        }
     }
 
     @Override
@@ -83,7 +99,7 @@ public class RatingSessionBean implements RatingSessionBeanLocal {
         EJBHelper.throwValidationErrorsIfAny(ratingEntity);
 
         RatingEntity ratingEntityToUpdate = retrieveRatingById(ratingEntity.getRatingId());
-        ratingEntityToUpdate.setRating(ratingEntityToUpdate.getRating());
-        ratingEntityToUpdate.setRatingDescription(ratingEntityToUpdate.getRatingDescription());
+        ratingEntityToUpdate.setRating(ratingEntity.getRating());
+        ratingEntityToUpdate.setRatingDescription(ratingEntity.getRatingDescription());
     }
 }

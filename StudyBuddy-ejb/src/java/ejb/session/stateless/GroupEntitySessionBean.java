@@ -235,6 +235,9 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
 
         MessageEntity message = new MessageEntity(messageEntity.getContent(), group, sender, messageEntity.getMediaType());
 
+        sender.getMessages().add(message);
+        group.getMessages().add(message);
+        
         em.persist(message);
         em.flush();
         return message.getMessageId();

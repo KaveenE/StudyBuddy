@@ -12,6 +12,7 @@ import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.StudentPremiumAlreadyExistsException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -24,7 +25,7 @@ public interface StudentSessionBeanLocal {
     public List<StudentEntity> retrieveAllStudents();
 
     public StudentEntity retrieveStudentById(Long studentId) throws DoesNotExistException, InputDataValidationException;
-    
+
     public Long createNewStudent(StudentEntity newStudentEntity) throws AlreadyExistsException, InputDataValidationException, UnknownPersistenceException;
 
     public StudentEntity retrieveStudentByUsername(String username) throws DoesNotExistException, InputDataValidationException;
@@ -34,5 +35,9 @@ public interface StudentSessionBeanLocal {
     public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException;
 
     public List<StudentEntity> retrieveAllCandidates(Long groupId);
+
+    public List<StudentEntity> retrieveAllGrpMembers(Long groupId);
+
+    public void upgradeAccount(Long studentId) throws InputDataValidationException, DoesNotExistException, StudentPremiumAlreadyExistsException;
 
 }

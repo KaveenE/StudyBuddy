@@ -16,6 +16,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -25,6 +26,7 @@ import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.StudentPremiumAlreadyExistsException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -64,6 +66,7 @@ public class StudentResource {
 
     @Path("retrieveStudentById")
     @GET
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveStudentById(@QueryParam("studentId") Long studentId) {
         try {
@@ -84,7 +87,7 @@ public class StudentResource {
     public Response registerStudent(StudentEntity student) {
         try {
             Long id = studentSessionBean.createNewStudent(student);
-             return this.retrieveStudentById(id);
+            return this.retrieveStudentById(id);
         } catch (AlreadyExistsException | InputDataValidationException ex) {
             return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         } catch (UnknownPersistenceException ex) {
@@ -104,4 +107,18 @@ public class StudentResource {
             return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
+
+    @Path("upgradeAccount/{studentId}")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response upgradeAccount(@PathParam("studentId") Long studentId) {
+        try {
+            System.out.println(studentId);
+            studentSessionBean.upgradeAccount(studentId);
+            return Response.status(Status.OK).build();
+        } catch (DoesNotExistException | InputDataValidationException | StudentPremiumAlreadyExistsException ex) {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+
 }
