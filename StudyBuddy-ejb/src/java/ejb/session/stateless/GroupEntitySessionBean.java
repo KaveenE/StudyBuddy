@@ -235,6 +235,8 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         StudentEntity sender = studentSessionBeanLocal.retrieveStudentById(messageEntity.getSender().getAccountId());
         
         MessageEntity message = new MessageEntity(messageEntity.getContent(), group, sender);
+        sender.getMessages().add(message);
+        group.getMessages().add(message);
         
         em.persist(message);
         em.flush();

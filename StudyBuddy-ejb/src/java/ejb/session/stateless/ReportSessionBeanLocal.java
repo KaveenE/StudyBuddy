@@ -22,10 +22,12 @@ public interface ReportSessionBeanLocal {
 
     public List<ReportEntity> retrieveAllReports();
 
-    public ReportEntity retrieveReporyById(Long reportId) throws InputDataValidationException, DoesNotExistException;
-
     public Long createNewReport(ReportEntity newReportEntity, Long reportedId, Long reporterId) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException, DoesNotExistException;
 
     public void updateReport(ReportEntity reportEntity) throws InputDataValidationException, DoesNotExistException;
+
+    public ReportEntity retrieveReportById(Long reportId) throws InputDataValidationException, DoesNotExistException;
+
+    public ReportEntity retrieveReportByReportedReporteeId(Long reportedId, Long reporterId) throws InputDataValidationException, DoesNotExistException;
 
 }

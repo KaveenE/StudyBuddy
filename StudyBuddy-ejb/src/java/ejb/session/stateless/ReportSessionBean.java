@@ -11,9 +11,12 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -44,12 +47,27 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     }
     
     @Override
-    public ReportEntity retrieveReporyById(Long reportId) throws InputDataValidationException, DoesNotExistException {
+    public ReportEntity retrieveReportById(Long reportId) throws InputDataValidationException, DoesNotExistException {
         ReportEntity report = em.find(ReportEntity.class, reportId);
         EJBHelper.requireNonNull(report, new ReportDoesNotExistException());
         EJBHelper.throwValidationErrorsIfAny(report);
 
         return report;
+    }
+    
+    @Override
+    public ReportEntity retrieveReportByReportedReporteeId(Long reportedId,Long reporterId) throws InputDataValidationException, DoesNotExistException {
+         TypedQuery<ReportEntity> tq = em.createQuery("SELECT r FROM ReportEntity r "
+                 + "WHERE r.reportedStudent.accountId = :reportedId AND "
+                 + "r.studentWhoReported.accountId = :reporterId", ReportEntity.class)
+                .setParameter("reportedId", reportedId)
+                .setParameter("reporterId", reporterId);
+         try {
+            return tq.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new ReportDoesNotExistException("Student has not reported this fella before");
+        }
+
     }
 
     @Override
@@ -79,7 +97,7 @@ public class ReportSessionBean implements ReportSessionBeanLocal {
     //only supports updating of the isResolved attribute currently
     @Override
     public void updateReport(ReportEntity reportEntity) throws InputDataValidationException, DoesNotExistException {
-        ReportEntity reportEntityToUpdate = retrieveReporyById(reportEntity.getReportId());
+        ReportEntity reportEntityToUpdate = retrieveReportById(reportEntity.getReportId());
         reportEntityToUpdate.setIsResolved(true);
     }
 }
