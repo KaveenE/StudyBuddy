@@ -14,6 +14,12 @@ import entities.GroupEntity;
 import entities.MessageEntity;
 
 import entities.StudentEntity;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import java.util.logging.Level;
@@ -32,10 +38,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import util.exception.AccessRightsException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
@@ -109,7 +118,7 @@ public class GroupResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("retrieveAllMyGroups/{studentId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -122,7 +131,7 @@ public class GroupResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("retrieveAllCandidates/{groupId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -174,7 +183,7 @@ public class GroupResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("disapproveReq")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -186,7 +195,7 @@ public class GroupResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("updateGroup/{studentId}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -199,7 +208,6 @@ public class GroupResource {
         }
     }
 
-
     private StudentSessionBeanLocal lookupStudentSessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -209,7 +217,6 @@ public class GroupResource {
             throw new RuntimeException(ne);
         }
     }
-
 
     @Path("approveToGroup")
     @POST
@@ -263,7 +270,7 @@ public class GroupResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response sendMessage(MessageEntity messageEntity) {
+    public Response sendMessageText(MessageEntity messageEntity) {
         try {
             groupEntitySessionBean.addNewMessage(messageEntity);
 
@@ -277,6 +284,7 @@ public class GroupResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessage(@QueryParam("groupId") Long groupId) {
+        System.out.printf("Message GET called to group[%d]%n", groupId);
         try {
             List<MessageEntity> messages = groupEntitySessionBean.retrieveMessagesByGroupId(groupId);
             messages.forEach(m -> {
@@ -287,7 +295,7 @@ public class GroupResource {
                 m.setGroup(group);
                 m.setSender(student);
             });
-            
+
             String res = new ObjectMapper().writeValueAsString(messages);
             return Response.ok(res, MediaType.APPLICATION_JSON).build();
         } catch (DoesNotExistException ex) {
@@ -297,5 +305,86 @@ public class GroupResource {
         }
     }
 
-}
+    @Path("messages")
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sendMessageFile(@Context HttpHeaders headers, @FormDataParam("img") InputStream fileInputStream, @QueryParam("groupId") Long groupId, @QueryParam("studentId") Long studentId) {
+        OutputStream out = null;
 
+        try {
+            GroupEntity group = new GroupEntity();
+            StudentEntity sender = new StudentEntity();
+
+            group.setGroupId(groupId);
+            sender.setAccountId(studentId);
+
+            MessageEntity message = new MessageEntity("", group, sender, util.enumeration.MediaType.PICTURE);
+
+            Long id = groupEntitySessionBean.addNewMessage(message);
+
+            System.out.println("New Message Id=" + id);
+
+            MultivaluedMap<String, String> map = headers.getRequestHeaders();
+            String fileType = getFileType(map);
+            String fileName = id.toString();
+            String filePath = "../docroot/StudyBuddy/messageImg/";
+            String fullPath = filePath + fileName + "." + fileType;
+            File outFile = new File(fullPath);
+            out = new FileOutputStream(outFile);
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = fileInputStream.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+
+            groupEntitySessionBean.changeMessageContent(id, fullPath);
+
+            System.out.println("Content changed");
+
+            return Response.ok().build();
+        } catch (IOException | DoesNotExistException | InputDataValidationException ex) {
+            Logger.getLogger(GroupResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            try {
+                out.close();
+                fileInputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(GroupResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @Path("messageFile")
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getMessageFile(@QueryParam("messageId") Long messageId) {
+        try {
+            MessageEntity messageEntity = groupEntitySessionBean.retrieveMessageEntityById(messageId);
+
+            System.out.println("Received new message File req: " + messageEntity.getMediaType());
+            if (messageEntity.getMediaType().equals(util.enumeration.MediaType.PICTURE)) {
+                File file = new File(messageEntity.getContent());
+                return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM).build();
+            } else {
+                return Response.status(Status.BAD_REQUEST).build();
+            }
+        } catch (DoesNotExistException ex) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+    }
+
+    private String getFileType(MultivaluedMap<String, String> headers) {
+        String[] contentDisposition = headers.getFirst("Content-Disposition").split(";");
+        for (String filename : contentDisposition) {
+            if ((filename.trim().startsWith("filetype"))) {
+                String[] name = filename.split("=");
+                String finalFileName = name[1].trim().replaceAll("\"", "");
+                return finalFileName;
+            }
+        }
+        return "";
+    }
+}

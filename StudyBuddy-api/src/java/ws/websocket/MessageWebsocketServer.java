@@ -22,6 +22,7 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import util.enumeration.MediaType;
 
 @ApplicationScoped
 @ServerEndpoint("/messages")
@@ -47,6 +48,9 @@ public class MessageWebsocketServer {
 
     @OnMessage
     public void handleMessage(String message, Session session) {
+        System.out.println("Data sent:");
+        System.out.println(message.toString());
+
         try (JsonReader reader = Json.createReader(new StringReader(message))) {
             JsonObject jsonMessage = reader.readObject();
             
@@ -56,11 +60,12 @@ public class MessageWebsocketServer {
             
             System.out.printf("%s from student[%d] to group [%d]", action, studentId, groupId);
             
+            
             if ("register".equals(action)) {
-                messageSessionHandler.addSession(studentId, groupId, session);
+                messageSessionHandler.addSession(groupId, session);
             }
             if ("close".equals(action)) {
-                messageSessionHandler.removeSession(studentId);
+                messageSessionHandler.removeSession(session);
             } else if ("send".equals(action)) {
                 MessageEntity messageEntity = new MessageEntity();
                 GroupEntity group = new GroupEntity();
@@ -70,7 +75,8 @@ public class MessageWebsocketServer {
 
                 messageEntity.setGroup(group);
                 messageEntity.setSender(sender);
-
+                
+                messageEntity.setMediaType(MediaType.valueOf(jsonMessage.getString("mediaType", "TEXT")));
                 messageEntity.setContent(jsonMessage.getString("content"));
 
                 messageSessionHandler.addMessage(messageEntity);

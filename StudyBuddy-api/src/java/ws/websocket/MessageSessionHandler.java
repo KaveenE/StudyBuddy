@@ -9,12 +9,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import ejb.session.stateless.GroupEntitySessionBeanLocal;
 import entities.GroupEntity;
 import entities.MessageEntity;
+import static entities.ModuleEntity_.groups;
 import entities.StudentEntity;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
@@ -34,22 +35,24 @@ public class MessageSessionHandler {
 
     private final GroupEntitySessionBeanLocal groupEntitySessionBean;
 
-    private final Map<Long, Session> sessions = new HashMap<>();
-    private final Map<Long, Long> groups = new HashMap<>();
-    private final Map<Long, List<MessageEntity>> activeChats = new HashMap<>();
+    private final Map<Long, Set<Session>> sessions = new HashMap<>();
+    private final Map<Session, Long> group = new HashMap<>();
 
     public MessageSessionHandler() {
         this.groupEntitySessionBean = new SessionBeanLookup().lookupGroupEntitySessionBeanLocal();
     }
 
-    public void addSession(Long studentId, Long groupId, Session session) {
-        sessions.put(studentId, session);
-        groups.put(studentId, groupId);
+    public void addSession(Long groupId, Session session) {
+        this.sessions.putIfAbsent(groupId, new HashSet<>());
+        Set<Session> groupSession = this.sessions.get(groupId);
+        groupSession.add(session);
+
+        this.group.put(session, groupId);
     }
 
-    public void removeSession(Long studentId) {
-        sessions.remove(studentId);
-        groups.remove(studentId);
+    public void removeSession(Session session) {
+        Long groupId = this.group.remove(session);
+        this.sessions.get(groupId).remove(session);
     }
 
     public void addMessage(MessageEntity message) {
@@ -57,17 +60,13 @@ public class MessageSessionHandler {
             Long messageId = groupEntitySessionBean.addNewMessage(message);
             Long groupId = message.getGroup().getGroupId();
             message.setMessageId(messageId);
-            GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
-            for (StudentEntity student : group.getGroupMembers()) {
-                Long studentId = student.getAccountId();
-                System.out.printf("group[%d] with student[%d]%n", groupId, studentId);
-                Session ss = sessions.get(studentId);
-                Long stuGroupId = groups.get(studentId);
-                System.out.printf("This student is subcribing to group[%d] %n", stuGroupId);
-                System.out.println("This student's session: " + ss);
-                if (ss != null && groupId.equals(stuGroupId)) {
-                    System.out.printf("Message forwarding to student[%d] %n", studentId);
-                    sendMessage(studentId, ss, message);
+
+            Set<Session> target = this.sessions.getOrDefault(groupId, new HashSet<>());
+
+            for (Session t : target) {
+                System.out.println("This student's session: " + t);
+                if (t != null) {
+                    sendMessage(t, message);
                 }
             }
         } catch (DoesNotExistException ex) {
@@ -77,36 +76,49 @@ public class MessageSessionHandler {
         }
     }
 
-    private void sendMessage(Long studentId, Session session, MessageEntity message) {
+    public void broadCastFileMessage(MessageEntity message) {
+        Long groupId = message.getGroup().getGroupId();
+        Set<Session> target = this.sessions.getOrDefault(groupId, new HashSet<>());
+
+        for (Session t : target) {
+            System.out.println("This student's session: " + t);
+            if (t != null) {
+                sendMessage(t, message);
+            }
+        }
+    }
+
+    private void sendMessage(Session session, MessageEntity message) {
         try {
             JsonObject sender = Json.createObjectBuilder()
                     .add("accountId", message.getSender().getAccountId())
                     .build();
-            JsonObject group = Json.createObjectBuilder()
+            JsonObject goroup = Json.createObjectBuilder()
                     .add("groupId", message.getGroup().getGroupId())
                     .build();
-            
+
             System.out.println(message);
-            
+
             String response = Json.createObjectBuilder()
                     .add("messageId", message.getMessageId())
+                    .add("mediaType", message.getMediaType().toString())
                     .add("action", "response")
                     .add("sender", sender)
-                    .add("groupId", group)
+                    .add("groupId", goroup)
                     .add("content", message.getContent())
+                    .add("mediaType", message.getMediaType().toString())
                     .build().toString();
-            
+
 //            String response = new ObjectMapper().writeValueAsString(message);
-            
             session.getBasicRemote().sendText(response);
             System.out.println(response);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(MessageSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            removeSession(studentId);
+            removeSession(session);
             Logger.getLogger(MessageSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalStateException ex) {
-            removeSession(studentId);
+            removeSession(session);
         }
     }
 

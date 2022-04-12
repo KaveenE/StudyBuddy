@@ -55,15 +55,15 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     public List<GroupEntity> retrieveAllOpenGroups(Long schoolId) {
         Query query = em.createQuery("SELECT g FROM GroupEntity g WHERE g.moduleEntity.school.schoolId = :schoolId AND g.isOpen = TRUE");
         query.setParameter("schoolId", schoolId);
-        
+
         return query.getResultList();
     }
-    
+
     @Override
     public List<GroupEntity> retrieveAllMyGroups(Long studentId) {
         Query query = em.createQuery("SELECT g FROM GroupEntity g WHERE g.poster.accountId = :studentId AND g.isOpen = TRUE");
         query.setParameter("studentId", studentId);
-        
+
         return query.getResultList();
     }
 
@@ -75,7 +75,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
             EJBHelper.requireNonNull(moduleId, new ModuleDoesNotExistException("The new group must be associated with a module"));
             StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
             ModuleEntity moduleEntity = moduleSessionBeanLocal.retrieveModuleById(moduleId);
-            
+
             newGroupEntity.setModuleEntity(moduleEntity);
             moduleEntity.getGroups().add(newGroupEntity);
             newGroupEntity.setPoster(studentEntity);
@@ -104,7 +104,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         return groupEntity;
     }
 
-        @Override
+    @Override
     public void applyToGroup(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException {
         GroupEntity group = retrieveGroupEntityById(groupId);
         StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
@@ -119,7 +119,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
             throw new SystemException("You can't join your own group!");
         }
     }
-    
+
     @Override
     public void approveReq(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException {
         GroupEntity group = retrieveGroupEntityById(groupId);
@@ -131,7 +131,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         studentEntity.getGroupsApplied().remove(group);
         em.flush();
     }
-    
+
     @Override
     public void disapproveReq(Long groupId, Long studentId) throws InputDataValidationException, DoesNotExistException {
         GroupEntity group = retrieveGroupEntityById(groupId);
@@ -140,7 +140,6 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         studentEntity.getGroupsApplied().remove(group);
         em.flush();
     }
-
 
     //Only poster is allowed to change name and description
     @Override
@@ -169,7 +168,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         try {
             GroupEntity group = retrieveGroupEntityById(groupId);
             StudentEntity student = studentSessionBeanLocal.retrieveStudentById(studentId);
-            
+
             if (!group.getGroupMembers().contains(student) || group.getCandidates().contains(student)) {
                 group.getGroupMembers().add(student);
                 student.getGroups().add(group);
@@ -180,13 +179,13 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
             Logger.getLogger(GroupEntitySessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public void rejectCandidateFromGroup(Long groupId, Long studentId) throws DoesNotExistException {
         try {
             GroupEntity group = retrieveGroupEntityById(groupId);
             StudentEntity student = studentSessionBeanLocal.retrieveStudentById(studentId);
-            
+
             if (group.getCandidates().contains(student)) {
                 group.getCandidates().remove(student);
                 student.getGroupsApplied().remove(group);
@@ -201,7 +200,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         try {
             GroupEntity group = retrieveGroupEntityById(groupId);
             StudentEntity student = studentSessionBeanLocal.retrieveStudentById(studentId);
-            
+
             if (group.getGroupMembers().contains(student) && !group.getPoster().equals(student)) {
                 group.getGroupMembers().remove(student);
                 student.getGroups().remove(group);
@@ -233,9 +232,9 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         System.out.println("Finding group with id: " + messageEntity.getGroup().getGroupId());
         GroupEntity group = retrieveGroupEntityById(messageEntity.getGroup().getGroupId());
         StudentEntity sender = studentSessionBeanLocal.retrieveStudentById(messageEntity.getSender().getAccountId());
-        
-        MessageEntity message = new MessageEntity(messageEntity.getContent(), group, sender);
-        
+
+        MessageEntity message = new MessageEntity(messageEntity.getContent(), group, sender, messageEntity.getMediaType());
+
         em.persist(message);
         em.flush();
         return message.getMessageId();
@@ -247,7 +246,29 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
                 .setParameter("groupId", groupId)
                 .getResultList();
     }
-    
 
+    @Override
+    public void changeMessageContent(Long messageId, String newContent) throws DoesNotExistException, InputDataValidationException {
+        MessageEntity message = em.find(MessageEntity.class, messageId);
+
+        if (message == null) {
+            throw new DoesNotExistException("This message does not exist[" + messageId + "]");
+        }
+
+        message.setContent(newContent);
+
+        em.flush();
+    }
+
+    @Override
+    public MessageEntity retrieveMessageEntityById(Long messageId) throws DoesNotExistException {
+        MessageEntity message = em.find(MessageEntity.class, messageId);
+        
+        if (message == null) {
+            throw new DoesNotExistException("This message does not exist[" + messageId + "]");
+        }
+        
+        return message;
+    }
 
 }

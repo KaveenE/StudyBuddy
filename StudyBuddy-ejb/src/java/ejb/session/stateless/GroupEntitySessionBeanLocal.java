@@ -60,5 +60,8 @@ public interface GroupEntitySessionBeanLocal {
     public Long addNewMessage(MessageEntity messageEntity) throws DoesNotExistException, InputDataValidationException;
     
     public List<MessageEntity> retrieveMessagesByGroupId(Long groupId) throws DoesNotExistException;
+    
+    public void changeMessageContent(Long messageId, String newContent) throws DoesNotExistException, InputDataValidationException;
 
+    public MessageEntity retrieveMessageEntityById(Long messageId) throws DoesNotExistException;
 }

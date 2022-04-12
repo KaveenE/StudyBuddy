@@ -10,12 +10,17 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Length;
+import util.enumeration.MediaType;
 
 /**
  *
@@ -28,8 +33,12 @@ public class MessageEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
+    
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private MediaType mediaType = MediaType.TEXT;
 
-    @Column(nullable = false, length = 2_000)
+    @Column(nullable = false)
     @NotNull
     private String content;
 
@@ -50,13 +59,14 @@ public class MessageEntity implements Serializable {
         dateTimeCreated = LocalDateTime.now();
     }
 
-    public MessageEntity(String content, GroupEntity group, StudentEntity sender) {
+    public MessageEntity(String content, GroupEntity group, StudentEntity sender, MediaType mediaType) {
         this();
         this.content = content;
         this.group = group;
         this.sender = sender;
+        this.mediaType = mediaType;
     }
-
+    
     public MessageEntity(String content) {
         this();
         this.content = content;
@@ -125,6 +135,14 @@ public class MessageEntity implements Serializable {
 
     public void setDateTimeCreated(LocalDateTime dateTimeCreated) {
         this.dateTimeCreated = dateTimeCreated;
+    }
+
+    public MediaType getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(MediaType mediaType) {
+        this.mediaType = mediaType;
     }
 
 }
