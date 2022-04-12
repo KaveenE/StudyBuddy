@@ -16,6 +16,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -26,7 +27,6 @@ import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.UnknownPersistenceException;
-import ws.datamodel.UpgradeAccountReq;
 
 /**
  * REST Web Service
@@ -107,37 +107,17 @@ public class StudentResource {
         }
     }
 
-//    @Path("upgradeAccount/{studentId}")
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response upgradeAccount(@QueryParam("studentId") Long studentId) {
-//        try {
-//            System.out.println(studentId);
-//            studentSessionBean.upgradeAccount(studentId);
-//            return Response.status(Status.OK).build();
-//        } catch (DoesNotExistException | InputDataValidationException ex) {
-//            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
-//        }   
-//    }
-//    
-    @Path("upgradeAccount")
+    @Path("upgradeAccount/{studentId}")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response upgradeAccount(UpgradeAccountReq upgradeAccountReq) {
-        if (upgradeAccountReq != null) {
-            try {
-                System.out.println(">>>>>>>>>>>>>>Upgrade account RWS" + upgradeAccountReq.getStudentEntity());
-                studentSessionBean.upgradeAccount(upgradeAccountReq.getStudentEntity());
-
-                return Response.status(Response.Status.OK).build();
-
-            } catch (Exception ex) {
-                return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
-            }
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Upgrade Account request").build();
+    public Response upgradeAccount(@PathParam("studentId") Long studentId) {
+        try {
+            System.out.println(studentId);
+            studentSessionBean.upgradeAccount(studentId);
+            return Response.status(Status.OK).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
+
 }

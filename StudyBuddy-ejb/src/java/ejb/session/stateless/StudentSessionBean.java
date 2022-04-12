@@ -90,15 +90,10 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
 
     @Override
-    public void upgradeAccount(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException {
-        System.out.println("STUDENT ID >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + studentEntity);
-        StudentEntity studentEntityToUpgrade = retrieveStudentById(studentEntity.getAccountId());
-        if (studentEntityToUpgrade.getUsername().equals(studentEntity.getUsername())) {
-            studentEntityToUpgrade.setIsPremium(true);
-           
-        } else {
-            throw new DoesNotExistException("Username of student does not match the existing record");
-        }
+    public void upgradeAccount(Long studentId) throws InputDataValidationException, DoesNotExistException {
+        System.out.println("STUDENT ID >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + studentId);
+        StudentEntity studentEntityToUpgrade = retrieveStudentById(studentId);
+        studentEntityToUpgrade.setIsPremium(true);
     }
 
     @Override
