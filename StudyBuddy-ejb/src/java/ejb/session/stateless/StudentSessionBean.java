@@ -19,6 +19,7 @@ import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.StudentDoesNotExistException;
+import util.exception.StudentPremiumAlreadyExistsException;
 import util.exception.UnknownPersistenceException;
 import util.helper.EJBHelper;
 
@@ -80,6 +81,7 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         StudentEntity accountToUpdateStudent = retrieveStudentById(studentEntity.getAccountId());
 
         accountToUpdateStudent.setEmail(studentEntity.getEmail());
+        accountToUpdateStudent.setFullName(studentEntity.getFullName());
         accountToUpdateStudent.setYearOfStudy(studentEntity.getYearOfStudy());
         accountToUpdateStudent.setOptLocation(studentEntity.getOptLocation());
 
@@ -90,9 +92,11 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
 
     @Override
-    public void upgradeAccount(Long studentId) throws InputDataValidationException, DoesNotExistException {
-        System.out.println("STUDENT ID >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + studentId);
+    public void upgradeAccount(Long studentId) throws InputDataValidationException, DoesNotExistException, StudentPremiumAlreadyExistsException {
         StudentEntity studentEntityToUpgrade = retrieveStudentById(studentId);
+        if (studentEntityToUpgrade.getIsPremium() == true) {
+            throw new StudentPremiumAlreadyExistsException();
+        }
         studentEntityToUpgrade.setIsPremium(true);
     }
 

@@ -26,6 +26,7 @@ import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.StudentPremiumAlreadyExistsException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -115,7 +116,7 @@ public class StudentResource {
             System.out.println(studentId);
             studentSessionBean.upgradeAccount(studentId);
             return Response.status(Status.OK).build();
-        } catch (DoesNotExistException | InputDataValidationException ex) {
+        } catch (DoesNotExistException | InputDataValidationException | StudentPremiumAlreadyExistsException ex) {
             return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
