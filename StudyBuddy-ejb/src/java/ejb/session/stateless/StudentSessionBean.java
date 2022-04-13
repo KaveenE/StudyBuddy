@@ -14,6 +14,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.security.auth.login.AccountNotFoundException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -110,6 +111,11 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
             throw new StudentPremiumAlreadyExistsException();
         }
         studentEntityToUpgrade.setIsPremium(true);
+    }
+    
+    @Override
+    public void updatePassword(StudentEntity accountToUpdatePassword, String newPassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException {
+        accountSessionBeanLocal.updatePassword(accountToUpdatePassword, newPassword);
     }
 
     @Override
