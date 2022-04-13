@@ -59,6 +59,18 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         return (StudentEntity) account;
     }
 
+    //method changing password use case
+    @Override
+    public StudentEntity retrieveStudentByEmail(String email) throws DoesNotExistException, InputDataValidationException {
+        AccountEntity account = accountSessionBeanLocal.retrieveAccountByEmail(email);
+        
+        if (!(account instanceof StudentEntity)) {
+            throw new StudentDoesNotExistException();
+        }
+     
+        return (StudentEntity) account;
+    }
+
     @Override
     public Long createNewStudent(StudentEntity newStudentEntity) throws AlreadyExistsException, InputDataValidationException, UnknownPersistenceException {
         return accountSessionBeanLocal.createNewAccount(newStudentEntity);

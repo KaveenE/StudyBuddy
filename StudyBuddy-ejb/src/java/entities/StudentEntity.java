@@ -105,7 +105,7 @@ public class StudentEntity extends AccountEntity implements Serializable {
     }
 
     public StudentEntity() {
-        super();
+//        super();
         System.out.println("Student Entity Default Constructor!");
     }
 

@@ -35,6 +35,8 @@ public interface AccountSessionBeanLocal {
 
     public List<AccountEntity> retrieveAllAccounts(Class subClass);
 
-    public void updatePassword(AccountEntity accountToUpdatePassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException;
+    public void updatePassword(AccountEntity accountToUpdatePassword, String newPassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException;
+
+    public AccountEntity retrieveAccountByEmail(String email) throws DoesNotExistException, InputDataValidationException;
 
 }

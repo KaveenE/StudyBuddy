@@ -7,8 +7,14 @@ package ws.restful;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ejb.session.stateless.AccountSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entities.StudentEntity;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.security.auth.login.AccountNotFoundException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -28,6 +34,7 @@ import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.StudentPremiumAlreadyExistsException;
 import util.exception.UnknownPersistenceException;
+import ws.passwordHelper.PasswordHelper;
 
 /**
  * REST Web Service
@@ -37,6 +44,7 @@ import util.exception.UnknownPersistenceException;
 @Path("Student")
 public class StudentResource {
 
+    AccountSessionBeanLocal accountSessionBean;
     StudentSessionBeanLocal studentSessionBean;
 
     @Context
@@ -47,6 +55,7 @@ public class StudentResource {
      */
     public StudentResource() {
         studentSessionBean = new SessionBeanLookup().lookupStudentSessionBeanLocal();
+        accountSessionBean = new SessionBeanLookup().lookupAccountSessionBeanLocal();
     }
 
     @Path("studentLogin")
@@ -71,6 +80,22 @@ public class StudentResource {
     public Response retrieveStudentById(@QueryParam("studentId") Long studentId) {
         try {
             StudentEntity studentEntity = studentSessionBean.retrieveStudentById(studentId);
+            String result = new ObjectMapper().writeValueAsString(studentEntity);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+
+    @Path("retrieveStudentByEmail")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveStudentByEmail(@QueryParam("email") String email) {
+        try {
+            StudentEntity studentEntity = studentSessionBean.retrieveStudentByEmail(email);
             String result = new ObjectMapper().writeValueAsString(studentEntity);
             return Response.ok(result, MediaType.APPLICATION_JSON).build();
         } catch (DoesNotExistException | InputDataValidationException ex) {
@@ -108,6 +133,19 @@ public class StudentResource {
         }
     }
 
+    @Path("updatePassword")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updatePassword(PasswordHelper passwordHelper) {
+        try {
+            accountSessionBean.updatePassword(passwordHelper.getStudentEntityToChangePassword(), passwordHelper.getNewPassword());
+            return Response.status(Status.OK).build();
+        } catch (AccountNotFoundException | DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+    
     @Path("upgradeAccount/{studentId}")
     @POST
     @Produces(MediaType.APPLICATION_JSON)

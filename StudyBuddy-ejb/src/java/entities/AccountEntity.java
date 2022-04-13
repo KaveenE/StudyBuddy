@@ -55,7 +55,7 @@ public abstract class AccountEntity implements Serializable {
 
     public AccountEntity(String email, String username, String password) {
         this();
-        
+
         this.email = email;
         this.username = username;
         setPassword(password);
@@ -127,6 +127,7 @@ public abstract class AccountEntity implements Serializable {
     }
 
     public void setSalt(String salt) {
+        this.salt = salt;
     }
 
 }

@@ -79,19 +79,31 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
     }
 
     @Override
+    public AccountEntity retrieveAccountByEmail(String email) throws DoesNotExistException, InputDataValidationException {
+        Query query = em.createQuery("SELECT a FROM AccountEntity a WHERE a.email = :email");
+        query.setParameter("email", email.toLowerCase());
+        AccountEntity account = (AccountEntity) query.getSingleResult();
+
+        EJBHelper.requireNonNull(account, new AccountDoesNotExistException());
+        EJBHelper.throwValidationErrorsIfAny(account);
+
+        return account;
+    }
+
+    @Override
     public Long createNewAccount(AccountEntity newAccountEntity) throws AlreadyExistsException, UnknownPersistenceException, InputDataValidationException {
         EJBHelper.throwValidationErrorsIfAny(newAccountEntity);
-        
+
         errorMsgForDupEmailUsername(newAccountEntity);
-        
+
         try {
             em.persist(newAccountEntity);
             em.flush();
         } catch (PersistenceException ex) {
-            if(newAccountEntity instanceof StudentEntity) {
-                AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex,new StudentAlreadyExistsException());
+            if (newAccountEntity instanceof StudentEntity) {
+                AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new StudentAlreadyExistsException());
             }
-            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex,new AdminAlreadyExistsException());
+            AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new AdminAlreadyExistsException());
         }
 
         return newAccountEntity.getAccountId();
@@ -115,16 +127,15 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
 
     //Only accessible by account owner!
     @Override
-    public void updatePassword(AccountEntity accountToUpdatePassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException {
-
+    public void updatePassword(AccountEntity accountToUpdatePassword, String newPassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException {
         EJBHelper.throwValidationErrorsIfAny(accountToUpdatePassword);
-
         AccountEntity account = retrieveAccountById(accountToUpdatePassword.getAccountId());
         String newSalt = CryptographicHelper.getInstance().generateRandomString(32);
         account.setSalt(newSalt);
-        account.setPassword(accountToUpdatePassword.getPassword());
+
+        account.setPassword(newPassword);
     }
-    
+
     //Couldn't refactor createAccount to include specific messages properly due to some bug (or i suck)
     //So had to create separate method, iterate thru the entities again..
     //Poor performance
@@ -141,8 +152,8 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
         if (dupUsername) {
             errorMsg = "Username has already been taken";
         }
-        
-        if(!errorMsg.isEmpty()) {
+
+        if (!errorMsg.isEmpty()) {
             throw new StudentAlreadyExistsException(errorMsg);
         }
     }

@@ -40,4 +40,6 @@ public interface StudentSessionBeanLocal {
 
     public void upgradeAccount(Long studentId) throws InputDataValidationException, DoesNotExistException, StudentPremiumAlreadyExistsException;
 
+    public StudentEntity retrieveStudentByEmail(String email) throws DoesNotExistException, InputDataValidationException;
+
 }
