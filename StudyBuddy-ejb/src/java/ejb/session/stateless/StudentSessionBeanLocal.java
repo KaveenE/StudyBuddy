@@ -45,4 +45,6 @@ public interface StudentSessionBeanLocal {
 
     public void updatePassword(StudentEntity accountToUpdatePassword, String newPassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException;
 
+    public StudentEntity retrieveStudentByUsernamePw(String username, String password) throws InvalidLoginCredentialException;
+
 }

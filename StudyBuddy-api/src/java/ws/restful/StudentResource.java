@@ -86,6 +86,23 @@ public class StudentResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
+    
+    @Path("retrieveStudentByUsernamePw")
+    @GET
+//    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveStudentByUsernamePw(@QueryParam("username") String username, @QueryParam("password") String password) {
+        try {
+            System.out.println("<<<<<<<<<<<<<<<" + username + password);
+            StudentEntity studentEntity = studentSessionBean.retrieveStudentByUsernamePw(username, password);
+            String result = new ObjectMapper().writeValueAsString(studentEntity);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (InvalidLoginCredentialException ex) {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
 
     @Path("retrieveStudentByEmail")
     @GET
