@@ -10,8 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ejb.session.stateless.KanbanSessionBeanLocal;
 import entities.KanbanBoard;
 import entities.KanbanCard;
-import entities.KanbanCard;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -70,6 +71,21 @@ public class KanbanResource {
             return Response.status(Response.Status.OK).entity(kanbanBoardId).build();
         } catch (DoesNotExistException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("retrieveKanbanCardsByGroupId/{groupId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveKanbanCardsByGroupId(@PathParam("groupId") Long groupId) {
+        try {
+            List<KanbanCard> kanbanCards = kanbanSessionBean.retrieveKanbanCardsByGroupId(groupId);
+            String result = new ObjectMapper().writeValueAsString(kanbanCards);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch ( JsonProcessingException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
 
