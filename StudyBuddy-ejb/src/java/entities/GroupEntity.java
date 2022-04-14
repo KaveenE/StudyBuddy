@@ -80,6 +80,7 @@ public class GroupEntity implements Serializable {
     @OneToMany(mappedBy = "group")
     @JsonIgnore
     @JsonManagedReference
+    @Size(min=1,max=1)
     private List<KanbanBoard> kanbanBoards;
 
     public GroupEntity() {
