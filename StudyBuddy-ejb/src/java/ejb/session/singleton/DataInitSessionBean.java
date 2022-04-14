@@ -31,6 +31,8 @@ import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
 import util.helper.NusModHelper;
+import util.helper.NtuModHelper;
+import util.helper.SmuModHelper;
 import ejb.session.stateless.ModuleSessionBeanLocal;
 import ejb.session.stateless.ReportSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
@@ -66,7 +68,6 @@ public class DataInitSessionBean {
 
     @EJB
     private SchoolSessionBeanLocal schoolEntitySessionBean;
-    
 
     public DataInitSessionBean() {
     }
@@ -92,12 +93,12 @@ public class DataInitSessionBean {
 
             adminSessionBean.createNewAdminEntity(new AdminEntity("admin@stubud.xyz", "admin", "password"));
 
-            SchoolEntity nus = new SchoolEntity("National University of Singapore (NUS)");   
-            SchoolEntity smu = new SchoolEntity("Singapore Management University (SMOO)"); 
+            SchoolEntity nus = new SchoolEntity("National University of Singapore (NUS)");
+            SchoolEntity smu = new SchoolEntity("Singapore Management University (SMOO)");
             SchoolEntity ntu = new SchoolEntity("Nanyang Technological University (NTU)");
-            Long schoolId = schoolEntitySessionBean.createNewSchool(nus);
-            schoolEntitySessionBean.createNewSchool(smu);
-            schoolEntitySessionBean.createNewSchool(ntu);
+            Long nusSchoolId = schoolEntitySessionBean.createNewSchool(nus);
+            Long smuSchoolId = schoolEntitySessionBean.createNewSchool(smu);
+            Long ntuSchoolId = schoolEntitySessionBean.createNewSchool(ntu);
             Long moduleId = new Long(0);
 
             //Importing modules from NUSMod
@@ -114,9 +115,50 @@ public class DataInitSessionBean {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String name = jsonObject.getString("title");
                         String code = jsonObject.getString("moduleCode");
-                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, nus), schoolId);
+                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, nus), nusSchoolId);
                     }
                     nusModReader.close();
+                } else {
+                    System.out.println("Returned Reader is null");
+                }
+            } catch (AlreadyExistsException | NoClassDefFoundError | IOException ex) {
+                Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                Reader ntuModReader = NtuModHelper.getReader();
+                if (ntuModReader != null) {
+                    System.out.println("Sucessfully retrieve reader");
+                    JSONTokener jsonTokener = new JSONTokener(ntuModReader);
+
+                    JSONArray jsonArray = new JSONArray(jsonTokener);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String name = jsonObject.getString("title");
+                        String code = jsonObject.getString("moduleCode");
+                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, ntu), ntuSchoolId);
+                    }
+                    ntuModReader.close();
+                } else {
+                    System.out.println("Returned Reader is null");
+                }
+            } catch (AlreadyExistsException | NoClassDefFoundError | IOException ex) {
+                Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+
+                Reader smuModReader = SmuModHelper.getReader();
+                if (smuModReader != null) {
+                    System.out.println("Sucessfully retrieve reader");
+                    JSONTokener jsonTokener = new JSONTokener(smuModReader);
+
+                    JSONArray jsonArray = new JSONArray(jsonTokener);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String name = jsonObject.getString("title");
+                        String code = jsonObject.getString("moduleCode");
+                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, ntu), smuSchoolId);
+                    }
+                    smuModReader.close();
                 } else {
                     System.out.println("Returned Reader is null");
                 }
@@ -139,9 +181,9 @@ public class DataInitSessionBean {
             studentEntitySessionBean.retrieveStudentById(2l).getGroupsApplied().add(groupEntity);
             groupEntity.getGroupMembers().add(studentEntitySessionBean.retrieveStudentById(3l));
             studentEntitySessionBean.retrieveStudentById(3l).getGroups().add(groupEntity);
-            
+
             reportSessionBeanLocal.createNewReport(new ReportEntity("test"), 1L, 2L);
-            
+
 //          Kanban Board Entity
             kanbanSessionBean.createDefaultKanbanBoard(1l);
         } catch (AlreadyExistsException | UnknownPersistenceException | InputDataValidationException | DoesNotExistException ex) {
