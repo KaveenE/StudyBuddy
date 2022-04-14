@@ -156,7 +156,7 @@ public class DataInitSessionBean {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String name = jsonObject.getString("title");
                         String code = jsonObject.getString("moduleCode");
-                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, ntu), smuSchoolId);
+                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, smu), smuSchoolId);
                     }
                     smuModReader.close();
                 } else {
