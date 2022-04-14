@@ -59,9 +59,9 @@ public class KanbanCard implements Serializable {
     @ManyToOne
     private StudentEntity author;
 
-//    @ManyToMany
-//    @JsonManagedReference
-//    private List<StudentEntity> assignedStudents;
+    @ManyToMany
+    @JsonManagedReference
+    private List<StudentEntity> assignedStudents;
 
     @JoinColumn(nullable = false)
     @ManyToOne
@@ -69,7 +69,7 @@ public class KanbanCard implements Serializable {
     private KanbanBoard kanbanBoard;
 
     public KanbanCard() {
-        //this.assignedStudents = new ArrayList<>();
+        this.assignedStudents = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.cardType = CardType.TASKS;
     }
@@ -162,14 +162,14 @@ public class KanbanCard implements Serializable {
     public void setAuthor(StudentEntity author) {
         this.author = author;
     }
-//
-//    public List<StudentEntity> getAssignedStudents() {
-//        return assignedStudents;
-//    }
-//
-//    public void setAssignedStudents(List<StudentEntity> assignedStudents) {
-//        this.assignedStudents = assignedStudents;
-//    }
+
+    public List<StudentEntity> getAssignedStudents() {
+        return assignedStudents;
+    }
+
+    public void setAssignedStudents(List<StudentEntity> assignedStudents) {
+        this.assignedStudents = assignedStudents;
+    }
 
     public KanbanBoard getKanbanBoard() {
         return kanbanBoard;
