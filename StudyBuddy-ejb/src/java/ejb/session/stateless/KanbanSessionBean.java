@@ -96,22 +96,22 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
         em.remove(kanbanBoardToDelete);
 
     }
-    
+
     @Override
     public Long createNewKanbanCard(KanbanCard newKanbanCard, Long kanbanBoardId, Long authorStudentId) throws UnknownPersistenceException, AlreadyExistsException, DoesNotExistException, InputDataValidationException {
         EJBHelper.throwValidationErrorsIfAny(newKanbanCard);
         EJBHelper.requireNonNull(kanbanBoardId, new KanbanBoardDoesNotExistException("Kanban board Id must not be null"));
         EJBHelper.requireNonNull(authorStudentId, new StudentDoesNotExistException("Student Id must not be null"));
-        
+
         KanbanBoard kanbanBoard = retrieveKanbanBoardById(kanbanBoardId);
         newKanbanCard.setKanbanBoard(kanbanBoard);
         kanbanBoard.getKanbanCards().add(newKanbanCard);
-        
+
         StudentEntity author = studentSessionBean.retrieveStudentById(authorStudentId);
         newKanbanCard.setAuthor(author);
-        
+
         List<StudentEntity> assignedStudents = new ArrayList<>();
-        for(StudentEntity assignedStudent: newKanbanCard.getAssignedStudents()) {
+        for (StudentEntity assignedStudent : newKanbanCard.getAssignedStudents()) {
             assignedStudents.add(studentSessionBean.retrieveStudentById(assignedStudent.getAccountId()));
         }
         newKanbanCard.setAssignedStudents(assignedStudents);
@@ -184,10 +184,11 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
         kanbanCardToDelete.setKanbanBoard(null);
         kanbanCardToDelete.getAssignedStudents().forEach(s -> s.getAssignedCards().remove(kanbanCardToDelete));
         kanbanCardToDelete.setAssignedStudents(new ArrayList<>());
-        
+
         em.remove(kanbanCardToDelete);
 
     }
+
     @Override
     public List<KanbanCard> retrieveKanbanCardsAssignedToStudents(Long StudentId) throws DoesNotExistException, InputDataValidationException {
         List<KanbanCard> kanbanCards = studentSessionBean.retrieveStudentById(StudentId).getAssignedCards();
@@ -205,6 +206,15 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
 
         return board;
 
+    }
+
+    //testing
+    @Override
+    public List<KanbanCard> retrieveKanbanCardsByGroupId(Long groupId) throws DoesNotExistException, InputDataValidationException {
+        KanbanBoard kanbanBoard = this.retrieveKanbanBoardsByGroupId(groupId).get(0);
+        List<KanbanCard> kanbanCards = kanbanBoard.getKanbanCards();
+        kanbanCards.size();
+        return kanbanCards;
     }
 
     @Override
@@ -236,18 +246,18 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
 
             StudentEntity poster = group.getPoster();
             StudentEntity anotherMember = null;
-            if(group.getGroupMembers().size() >= 1) {
+            if (group.getGroupMembers().size() >= 1) {
                 anotherMember = group.getGroupMembers().get(1);
             }
 
             KanbanBoard board = new KanbanBoard(String.format("%s's Kanban Board", group.getGroupName()), group);
             group.setKanbanBoards(new ArrayList<>(Arrays.asList(board)));
 
-            board.getKanbanCards().add(new KanbanCard("Head Back Log","Desc Back Log",poster,CardType.BACKLOG, null, board));
-            board.getKanbanCards().add(new KanbanCard("Head Tasks", "Desc Tasks",anotherMember,CardType.TASKS, null, board));
-            board.getKanbanCards().add(new KanbanCard("Head InProgress", "Desc Doing",anotherMember,CardType.INPROGRESS,null, board));
-            board.getKanbanCards().add(new KanbanCard("Head Finished", "Desc Finished",poster,CardType.FINISHED,null, board));
-            board.getKanbanCards().add(new KanbanCard("Head Archived", "Desc Archive",poster,CardType.ARCHIVED,null,board));
+            board.getKanbanCards().add(new KanbanCard("Head Back Log", "Desc Back Log", poster, CardType.BACKLOG, null, board));
+            board.getKanbanCards().add(new KanbanCard("Head Tasks", "Desc Tasks", anotherMember, CardType.TASKS, null, board));
+            board.getKanbanCards().add(new KanbanCard("Head InProgress", "Desc Doing", anotherMember, CardType.INPROGRESS, null, board));
+            board.getKanbanCards().add(new KanbanCard("Head Finished", "Desc Finished", poster, CardType.FINISHED, null, board));
+            board.getKanbanCards().add(new KanbanCard("Head Archived", "Desc Archive", poster, CardType.ARCHIVED, null, board));
 
             EJBHelper.throwValidationErrorsIfAny(board);
             for (KanbanCard l : board.getKanbanCards()) {
