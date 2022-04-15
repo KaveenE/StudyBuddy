@@ -175,13 +175,10 @@ public class KanbanResource {
 
     @Path("deleteKanbanCard/{kanbanCardId}")
     @DELETE
-    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteKanbanCard(@QueryParam("kanbanCardId") Long kanbanCardId) {
-        System.out.println("<<<<<<<<<<<<<" + kanbanCardId);
+    public Response deleteKanbanCard(@PathParam("kanbanCardId") Long kanbanCardId) {
         try {
             kanbanSessionBean.deleteKanbanCard(kanbanCardId);
-            System.out.println("<<<<<<<<<<<<<" + kanbanCardId);
             return Response.status(Response.Status.OK).build();
         } catch (DoesNotExistException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();

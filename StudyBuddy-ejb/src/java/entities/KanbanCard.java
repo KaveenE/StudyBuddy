@@ -63,7 +63,7 @@ public class KanbanCard implements Serializable {
     @JsonManagedReference
     private List<StudentEntity> assignedStudents;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
     @ManyToOne
     @JsonBackReference
     private KanbanBoard kanbanBoard;
