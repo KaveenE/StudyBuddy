@@ -89,6 +89,22 @@ public class KanbanResource {
         }
     }
 
+    //here
+    @Path("retrieveKanbanCardByCardId/{cardId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveKanbanCardByCardId(@PathParam("cardId") Long cardId) {
+        try {
+            KanbanCard kanbanCard = kanbanSessionBean.retrieveKanbanCardById(cardId);
+            String result = new ObjectMapper().writeValueAsString(kanbanCard);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (DoesNotExistException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+
     @Path("retrieveKanbanBoardsByGroupId/{groupId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
