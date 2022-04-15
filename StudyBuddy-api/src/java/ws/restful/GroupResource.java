@@ -20,7 +20,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -100,6 +103,7 @@ public class GroupResource {
     public Response retrieveGroupById(@PathParam("groupId") Long groupId) {
         try {
             GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
+            Map<String,List<Double>> map = new HashMap<>();
             group.getModuleEntity().getSchool().getModuleEntities().clear();
             String res = new ObjectMapper().writeValueAsString(group);
             return Response.ok(res, MediaType.APPLICATION_JSON).build();
@@ -211,6 +215,18 @@ public class GroupResource {
             groupEntitySessionBean.updateGroup(groupEntityToUpdate, studentId);
             return Response.status(Status.OK).build();
         } catch (AccessRightsException | DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("updateMapMarkers")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateMapMarkers(GroupEntity groupEntityToUpdate) {
+        try {
+            groupEntitySessionBean.updateMapMarkers(groupEntityToUpdate);
+            return Response.status(Status.OK).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }

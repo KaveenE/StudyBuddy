@@ -10,6 +10,7 @@ import entities.MessageEntity;
 import entities.ModuleEntity;
 import entities.StudentEntity;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -162,7 +163,13 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
             throw new GroupAccessRightsException();
         }
     }
-
+    
+    @Override
+    public void updateMapMarkers(GroupEntity groupEntity) throws InputDataValidationException, DoesNotExistException {
+        GroupEntity groupEntityToUpdate = retrieveGroupEntityById(groupEntity.getGroupId());
+        groupEntityToUpdate.setMapMarkerNum(groupEntity.getMapMarkerNum());
+        groupEntityToUpdate.setMapMarkerCoord(groupEntity.getMapMarkerCoord());
+    }
     @Override
     public void deleteGroup(Long groupId) throws DoesNotExistException, InputDataValidationException {
         GroupEntity groupEntityToDelete = retrieveGroupEntityById(groupId);
