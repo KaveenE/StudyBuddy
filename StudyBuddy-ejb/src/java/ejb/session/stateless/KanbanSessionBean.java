@@ -177,7 +177,10 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
 
     @Override
     public void deleteKanbanCard(Long kanbanCardId) throws DoesNotExistException {
-        KanbanCard kanbanCardToDelete = em.find(KanbanCard.class, kanbanCardId);
+        //KanbanCard kanbanCardToDelete = em.find(KanbanCard.class, kanbanCardId);
+        System.out.println("<<<<<<<<<<<<<<<< kanbanCardToDelete" + kanbanCardId);
+        KanbanCard kanbanCardToDelete = retrieveKanbanCardById(kanbanCardId);
+        System.out.println("<<<<<<<<<<<<<<<< kanbanCardToDelete" + kanbanCardToDelete);
         EJBHelper.requireNonNull(kanbanCardToDelete, new KanbanCardDoesNotExistException());
 
         kanbanCardToDelete.getKanbanBoard().getKanbanCards().remove(kanbanCardToDelete);
@@ -186,6 +189,10 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
         kanbanCardToDelete.setAssignedStudents(new ArrayList<>());
 
         em.remove(kanbanCardToDelete);
+        em.flush();
+//        KanbanCard kanbanToDelete = retrieveKanbanCardById(kanbanCardId);
+//        kan
+        
 
     }
 

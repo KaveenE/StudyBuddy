@@ -18,42 +18,9 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author larby
- */
+ * @author larby`    */
 public class NtuModHelper {
     public static Reader getReader() {
-//        Not working because of some HTTPS shit
-        
-//        try {
-//            LocalDate today = LocalDate.now();
-//            String acaYear;
-//            if (today.getMonthValue() < 6) {
-//                acaYear = String.format("%d-%d", today.getYear() - 1, today.getYear());
-//            } else {
-//                acaYear = String.format("%d-%d", today.getYear(), today.getYear() + 1);
-//            }
-//            String urlString = String.format("https://api.nusmods.com/v2/%s/moduleList.json", acaYear);
-//            URL url = new URL(urlString);
-//            
-//            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-//            int responseCode = con.getResponseCode();
-//            if (responseCode < 300) {
-//                System.out.println("Successful connection");
-//                BufferedReader in = new BufferedReader(
-//                        new InputStreamReader(con.getInputStream()));
-//                
-//                return in;
-//            } else {
-//                System.out.println("We failed");
-//            }
-//
-//        } catch (MalformedURLException ex) {
-//            Logger.getLogger(NusModHelper.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(NusModHelper.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
-//        return null;
 
         try {
             String filepath = NtuModHelper.class.getClassLoader().getResource("").getPath() + "../../docroot/ntuList.json";

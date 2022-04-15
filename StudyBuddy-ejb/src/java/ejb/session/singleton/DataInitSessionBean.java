@@ -124,26 +124,26 @@ public class DataInitSessionBean {
             } catch (AlreadyExistsException | NoClassDefFoundError | IOException ex) {
                 Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
             }
-            try {
-                Reader ntuModReader = NtuModHelper.getReader();
-                if (ntuModReader != null) {
-                    System.out.println("Sucessfully retrieve reader");
-                    JSONTokener jsonTokener = new JSONTokener(ntuModReader);
-
-                    JSONArray jsonArray = new JSONArray(jsonTokener);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String name = jsonObject.getString("title");
-                        String code = jsonObject.getString("moduleCode");
-                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, ntu), ntuSchoolId);
-                    }
-                    ntuModReader.close();
-                } else {
-                    System.out.println("Returned Reader is null");
-                }
-            } catch (AlreadyExistsException | NoClassDefFoundError | IOException ex) {
-                Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            try {
+//                Reader ntuModReader = NtuModHelper.getReader();
+//                if (ntuModReader != null) {
+//                    System.out.println("Sucessfully retrieve reader");
+//                    JSONTokener jsonTokener = new JSONTokener(ntuModReader);
+//
+//                    JSONArray jsonArray = new JSONArray(jsonTokener);
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                        String name = jsonObject.getString("name");
+//                        String code = jsonObject.getString("code");
+//                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, ntu), ntuSchoolId);
+//                    }
+//                    ntuModReader.close();
+//                } else {
+//                    System.out.println("Returned Reader is null");
+//                }
+//            } catch (AlreadyExistsException | NoClassDefFoundError | IOException ex) {
+//                Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+//            }
             try {
 
                 Reader smuModReader = SmuModHelper.getReader();
