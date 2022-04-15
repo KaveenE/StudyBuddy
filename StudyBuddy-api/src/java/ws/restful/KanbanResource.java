@@ -151,7 +151,7 @@ public class KanbanResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewKanbanCard(KanbanCard newKanbanCard, @QueryParam("kanbanBoardId") Long kanbanBoardId, @QueryParam("authorStudentId") Long authorStudentId) {
         try {
-            Long kanbanCardId = kanbanSessionBean.createNewKanbanCard(newKanbanCard, authorStudentId, authorStudentId);
+            Long kanbanCardId = kanbanSessionBean.createNewKanbanCard(newKanbanCard, kanbanBoardId, authorStudentId);
             return Response.status(Response.Status.OK).entity(kanbanCardId).build();
         } catch (DoesNotExistException | InputDataValidationException | AlreadyExistsException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
