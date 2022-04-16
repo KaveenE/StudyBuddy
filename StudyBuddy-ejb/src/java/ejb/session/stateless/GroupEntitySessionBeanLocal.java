@@ -64,4 +64,6 @@ public interface GroupEntitySessionBeanLocal {
     public void changeMessageContent(Long messageId, String newContent) throws DoesNotExistException, InputDataValidationException;
 
     public MessageEntity retrieveMessageEntityById(Long messageId) throws DoesNotExistException;
+
+    public void updateMapMarkers(GroupEntity groupEntity) throws InputDataValidationException, DoesNotExistException;
 }

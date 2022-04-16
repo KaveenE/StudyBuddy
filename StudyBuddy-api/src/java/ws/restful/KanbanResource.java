@@ -10,8 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ejb.session.stateless.KanbanSessionBeanLocal;
 import entities.KanbanBoard;
 import entities.KanbanCard;
-import entities.KanbanCard;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -73,6 +74,37 @@ public class KanbanResource {
         }
     }
 
+    @Path("retrieveKanbanCardsByGroupId/{groupId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveKanbanCardsByGroupId(@PathParam("groupId") Long groupId) {
+        try {
+            List<KanbanCard> kanbanCards = kanbanSessionBean.retrieveKanbanCardsByGroupId(groupId);
+            String result = new ObjectMapper().writeValueAsString(kanbanCards);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+
+    //here
+    @Path("retrieveKanbanCardByCardId/{cardId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveKanbanCardByCardId(@PathParam("cardId") Long cardId) {
+        try {
+            KanbanCard kanbanCard = kanbanSessionBean.retrieveKanbanCardById(cardId);
+            String result = new ObjectMapper().writeValueAsString(kanbanCard);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (DoesNotExistException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+
     @Path("retrieveKanbanBoardsByGroupId/{groupId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -83,6 +115,22 @@ public class KanbanResource {
             return Response.ok(result, MediaType.APPLICATION_JSON).build();
         } catch (DoesNotExistException | InputDataValidationException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+
+    @Path("retrieveAllKanbanCards")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllKanbanCards() {
+        try {
+            List<KanbanCard> kanbanCards = kanbanSessionBean.retrieveAllKanbanCards();
+
+            String result = new ObjectMapper().writeValueAsString(kanbanCards);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+//        } catch (DoesNotExistException | InputDataValidationException ex) {
+//            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         } catch (JsonProcessingException ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
@@ -100,7 +148,7 @@ public class KanbanResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("deleteKanbanBoard")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
@@ -112,14 +160,14 @@ public class KanbanResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("createNewKanbanCard")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewKanbanCard(KanbanCard newKanbanCard, @QueryParam("kanbanBoardId") Long kanbanBoardId, @QueryParam("authorStudentId") Long authorStudentId) {
         try {
-            Long kanbanCardId = kanbanSessionBean.createNewKanbanCard(newKanbanCard, authorStudentId, authorStudentId);
+            Long kanbanCardId = kanbanSessionBean.createNewKanbanCard(newKanbanCard, kanbanBoardId, authorStudentId);
             return Response.status(Response.Status.OK).entity(kanbanCardId).build();
         } catch (DoesNotExistException | InputDataValidationException | AlreadyExistsException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
@@ -127,7 +175,7 @@ public class KanbanResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("updateKanbanCard")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -140,11 +188,11 @@ public class KanbanResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
-    
-    @Path("deleteKanbanCard")
+
+    @Path("deleteKanbanCard/{kanbanCardId}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteKanbanCard(@QueryParam("kanbanCardId") Long kanbanCardId) {
+    public Response deleteKanbanCard(@PathParam("kanbanCardId") Long kanbanCardId) {
         try {
             kanbanSessionBean.deleteKanbanCard(kanbanCardId);
             return Response.status(Response.Status.OK).build();
@@ -152,5 +200,5 @@ public class KanbanResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
-    
+
 }

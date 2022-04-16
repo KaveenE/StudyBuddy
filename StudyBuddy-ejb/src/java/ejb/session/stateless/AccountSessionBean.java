@@ -82,12 +82,12 @@ public class AccountSessionBean implements AccountSessionBeanLocal {
     public AccountEntity retrieveAccountByEmail(String email) throws DoesNotExistException, InputDataValidationException {
         Query query = em.createQuery("SELECT a FROM AccountEntity a WHERE a.email = :email");
         query.setParameter("email", email.toLowerCase());
-        AccountEntity account = (AccountEntity) query.getSingleResult();
-
-        EJBHelper.requireNonNull(account, new AccountDoesNotExistException());
-        EJBHelper.throwValidationErrorsIfAny(account);
-
-        return account;
+        
+        try {
+            return (AccountEntity) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new AccountDoesNotExistException("Email: " + email + " does not exist!");
+        }
     }
 
     @Override

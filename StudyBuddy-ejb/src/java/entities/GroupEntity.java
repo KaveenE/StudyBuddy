@@ -10,8 +10,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -77,10 +80,27 @@ public class GroupEntity implements Serializable {
     @JsonManagedReference
     private List<StudentEntity> groupMembers;
 
+    //Note that we will be using only 1 kanban board
+    //Lazy to refactor to single entity
     @OneToMany(mappedBy = "group")
     @JsonIgnore
     @JsonManagedReference
     private List<KanbanBoard> kanbanBoards;
+
+//    IDK how to serialize from TS to json + lazy + sleepy => using 2 lists
+//    @NotNull
+//    @Size(max = 3)
+//    private Map<String,List<Double>> mapMarkerNumToCoordinates;
+    
+    @ElementCollection
+    @NotNull
+    @Size(max = 3)
+    private List<String> mapMarkerNum;
+    
+    @ElementCollection
+    @NotNull
+    @Size(max = 6)
+    private List<Double> mapMarkerCoord;
 
     public GroupEntity() {
         this.candidates = new ArrayList<>();
@@ -90,6 +110,9 @@ public class GroupEntity implements Serializable {
         this.isDeleted = false;
         this.dateTimeCreated = LocalDateTime.now();
         this.kanbanBoards = new ArrayList<>();
+        //this.mapMarkerNumToCoordinates = new HashMap<>();
+        this.mapMarkerCoord = new ArrayList<>();
+        this.mapMarkerNum = new ArrayList<>();
     }
 
     public GroupEntity(String groupName, String description) {
@@ -229,6 +252,30 @@ public class GroupEntity implements Serializable {
     @Override
     public String toString() {
         return "entities.GroupEntity[ id=" + groupId + " ]";
+    }
+
+//    public Map<String, List<Double>> getMapMarkerNumToCoordinates() {
+//        return mapMarkerNumToCoordinates;
+//    }
+//
+//    public void setMapMarkerNumToCoordinates(Map<String, List<Double>> mapMarkerNumToCoordinates) {
+//        this.mapMarkerNumToCoordinates = mapMarkerNumToCoordinates;
+//    }
+
+    public List<String> getMapMarkerNum() {
+        return mapMarkerNum;
+    }
+
+    public void setMapMarkerNum(List<String> mapMarkerNum) {
+        this.mapMarkerNum = mapMarkerNum;
+    }
+
+    public List<Double> getMapMarkerCoord() {
+        return mapMarkerCoord;
+    }
+
+    public void setMapMarkerCoord(List<Double> mapMarkerCoord) {
+        this.mapMarkerCoord = mapMarkerCoord;
     }
 
 }

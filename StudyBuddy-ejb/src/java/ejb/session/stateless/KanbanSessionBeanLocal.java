@@ -52,5 +52,7 @@ public interface KanbanSessionBeanLocal {
 
     public Long createDefaultKanbanBoard(Long GroupId) throws GroupEntityDoesNotExistException;
 
+    public List<KanbanCard> retrieveKanbanCardsByGroupId(Long groupId) throws DoesNotExistException, InputDataValidationException;
+
     
 }

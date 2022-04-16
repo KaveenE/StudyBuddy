@@ -12,8 +12,5 @@ package util.enumeration;
 public enum CardType {
     TASKS,
     INPROGRESS,
-    FINISHED,
-    ARCHIVED,
-    BACKLOG
-   
+    FINISHED,   
 }

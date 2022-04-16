@@ -14,6 +14,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.security.auth.login.AccountNotFoundException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -63,11 +64,11 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     @Override
     public StudentEntity retrieveStudentByEmail(String email) throws DoesNotExistException, InputDataValidationException {
         AccountEntity account = accountSessionBeanLocal.retrieveAccountByEmail(email);
-        
+
         if (!(account instanceof StudentEntity)) {
             throw new StudentDoesNotExistException();
         }
-     
+
         return (StudentEntity) account;
     }
 
@@ -82,6 +83,16 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
         if (!(account instanceof StudentEntity)) {
             throw new InvalidLoginCredentialException();
         }
+        return (StudentEntity) account;
+    }
+
+    @Override
+    public StudentEntity retrieveStudentByUsernamePw(String username, String password) throws InvalidLoginCredentialException {
+        AccountEntity account = accountSessionBeanLocal.login(username, password);
+        if (!(account instanceof StudentEntity)) {
+            throw new InvalidLoginCredentialException();
+        }
+        System.out.println("<<<<<<<<<<<<<<<" + username + password);
         return (StudentEntity) account;
     }
 
@@ -110,6 +121,11 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
             throw new StudentPremiumAlreadyExistsException();
         }
         studentEntityToUpgrade.setIsPremium(true);
+    }
+
+    @Override
+    public void updatePassword(StudentEntity accountToUpdatePassword, String newPassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException {
+        accountSessionBeanLocal.updatePassword(accountToUpdatePassword, newPassword);
     }
 
     @Override

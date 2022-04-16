@@ -44,7 +44,6 @@ import ws.passwordHelper.PasswordHelper;
 @Path("Student")
 public class StudentResource {
 
-    AccountSessionBeanLocal accountSessionBean;
     StudentSessionBeanLocal studentSessionBean;
 
     @Context
@@ -55,7 +54,6 @@ public class StudentResource {
      */
     public StudentResource() {
         studentSessionBean = new SessionBeanLookup().lookupStudentSessionBeanLocal();
-        accountSessionBean = new SessionBeanLookup().lookupAccountSessionBeanLocal();
     }
 
     @Path("studentLogin")
@@ -83,6 +81,23 @@ public class StudentResource {
             String result = new ObjectMapper().writeValueAsString(studentEntity);
             return Response.ok(result, MediaType.APPLICATION_JSON).build();
         } catch (DoesNotExistException | InputDataValidationException ex) {
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("retrieveStudentByUsernamePw")
+    @GET
+//    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveStudentByUsernamePw(@QueryParam("username") String username, @QueryParam("password") String password) {
+        try {
+            System.out.println("<<<<<<<<<<<<<<<" + username + password);
+            StudentEntity studentEntity = studentSessionBean.retrieveStudentByUsernamePw(username, password);
+            String result = new ObjectMapper().writeValueAsString(studentEntity);
+            return Response.ok(result, MediaType.APPLICATION_JSON).build();
+        } catch (InvalidLoginCredentialException ex) {
             return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         } catch (JsonProcessingException ex) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
@@ -139,7 +154,7 @@ public class StudentResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updatePassword(PasswordHelper passwordHelper) {
         try {
-            accountSessionBean.updatePassword(passwordHelper.getStudentEntityToChangePassword(), passwordHelper.getNewPassword());
+            studentSessionBean.updatePassword(passwordHelper.getStudentEntityToChangePassword(), passwordHelper.getNewPassword());
             return Response.status(Status.OK).build();
         } catch (AccountNotFoundException | DoesNotExistException | InputDataValidationException ex) {
             return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();

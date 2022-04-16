@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entities.StudentEntity;
 import java.util.List;
 import javax.ejb.Local;
+import javax.security.auth.login.AccountNotFoundException;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -41,5 +42,9 @@ public interface StudentSessionBeanLocal {
     public void upgradeAccount(Long studentId) throws InputDataValidationException, DoesNotExistException, StudentPremiumAlreadyExistsException;
 
     public StudentEntity retrieveStudentByEmail(String email) throws DoesNotExistException, InputDataValidationException;
+
+    public void updatePassword(StudentEntity accountToUpdatePassword, String newPassword) throws AccountNotFoundException, DoesNotExistException, InputDataValidationException;
+
+    public StudentEntity retrieveStudentByUsernamePw(String username, String password) throws InvalidLoginCredentialException;
 
 }
