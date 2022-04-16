@@ -243,19 +243,13 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
             GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(GroupId);
 
             StudentEntity poster = group.getPoster();
-            StudentEntity anotherMember = null;
-            if (group.getGroupMembers().size() >= 1) {
-                anotherMember = group.getGroupMembers().get(1);
-            }
 
             KanbanBoard board = new KanbanBoard(String.format("%s's Kanban Board", group.getGroupName()), group);
             group.setKanbanBoards(new ArrayList<>(Arrays.asList(board)));
 
-            board.getKanbanCards().add(new KanbanCard("Head Back Log", "Desc Back Log", poster, CardType.BACKLOG, null, board));
-            board.getKanbanCards().add(new KanbanCard("Head Tasks", "Desc Tasks", anotherMember, CardType.TASKS, null, board));
-            board.getKanbanCards().add(new KanbanCard("Head InProgress", "Desc Doing", anotherMember, CardType.INPROGRESS, null, board));
-            board.getKanbanCards().add(new KanbanCard("Head Finished", "Desc Finished", poster, CardType.FINISHED, null, board));
-            board.getKanbanCards().add(new KanbanCard("Head Archived", "Desc Archive", poster, CardType.ARCHIVED, null, board));
+            board.getKanbanCards().add(new KanbanCard("Sample Heading", "Sample Description", poster, CardType.TASKS, null, board));
+            board.getKanbanCards().add(new KanbanCard("Sample Heading", "Sample Description", poster, CardType.INPROGRESS, null, board));
+            board.getKanbanCards().add(new KanbanCard("Sample Heading", "Sample Description", poster, CardType.FINISHED, null, board));
 
             EJBHelper.throwValidationErrorsIfAny(board);
             for (KanbanCard l : board.getKanbanCards()) {

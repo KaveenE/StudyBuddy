@@ -20,8 +20,8 @@ import java.util.logging.Logger;
  *
  * @author larby
  */
-public class SmuModHelper {
-    public static Reader getReader() {
+public class ModHelper {
+    public static Reader getReader(String fileName) {
 //        Not working because of some HTTPS shit
         
 //        try {
@@ -48,23 +48,23 @@ public class SmuModHelper {
 //            }
 //
 //        } catch (MalformedURLException ex) {
-//            Logger.getLogger(NusModHelper.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(ModHelper.class.getName()).log(Level.SEVERE, null, ex);
 //        } catch (IOException ex) {
-//            Logger.getLogger(NusModHelper.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(ModHelper.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        
 //        return null;
 
         try {
-            String filepath = SmuModHelper.class.getClassLoader().getResource("").getPath() + "../../docroot/smuList.json";
+            String filepath = ModHelper.class.getClassLoader().getResource("").getPath() + "../../docroot/"+fileName+".json";
             System.out.println(filepath);
             File modFile = new File(filepath);
             InputStream stream = new FileInputStream(modFile);
             return new BufferedReader(new InputStreamReader(stream));
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SmuModHelper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModHelper.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(SmuModHelper.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return null;

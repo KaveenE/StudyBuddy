@@ -44,7 +44,6 @@ public class StudentEntity extends AccountEntity implements Serializable {
     @NotNull
     private Boolean isEnabled;
 
-//no premium = default false
     @Column(nullable = false)
     @NotNull
     private Boolean optLocation;
