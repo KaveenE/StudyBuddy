@@ -91,10 +91,10 @@ public class DataInitSessionBean {
         try {
             System.out.println("Data Initialization Start");
 
-            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Shopee", "https://i.imgur.com/wWSzJIx.png"));
-            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Indigo", "https://i.imgur.com/ISlyBFs.png"));
-            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Secret Lab", "https://i.imgur.com/HHDqj7P.png"));
-            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Grammarly", "https://i.imgur.com/znB8aI9.png"));
+            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Shopee", "https://i.imgur.com/wWSzJIx.png",2.5));
+            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Indigo", "https://i.imgur.com/ISlyBFs.png",1.0));
+            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Secret Lab", "https://i.imgur.com/HHDqj7P.png",3.3));
+            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Grammarly", "https://i.imgur.com/znB8aI9.png",3.0));
             
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "password", "Y1S1", "stud1name"));
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "password", "Y1S2", "stud2name"));

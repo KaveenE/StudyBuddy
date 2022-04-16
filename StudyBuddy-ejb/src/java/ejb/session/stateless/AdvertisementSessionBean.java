@@ -84,5 +84,7 @@ public class AdvertisementSessionBean implements AdvertisementSessionBeanLocal {
         AdvertisementEntity advertisementToUpdate = retrieveAdvertisementById(advertisementEntity.getAdvertisementId());
         advertisementToUpdate.setCompanyName(advertisementEntity.getCompanyName());
         advertisementToUpdate.setImageUrl(advertisementEntity.getImageUrl());
+        advertisementToUpdate.setCpc(advertisementEntity.getCpc());
+        advertisementToUpdate.setNumberOfClicks(advertisementEntity.getNumberOfClicks());
     }
 }

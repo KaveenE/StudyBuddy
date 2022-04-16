@@ -72,24 +72,14 @@
             <div style="height:500px">
                 <h:form>
                     <p:growl id="msgs" showDetail="true" />
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" columnClasses="left,right" style="width:100%;">
+                        <p:chart type="bar" model="#{advManagedBean.advertismentRevenueModel}" style="width:1000px;" />
                         <p:dashboard id="board" model="#{dashboardManagedBean.model}">
                             <p:ajax event="reorder" listener="#{dashboardManagedBean.handleReorder}" update="msgs" />
-                            <p:panel id="ImportantAnnouncements" header="Important Announcements" closable="true" toggleable="true">
-                                <h:outputText value="Meeting with ALL admins at 10pm"></h:outputText>
-                            </p:panel>
-
-                            <p:panel id="Updates" header="Updates" closable="true" toggleable="true">
-                                <h:outputText value="Software Update Tomorrow"></h:outputText>
-                            </p:panel>
                             <p:panel id="Reports" header="Number of Unresolved Reports" closable="true" toggleable="true">
                                 <h:outputText value="#{reportManagedBean.unsolvedReportsSize}"/>
                             </p:panel>
                         </p:dashboard>
-<!--                        <p:panel id="draggable">
-                            <h:inputText value = "Type content and drag into dashboard" style="width: 350px"></h:inputText>
-                        </p:panel>
-                        <p:draggable for="draggable" helper="clone" dashboard="board"></p:draggable>-->
                     </h:panelGrid>
 
                 </h:form>
