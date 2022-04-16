@@ -49,7 +49,7 @@ public class MessageWebsocketServer {
     @OnMessage
     public void handleMessage(String message, Session session) {
         System.out.println("Data sent:");
-        System.out.println(message.toString());
+        System.out.println(message);
 
         try (JsonReader reader = Json.createReader(new StringReader(message))) {
             JsonObject jsonMessage = reader.readObject();

@@ -37,6 +37,8 @@ public class MessageSessionHandler {
 
     private final Map<Long, Set<Session>> sessions = new HashMap<>();
     private final Map<Session, Long> group = new HashMap<>();
+    
+    private final Set<Session> sessionsToRemove = new HashSet<>();
 
     public MessageSessionHandler() {
         this.groupEntitySessionBean = new SessionBeanLookup().lookupGroupEntitySessionBeanLocal();
@@ -58,6 +60,7 @@ public class MessageSessionHandler {
     public void addMessage(MessageEntity message) {
         try {
             Long messageId = groupEntitySessionBean.addNewMessage(message);
+            message = groupEntitySessionBean.retrieveMessageEntityById(messageId);
             Long groupId = message.getGroup().getGroupId();
             message.setMessageId(messageId);
 
@@ -73,6 +76,9 @@ public class MessageSessionHandler {
             Logger.getLogger(MessageSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InputDataValidationException ex) {
             Logger.getLogger(MessageSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            sessionsToRemove.forEach((s) -> removeSession(s));
+            sessionsToRemove.clear();
         }
     }
 
@@ -96,6 +102,10 @@ public class MessageSessionHandler {
             JsonObject goroup = Json.createObjectBuilder()
                     .add("groupId", message.getGroup().getGroupId())
                     .build();
+            JsonObject dateTimeCreated = Json.createObjectBuilder()
+                    .add("hour", message.getDateTimeCreated().getHour())
+                    .add("minute", message.getDateTimeCreated().getMinute())
+                    .build();
 
             System.out.println(message);
 
@@ -106,6 +116,7 @@ public class MessageSessionHandler {
                     .add("sender", sender)
                     .add("groupId", goroup)
                     .add("content", message.getContent())
+                    .add("dateTimeCreated", dateTimeCreated)
                     .add("mediaType", message.getMediaType().toString())
                     .build().toString();
 
@@ -115,10 +126,10 @@ public class MessageSessionHandler {
         } catch (JsonProcessingException ex) {
             Logger.getLogger(MessageSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            removeSession(session);
+            sessionsToRemove.add(session);
             Logger.getLogger(MessageSessionHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalStateException ex) {
-            removeSession(session);
+            sessionsToRemove.add(session);
         }
     }
 
