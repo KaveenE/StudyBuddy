@@ -6,11 +6,8 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,7 +16,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -36,11 +32,11 @@ public class KanbanCard implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long kanbanCardId;
-    
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private CardType cardType;
-    
+
     @Column(nullable = false, length = 64)
     @NotNull
     @Size(min = 1, max = 64)
@@ -59,20 +55,16 @@ public class KanbanCard implements Serializable {
     @ManyToOne
     private StudentEntity author;
 
-    @ManyToMany
-    @JsonManagedReference
-    private List<StudentEntity> assignedStudents;
-
     @JoinColumn(nullable = true)
     @ManyToOne
     @JsonBackReference
     private KanbanBoard kanbanBoard;
 
     public KanbanCard() {
-        this.assignedStudents = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.cardType = CardType.TASKS;
     }
+
     public KanbanCard(String heading, String description, StudentEntity author, CardType cardType) {
         this();
         this.heading = heading;
@@ -82,16 +74,16 @@ public class KanbanCard implements Serializable {
     }
 
     public KanbanCard(String heading, String description, StudentEntity author, CardType cardType, LocalDateTime deadline) {
-        this(heading, description, author,cardType);
+        this(heading, description, author, cardType);
         this.deadline = deadline;
     }
-    
-    public KanbanCard(String heading, String description, StudentEntity author,CardType cardType,LocalDateTime deadline,KanbanBoard kanbanBoard) {
-        this(heading, description, author, cardType,deadline);
+
+    public KanbanCard(String heading, String description, StudentEntity author, CardType cardType, LocalDateTime deadline, KanbanBoard kanbanBoard) {
+        this(heading, description, author, cardType, deadline);
         this.kanbanBoard = kanbanBoard;
     }
-    
-     @Override
+
+    @Override
     public int hashCode() {
         int hash = 0;
         hash += (kanbanCardId != null ? kanbanCardId.hashCode() : 0);
@@ -115,6 +107,7 @@ public class KanbanCard implements Serializable {
     public String toString() {
         return "entities.KanbanCard[ id=" + kanbanCardId + " ]";
     }
+
     public Long getKanbanCardId() {
         return kanbanCardId;
     }
@@ -161,14 +154,6 @@ public class KanbanCard implements Serializable {
 
     public void setAuthor(StudentEntity author) {
         this.author = author;
-    }
-
-    public List<StudentEntity> getAssignedStudents() {
-        return assignedStudents;
-    }
-
-    public void setAssignedStudents(List<StudentEntity> assignedStudents) {
-        this.assignedStudents = assignedStudents;
     }
 
     public KanbanBoard getKanbanBoard() {
