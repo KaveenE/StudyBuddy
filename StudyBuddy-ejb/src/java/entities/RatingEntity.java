@@ -33,7 +33,7 @@ public class RatingEntity implements Serializable {
 
     @Column(nullable = false)
     @NotNull
-    @Min(1)
+    @Min(0)
     @Max(5)
     private Long rating;
 
