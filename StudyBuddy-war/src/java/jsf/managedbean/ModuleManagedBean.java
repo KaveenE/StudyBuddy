@@ -65,6 +65,7 @@ public class ModuleManagedBean implements Serializable {
 
         return module.getModuleId().toString().contains(filterText)
                 || module.getName().toLowerCase().contains(filterText)
+                || module.getCode().toLowerCase().contains(filterText)
                 || module.getSchool().getName().toLowerCase().contains(filterText);
     }
 
@@ -101,7 +102,7 @@ public class ModuleManagedBean implements Serializable {
             selectedModuleEntity = (ModuleEntity) event.getComponent().getAttributes().get("moduleEntityToDisable");
             selectedModuleEntity.setIsDeleted(!selectedModuleEntity.getIsDeleted());
             moduleSessionBean.updateModule(selectedModuleEntity);
-            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Module Updated");
+            JSFHelper.addMessage(FacesMessage.SEVERITY_INFO, "Module deleted");
         } catch (DoesNotExistException | InputDataValidationException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Error while deleting: " + ex);
         }
