@@ -15,12 +15,12 @@ import entities.MessageEntity;
 
 import entities.StudentEntity;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +46,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import util.exception.AccessRightsException;
 import util.exception.AlreadyExistsException;
@@ -391,13 +392,19 @@ public class GroupResource {
             System.out.println("Received new message File req: " + messageEntity.getMediaType());
             if (messageEntity.getMediaType().equals(util.enumeration.MediaType.PICTURE)) {
                 File file = new File(messageEntity.getContent());
-                InputStream imgIs = new FileInputStream(file);
-                return Response.ok(imgIs).build();
+                byte[] fileContent = FileUtils.readFileToByteArray(file);
+                String encodedString = Base64.getEncoder().encodeToString(fileContent);
+                return Response.ok(encodedString, MediaType.TEXT_PLAIN).build();
+                
+//                InputStream imgIs = new FileInputStream(file);
+//                return Response.ok(imgIs).build();
             } else {
                 return Response.status(Status.BAD_REQUEST).build();
             }
         } catch (DoesNotExistException | FileNotFoundException ex) {
-            return Response.status(Status.BAD_REQUEST).build();
+            return Response.status(Status.BAD_REQUEST).entity(ex).build();
+        } catch (IOException ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex).build();
         }
     }
 
