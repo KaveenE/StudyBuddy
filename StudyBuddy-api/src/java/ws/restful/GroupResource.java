@@ -16,11 +16,11 @@ import entities.MessageEntity;
 import entities.StudentEntity;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -387,19 +387,21 @@ public class GroupResource {
 
     @Path("messageFile")
     @GET
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response getMessageFile(@QueryParam("messageId") Long messageId) {
         try {
             MessageEntity messageEntity = groupEntitySessionBean.retrieveMessageEntityById(messageId);
-
+            System.out.println("This is modified");
             System.out.println("Received new message File req: " + messageEntity.getMediaType());
             if (messageEntity.getMediaType().equals(util.enumeration.MediaType.PICTURE)) {
                 File file = new File(messageEntity.getContent());
-                return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM).build();
+                InputStream imgIs = new FileInputStream(file);
+                imgIs.
+                return Response.ok(imgIs).build();
             } else {
                 return Response.status(Status.BAD_REQUEST).build();
             }
-        } catch (DoesNotExistException ex) {
+        } catch (DoesNotExistException | FileNotFoundException ex) {
             return Response.status(Status.BAD_REQUEST).build();
         }
     }
