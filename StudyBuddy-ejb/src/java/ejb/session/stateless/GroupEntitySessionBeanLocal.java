@@ -7,7 +7,6 @@ package ejb.session.stateless;
 
 import entities.GroupEntity;
 import entities.MessageEntity;
-import entities.StudentEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AccessRightsException;

@@ -1,4 +1,4 @@
-    /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -26,28 +26,29 @@ public class AdvertisementEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long advertisementId;
-    
-    @Column(nullable = false,unique = true)
+
+    @Column(nullable = false, unique = true)
     @Size(min = 1, max = 255)
     @NotNull
     private String companyName;
-    
+
     @Column(nullable = false)
     @NotNull
     private String imageUrl;
-    
+
     @Column(nullable = false)
     @NotNull
     @Min(0)
-    private Long numberOfClicks;
+    private Integer numberOfClicks;
 
     public AdvertisementEntity() {
-        this.numberOfClicks = 0l;
+        this.numberOfClicks = 0;
     }
 
     public AdvertisementEntity(String companyName, String imageUrl) {
         this.companyName = companyName;
         this.imageUrl = imageUrl;
+        this.numberOfClicks = 0;
     }
 
     public Long getAdvertisementId() {
@@ -102,15 +103,15 @@ public class AdvertisementEntity implements Serializable {
     /**
      * @return the numberOfClicks
      */
-    public Long getNumberOfClicks() {
+    public Integer getNumberOfClicks() {
         return numberOfClicks;
     }
 
     /**
      * @param numberOfClicks the numberOfClicks to set
      */
-    public void setNumberOfClicks(Long numberOfClicks) {
+    public void setNumberOfClicks(Integer numberOfClicks) {
         this.numberOfClicks = numberOfClicks;
     }
-    
+
 }

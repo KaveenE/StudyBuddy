@@ -6,6 +6,7 @@
 package ejb.session.singleton;
 
 import ejb.session.stateless.AdminSessionBeanLocal;
+import ejb.session.stateless.AdvertisementSessionBeanLocal;
 import ejb.session.stateless.GroupEntitySessionBeanLocal;
 import ejb.session.stateless.KanbanSessionBeanLocal;
 import entities.AdminEntity;
@@ -35,6 +36,7 @@ import ejb.session.stateless.ModuleSessionBeanLocal;
 import ejb.session.stateless.ReportSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import ejb.session.stateless.SchoolSessionBeanLocal;
+import entities.AdvertisementEntity;
 import entities.ReportEntity;
 
 /**
@@ -45,6 +47,9 @@ import entities.ReportEntity;
 @LocalBean
 @Startup
 public class DataInitSessionBean {
+
+    @EJB
+    private AdvertisementSessionBeanLocal advertisementSessionBeanLocal;
 
     @EJB
     private ReportSessionBeanLocal reportSessionBeanLocal;
@@ -85,6 +90,12 @@ public class DataInitSessionBean {
     public void initData() {
         try {
             System.out.println("Data Initialization Start");
+
+            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Shopee", "https://i.imgur.com/wWSzJIx.png"));
+            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Indigo", "https://i.imgur.com/ISlyBFs.png"));
+            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Secret Lab", "https://i.imgur.com/HHDqj7P.png"));
+            advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Grammarly", "https://i.imgur.com/znB8aI9.png"));
+            
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "password", "Y1S1", "stud1name"));
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "password", "Y1S2", "stud2name"));
             studentEntitySessionBean.createNewStudent(new StudentEntity("stud3@gmail.com", "stud3", "password", "Y1S1", "stud3name"));
@@ -137,8 +148,8 @@ public class DataInitSessionBean {
                 JSONArray jsonArray = new JSONArray(jsonTokener);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    String name = jsonObject.getString(fileName.equals("ntuList") ? "name":"title");
-                    String code = jsonObject.getString(fileName.equals("ntuList") ? "code":"moduleCode");
+                    String name = jsonObject.getString(fileName.equals("ntuList") ? "name" : "title");
+                    String code = jsonObject.getString(fileName.equals("ntuList") ? "code" : "moduleCode");
                     moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, someSch), someSchId);
                 }
                 someSchoolModReader.close();

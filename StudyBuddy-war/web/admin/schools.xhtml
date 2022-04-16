@@ -115,7 +115,7 @@
                       widgetVar="manageNewDialog" responsive="true" appendTo="@(body)" resizable="false">
                 <h:form id ="formManageNewContent">
                     <p:outputPanel id="manage-new-content" >
-                        <p:panelGrid columns="2" rendered="#{not empty schoolManagedBean.selectedSchoolEntity}" styleClass="ui-noborder" >             
+                        <p:panelGrid columns="3" rendered="#{not empty schoolManagedBean.selectedSchoolEntity}" styleClass="ui-noborder" >             
                             <h:outputLabel value="Name: " />
                             <p:inputTextarea rows="5" cols="30" 
                                              counter="displayInAdd" maxlength="255" counterTemplate="{0} characters remaining." 

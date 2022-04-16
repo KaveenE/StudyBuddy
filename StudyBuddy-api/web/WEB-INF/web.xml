@@ -71,4 +71,10 @@
         <local>ejb.session.stateless.AccountSessionBeanLocal</local>
         <ejb-link>StudyBuddy-ejb.jar#AccountSessionBean</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>AdvertisementSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.AdvertisementSessionBeanLocal</local>
+        <ejb-link>StudyBuddy-ejb.jar#AdvertisementSessionBean</ejb-link>
+    </ejb-local-ref>
 </web-app>

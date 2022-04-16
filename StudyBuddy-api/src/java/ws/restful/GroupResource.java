@@ -24,16 +24,13 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
 import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -64,7 +61,7 @@ import ws.websocket.MessageSessionHandler;
 @RequestScoped
 @Path("Group")
 public class GroupResource {
-    
+
     @Inject
     private MessageSessionHandler messageSessionHandler;
 
@@ -103,7 +100,7 @@ public class GroupResource {
     public Response retrieveGroupById(@PathParam("groupId") Long groupId) {
         try {
             GroupEntity group = groupEntitySessionBean.retrieveGroupEntityById(groupId);
-            Map<String,List<Double>> map = new HashMap<>();
+            Map<String, List<Double>> map = new HashMap<>();
             group.getModuleEntity().getSchool().getModuleEntities().clear();
             String res = new ObjectMapper().writeValueAsString(group);
             return Response.ok(res, MediaType.APPLICATION_JSON).build();
@@ -218,7 +215,7 @@ public class GroupResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
-    
+
     @Path("updateMapMarkers")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -345,7 +342,6 @@ public class GroupResource {
             MessageEntity message = new MessageEntity("", group, sender, util.enumeration.MediaType.PICTURE);
 
             Long id = groupEntitySessionBean.addNewMessage(message);
-            
 
             System.out.println("New Message Id=" + id);
 
@@ -366,7 +362,7 @@ public class GroupResource {
             groupEntitySessionBean.changeMessageContent(id, fullPath);
 
             System.out.println("Content changed");
-            
+
             message.setMessageId(id);
             message.setContent(fullPath);
             messageSessionHandler.broadCastFileMessage(message);
@@ -396,7 +392,6 @@ public class GroupResource {
             if (messageEntity.getMediaType().equals(util.enumeration.MediaType.PICTURE)) {
                 File file = new File(messageEntity.getContent());
                 InputStream imgIs = new FileInputStream(file);
-                imgIs.
                 return Response.ok(imgIs).build();
             } else {
                 return Response.status(Status.BAD_REQUEST).build();
