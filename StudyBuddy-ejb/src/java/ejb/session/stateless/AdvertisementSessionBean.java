@@ -26,44 +26,51 @@ import util.helper.EJBHelper;
  */
 @Stateless
 public class AdvertisementSessionBean implements AdvertisementSessionBeanLocal {
-
+    
     @PersistenceContext(unitName = "StudyBuddy-ejbPU")
     private EntityManager em;
-
+    
     @Override
     public List<AdvertisementEntity> retrieveAllAdvertisements() {
         Query query = em.createQuery("SELECT a FROM AdvertisementEntity a");
-
+        
         return query.getResultList();
     }
-
+    
     @Override
     public AdvertisementEntity retrieveAdvertisementById(Long advertisementId) throws DoesNotExistException, InputDataValidationException {
         AdvertisementEntity advertisment = em.find(AdvertisementEntity.class, advertisementId);
         EJBHelper.requireNonNull(advertisment, new AdvertisementDoesNotExistException());
         EJBHelper.throwValidationErrorsIfAny(advertisment);
-
+        
         return advertisment;
     }
-
+    
+    @Override
+    public void clickAdvertisement(Long advertisementId) throws InputDataValidationException, DoesNotExistException {
+        EJBHelper.throwValidationErrorsIfAny(advertisementId);
+        AdvertisementEntity advertisementToUpdate = retrieveAdvertisementById(advertisementId);
+        advertisementToUpdate.setNumberOfClicks(advertisementToUpdate.getNumberOfClicks() + 1);
+    }
+    
     @Override
     public Long createNewAdvertisement(AdvertisementEntity newAdvertisementEntity) throws InputDataValidationException, AlreadyExistsException, UnknownPersistenceException {
         EJBHelper.throwValidationErrorsIfAny(newAdvertisementEntity);
-
+        
         try {
             em.persist(newAdvertisementEntity);
             em.flush();
         } catch (PersistenceException ex) {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new AdvertismentAlreadyExistsException());
         }
-
+        
         return newAdvertisementEntity.getAdvertisementId();
     }
-
+    
     @Override
     public void updateAdvertisement(AdvertisementEntity advertisementEntity) throws InputDataValidationException, DoesNotExistException {
         EJBHelper.throwValidationErrorsIfAny(advertisementEntity);
-
+        
         AdvertisementEntity advertisementToUpdate = retrieveAdvertisementById(advertisementEntity.getAdvertisementId());
         advertisementToUpdate.setCompanyName(advertisementEntity.getCompanyName());
         advertisementToUpdate.setImageUrl(advertisementEntity.getImageUrl());
