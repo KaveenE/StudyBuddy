@@ -39,7 +39,6 @@ public class AdvertisementSessionBean implements AdvertisementSessionBeanLocal {
         
         em.remove(advertisment);
         
-        return;
     }
     @Override
     public List<AdvertisementEntity> retrieveAllAdvertisements() {

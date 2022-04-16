@@ -7,14 +7,12 @@ package ejb.session.stateless;
 
 import entities.KanbanBoard;
 import entities.KanbanCard;
-import entities.KanbanCard;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.GroupEntityDoesNotExistException;
 import util.exception.InputDataValidationException;
-import util.exception.KanbanCardDoesNotExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
