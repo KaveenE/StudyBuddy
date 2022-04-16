@@ -31,6 +31,16 @@ public class AdvertisementSessionBean implements AdvertisementSessionBeanLocal {
     private EntityManager em;
     
     @Override
+    public void deleteAdvertismentById(Long advertisementId) throws DoesNotExistException, InputDataValidationException {
+        System.out.println("Id: "+advertisementId);
+        AdvertisementEntity advertisment = em.find(AdvertisementEntity.class, advertisementId);
+        EJBHelper.requireNonNull(advertisment, new AdvertisementDoesNotExistException());
+        EJBHelper.throwValidationErrorsIfAny(advertisment);
+        
+        em.remove(advertisment);
+        
+    }
+    @Override
     public List<AdvertisementEntity> retrieveAllAdvertisements() {
         Query query = em.createQuery("SELECT a FROM AdvertisementEntity a");
         

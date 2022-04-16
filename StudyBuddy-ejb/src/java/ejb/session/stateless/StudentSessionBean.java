@@ -7,7 +7,6 @@ package ejb.session.stateless;
 
 import entities.AccountEntity;
 import entities.StudentEntity;
-import static java.lang.Boolean.TRUE;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;

@@ -5,7 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entities.AccountEntity;
 import entities.AdminEntity;
 import java.util.List;
 import javax.ejb.Local;

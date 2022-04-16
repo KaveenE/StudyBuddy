@@ -7,13 +7,8 @@ package ws.restful;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ejb.session.stateless.AccountSessionBeanLocal;
 import ejb.session.stateless.StudentSessionBeanLocal;
 import entities.StudentEntity;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

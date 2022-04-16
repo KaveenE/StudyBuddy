@@ -76,8 +76,12 @@ public class AdminManagedBean {
         {
             return 4;
         }
+        else if(srcPage.equalsIgnoreCase("advertmisement") )
+        {
+            return 4;
+        }
         else {
-            return 69;
+            return "Shut the fuck up, hope prof doesn't see this. If he did, xiang yong wrote it".length();
         }
   
     }
