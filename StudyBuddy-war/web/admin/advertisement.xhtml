@@ -77,6 +77,10 @@
                     <p:column headerText="Image URL" sortBy="#{advEntity.imageUrl}">
                         <h:outputText value="#{advEntity.imageUrl}"/>
                     </p:column>
+                    
+                    <p:column headerText="Clicks" sortBy="#{advEntity.numberOfClicks}">
+                        <h:outputText value="#{advEntity.numberOfClicks}"/>
+                    </p:column>
 
                     <p:column exportable="false">
                         <p:commandButton icon="pi pi-pencil" update="formManageContent"
