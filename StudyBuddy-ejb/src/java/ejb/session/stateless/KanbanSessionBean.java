@@ -144,8 +144,6 @@ public class KanbanSessionBean implements KanbanSessionBeanLocal {
                 throw new KanbanCardDoesNotExistException("This kanban card does not exist!");
             }
 
-            kanbanCardToUpdate.setCreatedAt(kanbanCard.getCreatedAt());
-            kanbanCardToUpdate.setDeadline(kanbanCard.getDeadline());
             kanbanCardToUpdate.setHeading(kanbanCard.getHeading());
             kanbanCardToUpdate.setDescription(kanbanCard.getDescription());
 
