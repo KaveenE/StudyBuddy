@@ -97,76 +97,10 @@ public class DataInitSessionBean {
             Long nusSchoolId = schoolEntitySessionBean.createNewSchool(nus);
             Long smuSchoolId = schoolEntitySessionBean.createNewSchool(smu);
             Long ntuSchoolId = schoolEntitySessionBean.createNewSchool(ntu);
-            Long moduleId = new Long(0);
 
             initModules("moduleList", nus, nusSchoolId);
             initModules("ntuList", ntu, ntuSchoolId);
             initModules("smuList", smu, smuSchoolId);
-
-//            try {
-//                // Using HTTPS request to nusmod server, currently faulty
-//
-//                Reader nusModReader = ModHelper.getReader("moduleList");
-//
-//                if (nusModReader != null) {
-//                    System.out.println("Sucessfully retrieve reader");
-//                    JSONTokener jsonTokener = new JSONTokener(nusModReader);
-//
-//                    JSONArray jsonArray = new JSONArray(jsonTokener);
-//                    for (int i = 0; i < jsonArray.length(); i++) {
-//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        String name = jsonObject.getString("title");
-//                        String code = jsonObject.getString("moduleCode");
-//                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, nus), nusSchoolId);
-//                    }
-//                    nusModReader.close();
-//                } else {
-//                    System.out.println("Returned Reader is null");
-//                }
-//            } catch (AlreadyExistsException | NoClassDefFoundError | IOException ex) {
-//                Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            try {
-//                Reader ntuModReader = ModHelper.getReader("ntuList");
-//                if (ntuModReader != null) {
-//                    System.out.println("Sucessfully retrieve reader");
-//                    JSONTokener jsonTokener = new JSONTokener(ntuModReader);
-//
-//                    JSONArray jsonArray = new JSONArray(jsonTokener);
-//                    for (int i = 0; i < jsonArray.length(); i++) {
-//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        String name = jsonObject.getString("name");
-//                        String code = jsonObject.getString("code");
-//                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, ntu), ntuSchoolId);
-//                    }
-//                    ntuModReader.close();
-//                } else {
-//                    System.out.println("Returned Reader is null");
-//                }
-//            } catch (AlreadyExistsException | NoClassDefFoundError | IOException ex) {
-//                Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            try {
-//
-//                Reader smuModReader = ModHelper.getReader("smuList");
-//                if (smuModReader != null) {
-//                    System.out.println("Sucessfully retrieve reader");
-//                    JSONTokener jsonTokener = new JSONTokener(smuModReader);
-//
-//                    JSONArray jsonArray = new JSONArray(jsonTokener);
-//                    for (int i = 0; i < jsonArray.length(); i++) {
-//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        String name = jsonObject.getString("title");
-//                        String code = jsonObject.getString("moduleCode");
-//                        moduleId = moduleEntitySessionBean.createNewModule(new ModuleEntity(name, code, smu), smuSchoolId);
-//                    }
-//                    smuModReader.close();
-//                } else {
-//                    System.out.println("Returned Reader is null");
-//                }
-//            } catch (AlreadyExistsException | NoClassDefFoundError | IOException ex) {
-//                Logger.getLogger(DataInitSessionBean.class.getName()).log(Level.SEVERE, null, ex);
-//            }
 
             // Group Entity. Edited
             GroupEntity groupEntity = new GroupEntity();
