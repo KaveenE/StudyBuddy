@@ -13,6 +13,7 @@ import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.ScrewYouException;
 import util.exception.StudentPremiumAlreadyExistsException;
 import util.exception.UnknownPersistenceException;
 
@@ -31,7 +32,7 @@ public interface StudentSessionBeanLocal {
 
     public StudentEntity retrieveStudentByUsername(String username) throws DoesNotExistException, InputDataValidationException;
 
-    public StudentEntity studentLogin(String username, String password) throws InvalidLoginCredentialException;
+    public StudentEntity studentLogin(String username, String password) throws InvalidLoginCredentialException, ScrewYouException;
 
     public void updateAccountStudent(StudentEntity studentEntity) throws InputDataValidationException, DoesNotExistException;
 
