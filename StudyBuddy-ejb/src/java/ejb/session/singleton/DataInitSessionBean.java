@@ -103,7 +103,7 @@ public class DataInitSessionBean {
             adminSessionBean.createNewAdminEntity(new AdminEntity("admin@stubud.xyz", "admin", "password"));
 
             SchoolEntity nus = new SchoolEntity("National University of Singapore (NUS)");
-            SchoolEntity smu = new SchoolEntity("Singapore Management University (SMOO)");
+            SchoolEntity smu = new SchoolEntity("Singapore Management University (SMU)");
             SchoolEntity ntu = new SchoolEntity("Nanyang Technological University (NTU)");
             Long nusSchoolId = schoolEntitySessionBean.createNewSchool(nus);
             Long smuSchoolId = schoolEntitySessionBean.createNewSchool(smu);
