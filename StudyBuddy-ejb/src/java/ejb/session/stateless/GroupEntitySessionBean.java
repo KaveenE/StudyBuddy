@@ -37,6 +37,8 @@ import util.helper.EJBHelper;
 @Stateless
 public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
 
+    @EJB(name = "KanbanSessionBeanLocal")
+    private KanbanSessionBeanLocal kanbanSessionBeanLocal;
     @EJB(name = "StudentSessionBeanLocal")
     private StudentSessionBeanLocal studentSessionBeanLocal;
     @EJB(name = "ModuleSessionBeanLocal")
@@ -86,6 +88,8 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
 //          Set up kanban board
             em.persist(newGroupEntity);
             em.flush();
+
+            kanbanSessionBeanLocal.createDefaultKanbanBoard(newGroupEntity.getGroupId());
         } catch (PersistenceException ex) {
             AlreadyExistsException.throwAlreadyExistsOrUnknownException(ex, new AdvertismentAlreadyExistsException());
         }
@@ -110,11 +114,11 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
         StudentEntity studentEntity = studentSessionBeanLocal.retrieveStudentById(studentId);
         if (group.getCandidates().contains(studentEntity)) {
             throw new SystemException("You already applied to this group before!");
-        } 
+        }
         if (group.getPoster() == studentEntity) {
             throw new SystemException("You can't join your own group!");
         }
-        
+
         if (group.getPoster() != studentEntity) {
             group.getCandidates().add(studentEntity);
             studentEntity.getGroupsApplied().add(group);
@@ -162,13 +166,14 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
             throw new GroupAccessRightsException();
         }
     }
-    
+
     @Override
     public void updateMapMarkers(GroupEntity groupEntity) throws InputDataValidationException, DoesNotExistException {
         GroupEntity groupEntityToUpdate = retrieveGroupEntityById(groupEntity.getGroupId());
         groupEntityToUpdate.setMapMarkerNum(groupEntity.getMapMarkerNum());
         groupEntityToUpdate.setMapMarkerCoord(groupEntity.getMapMarkerCoord());
     }
+
     @Override
     public void deleteGroup(Long groupId) throws DoesNotExistException, InputDataValidationException {
         GroupEntity groupEntityToDelete = retrieveGroupEntityById(groupId);
@@ -250,7 +255,7 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
 
         sender.getMessages().add(message);
         group.getMessages().add(message);
-        
+
         em.persist(message);
         em.flush();
         return message.getMessageId();
@@ -279,11 +284,11 @@ public class GroupEntitySessionBean implements GroupEntitySessionBeanLocal {
     @Override
     public MessageEntity retrieveMessageEntityById(Long messageId) throws DoesNotExistException {
         MessageEntity message = em.find(MessageEntity.class, messageId);
-        
+
         if (message == null) {
             throw new DoesNotExistException("This message does not exist[" + messageId + "]");
         }
-        
+
         return message;
     }
 
