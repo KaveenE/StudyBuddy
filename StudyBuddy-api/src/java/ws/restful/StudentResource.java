@@ -27,6 +27,7 @@ import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.ScrewYouException;
 import util.exception.StudentPremiumAlreadyExistsException;
 import util.exception.UnknownPersistenceException;
 import ws.passwordHelper.PasswordHelper;
@@ -59,7 +60,7 @@ public class StudentResource {
             StudentEntity student = studentSessionBean.studentLogin(username, password);
             String result = new ObjectMapper().writeValueAsString(student);
             return Response.ok(result, MediaType.APPLICATION_JSON).build();
-        } catch (InvalidLoginCredentialException ex) {
+        } catch (InvalidLoginCredentialException | ScrewYouException ex) {
             return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         } catch (JsonProcessingException ex) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();

@@ -18,6 +18,7 @@ import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.ScrewYouException;
 import util.exception.StudentDoesNotExistException;
 import util.exception.StudentPremiumAlreadyExistsException;
 import util.exception.UnknownPersistenceException;
@@ -77,11 +78,19 @@ public class StudentSessionBean implements StudentSessionBeanLocal {
     }
 
     @Override
-    public StudentEntity studentLogin(String username, String password) throws InvalidLoginCredentialException {
+    public StudentEntity studentLogin(String username, String password) throws InvalidLoginCredentialException, ScrewYouException {
         AccountEntity account = accountSessionBeanLocal.login(username, password);
+        
         if (!(account instanceof StudentEntity)) {
             throw new InvalidLoginCredentialException();
         }
+        
+        StudentEntity student = (StudentEntity) account;
+        
+        if(!student.getIsEnabled()) {
+            throw new ScrewYouException();
+        }
+        
         return (StudentEntity) account;
     }
 
