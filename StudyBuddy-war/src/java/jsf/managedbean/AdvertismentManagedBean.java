@@ -189,7 +189,7 @@ public class AdvertismentManagedBean implements Serializable {
         
         Axis yAxis = advertismentRevenueModel.getAxis(AxisType.Y);
         yAxis.setMin(0);
-        yAxis.setMax(200);
+        yAxis.setMax(20);
     }
     
     private BarChartModel initBarModel() {
