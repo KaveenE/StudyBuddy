@@ -50,7 +50,7 @@ public class StudentEntity extends AccountEntity implements Serializable {
 
     @Column(nullable = false)
     @NotNull
-    @Size(min=4, max = 128)
+    @Size(min = 4, max = 128)
     private String fullName;
 
     @OneToMany(mappedBy = "ratee")
@@ -81,10 +81,6 @@ public class StudentEntity extends AccountEntity implements Serializable {
     @JsonBackReference
     private List<ReportEntity> reportsSubmitted;
 
-    @ManyToMany(mappedBy = "assignedStudents")
-    @JsonBackReference
-    private List<KanbanCard> assignedCards;
-
     @OneToMany(mappedBy = "reportedStudent")
     @JsonBackReference
     private List<ReportEntity> reportReceived;
@@ -96,7 +92,6 @@ public class StudentEntity extends AccountEntity implements Serializable {
         this.messages = new ArrayList<>();
         this.reportsSubmitted = new ArrayList<>();
         this.reportReceived = new ArrayList<>();
-        this.assignedCards = new ArrayList<>();
         this.optLocation = false;
         this.isEnabled = true;
         this.isPremium = false;
@@ -104,7 +99,7 @@ public class StudentEntity extends AccountEntity implements Serializable {
     }
 
     public StudentEntity() {
-//        super();
+
         System.out.println("Student Entity Default Constructor!");
     }
 
@@ -190,20 +185,6 @@ public class StudentEntity extends AccountEntity implements Serializable {
      */
     public void setOptLocation(Boolean optLocation) {
         this.optLocation = optLocation;
-    }
-
-    /**
-     * @return the assignedCards
-     */
-    public List<KanbanCard> getAssignedCards() {
-        return assignedCards;
-    }
-
-    /**
-     * @param assignedCards the assignedCards to set
-     */
-    public void setAssignedCards(List<KanbanCard> assignedCards) {
-        this.assignedCards = assignedCards;
     }
 
     public List<GroupEntity> getGroupsPosted() {

@@ -46,8 +46,6 @@ public interface KanbanSessionBeanLocal {
 
     public Long createNewKanbanCard(KanbanCard newKanbanCard, Long kanbanBoardId, Long authorStudentId) throws UnknownPersistenceException, DoesNotExistException, DoesNotExistException, AlreadyExistsException, InputDataValidationException;
 
-    public List<KanbanCard> retrieveKanbanCardsAssignedToStudents(Long StudentId) throws DoesNotExistException, InputDataValidationException;
-
     public Long createDefaultKanbanBoard(Long GroupId) throws GroupEntityDoesNotExistException;
 
     public List<KanbanCard> retrieveKanbanCardsByGroupId(Long groupId) throws DoesNotExistException, InputDataValidationException;

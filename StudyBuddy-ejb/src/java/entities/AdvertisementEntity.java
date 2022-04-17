@@ -40,15 +40,22 @@ public class AdvertisementEntity implements Serializable {
     @NotNull
     @Min(0)
     private Integer numberOfClicks;
+    
+    @Column(nullable = false)
+    @NotNull
+    @Min(0)
+    private Double cpc;
 
     public AdvertisementEntity() {
         this.numberOfClicks = 0;
+        this.cpc = 0.0;
     }
 
-    public AdvertisementEntity(String companyName, String imageUrl) {
+    public AdvertisementEntity(String companyName, String imageUrl, Double cpc) {
+        this();
         this.companyName = companyName;
         this.imageUrl = imageUrl;
-        this.numberOfClicks = 0;
+        this.cpc = cpc;
     }
 
     public Long getAdvertisementId() {
@@ -112,6 +119,14 @@ public class AdvertisementEntity implements Serializable {
      */
     public void setNumberOfClicks(Integer numberOfClicks) {
         this.numberOfClicks = numberOfClicks;
+    }
+
+    public Double getCpc() {
+        return cpc;
+    }
+
+    public void setCpc(Double cpc) {
+        this.cpc = cpc;
     }
 
 }

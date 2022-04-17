@@ -63,9 +63,9 @@
                     <p:ajax event="rowSelectCheckbox" update=":form:delete-multiple-button"/>
                     <p:ajax event="rowUnselectCheckbox" update=":form:delete-multiple-button"/>
                     <p:ajax event="toggleSelect" update=":form:delete-multiple-button"/>
-                    
+
                     <p:column selectionMode="multiple" exportable="false" width="25" style ="text-align: center;"></p:column>
-                    
+
                     <p:column headerText="ID" sortBy="#{advEntity.advertisementId}">
                         <h:outputText value="#{advEntity.advertisementId}"/>
                     </p:column>
@@ -73,13 +73,25 @@
                     <p:column headerText="Name" sortBy="#{advEntity.companyName}">
                         <h:outputText value="#{advEntity.companyName}" />
                     </p:column>
-                    
+
                     <p:column headerText="Image URL" sortBy="#{advEntity.imageUrl}">
                         <h:outputText value="#{advEntity.imageUrl}"/>
                     </p:column>
-                    
+
                     <p:column headerText="Clicks" sortBy="#{advEntity.numberOfClicks}">
                         <h:outputText value="#{advEntity.numberOfClicks}"/>
+                    </p:column>
+
+                    <p:column headerText="CPC" sortBy="#{advEntity.cpc}">
+                        <h:outputText value="#{advEntity.cpc}">
+                            <f:convertNumber minFractionDigits="0" maxFractionDigits="3" type="currency"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Profit" sortBy="#{advEntity.cpc * advEntity.numberOfClicks}">
+                        <h:outputText value="#{advEntity.cpc * advEntity.numberOfClicks}">
+                            <f:convertNumber minFractionDigits="0" maxFractionDigits="3" type="currency"/>
+                        </h:outputText>
                     </p:column>
 
                     <p:column exportable="false">
@@ -111,7 +123,10 @@
 
                             <h:outputLabel value="Clicks: " />
                             <p:inputNumber value="#{advManagedBean.selectedAdvEntity.numberOfClicks}" minValue="0"/>
-                            
+
+                            <h:outputLabel value="CPC: " />
+                            <p:inputNumber value="#{advManagedBean.selectedAdvEntity.cpc}" minValue="0" type="currency"/>
+
                             <h:outputLabel value="Name: " />
                             <p:inputTextarea rows="5" cols="30" 
                                              counter="displayInEdit" maxlength="255" counterTemplate="{0} characters remaining." 
@@ -131,16 +146,19 @@
                       widgetVar="manageNewDialog" responsive="true" appendTo="@(body)" resizable="false">
                 <h:form id ="formManageNewContent">
                     <p:outputPanel id="manage-new-content" >
-                        <p:panelGrid columns="3" rendered="#{not empty advManagedBean.selectedAdvEntity}" styleClass="ui-noborder" >             
+                        <p:panelGrid columns="2" rendered="#{not empty advManagedBean.selectedAdvEntity}" styleClass="ui-noborder" >             
+
+                            <h:outputLabel value="Image URL: " />
+                            <p:inputText value="#{advManagedBean.selectedAdvEntity.imageUrl}" required="true"/>
+
+                            <h:outputLabel value="CPC: " />
+                            <p:inputNumber value="#{advManagedBean.selectedAdvEntity.cpc}" minValue="0" type="currency" required="true"/>
+
                             <h:outputLabel value="Name: " />
                             <p:inputTextarea rows="5" cols="30" 
                                              counter="displayInAdd" maxlength="255" counterTemplate="{0} characters remaining." 
                                              autoResize="false" value="#{advManagedBean.selectedAdvEntity.companyName}" />
                             <h:outputText id="displayInAdd" />
-                            
-                            <h:outputLabel value="Image URL: " />
-                            <p:inputText value="#{advManagedBean.selectedAdvEntity.imageUrl}" />
-                            
                         </p:panelGrid>      
                     </p:outputPanel>
 

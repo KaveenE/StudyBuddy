@@ -20,6 +20,10 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 import org.primefaces.PrimeFaces;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
 import util.exception.AlreadyExistsException;
 import util.exception.DoesNotExistException;
 import util.exception.InputDataValidationException;
@@ -41,7 +45,7 @@ public class AdvertismentManagedBean implements Serializable {
     private List<AdvertisementEntity> filteredAdvEntities;
     private List<AdvertisementEntity> selectedAdvEntities;
     private AdvertisementEntity selectedAdvEntity;
-    
+    private BarChartModel advertismentRevenueModel;
     public AdvertismentManagedBean() {
         
     }
@@ -49,6 +53,7 @@ public class AdvertismentManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct() {
         this.advEntities = advertisementSessionBeanLocal.retrieveAllAdvertisements();
+        createBarModel();
     }
     public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
         String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
@@ -174,5 +179,40 @@ public class AdvertismentManagedBean implements Serializable {
         } catch (IOException ex) {
             JSFHelper.addMessage(FacesMessage.SEVERITY_ERROR, "Unable to redirect to "+link);
         }
+    }
+    
+    private void createBarModel() {
+        advertismentRevenueModel = initBarModel();
+        advertismentRevenueModel.setTitle("Advertisment Revenue");
+        advertismentRevenueModel.setAnimate(true);
+        advertismentRevenueModel.setLegendPosition("ne");
+        
+        Axis yAxis = advertismentRevenueModel.getAxis(AxisType.Y);
+        yAxis.setMin(0);
+        yAxis.setMax(200);
+    }
+    
+    private BarChartModel initBarModel() {
+        BarChartModel advertismentRevenue = new BarChartModel();
+        
+        ChartSeries company;
+        for(AdvertisementEntity adv: this.advEntities) {
+            company = new ChartSeries();
+            company.setLabel(adv.getCompanyName());
+            company.set("Clicks", adv.getNumberOfClicks());
+            company.set("Profit",adv.getCpc() * adv.getNumberOfClicks());
+            
+            advertismentRevenue.addSeries(company);
+        }
+ 
+        return advertismentRevenue;
+    }
+
+    public BarChartModel getAdvertismentRevenueModel() {
+        return advertismentRevenueModel;
+    }
+
+    public void setAdvertismentRevenueModel(BarChartModel advertismentRevenueModel) {
+        this.advertismentRevenueModel = advertismentRevenueModel;
     }
 }
