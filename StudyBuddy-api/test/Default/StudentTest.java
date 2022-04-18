@@ -18,6 +18,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.ScrewYouException;
 
 /**
  *
@@ -44,7 +45,7 @@ public class StudentTest {
             StudentEntity student = studentSessionBean.studentLogin("stud1", "password");
             String studentJson = new ObjectMapper().writeValueAsString(student);
             System.out.println(studentJson);
-        } catch (InvalidLoginCredentialException ex) {
+        } catch (InvalidLoginCredentialException|ScrewYouException ex) {
             System.out.println("Login Credential");
         }
         

@@ -96,9 +96,9 @@ public class DataInitSessionBean {
             advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Secret Lab", "https://i.imgur.com/HHDqj7P.png",3.3));
             advertisementSessionBeanLocal.createNewAdvertisement(new AdvertisementEntity("Grammarly", "https://i.imgur.com/znB8aI9.png",3.0));
             
-            studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "password", "Y1S1", "stud1name"));
-            studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "password", "Y1S2", "stud2name"));
-            studentEntitySessionBean.createNewStudent(new StudentEntity("stud3@gmail.com", "stud3", "password", "Y1S1", "stud3name"));
+            studentEntitySessionBean.createNewStudent(new StudentEntity("stud1@gmail.com", "stud1", "Password1!", "Y1S1", "stud1name"));
+            studentEntitySessionBean.createNewStudent(new StudentEntity("stud2@gmail.com", "stud2", "Password1!", "Y1S2", "stud2name"));
+            studentEntitySessionBean.createNewStudent(new StudentEntity("stud3@gmail.com", "stud3", "Password1!", "Y1S1", "stud3name"));
 
             adminSessionBean.createNewAdminEntity(new AdminEntity("admin@stubud.xyz", "admin", "password"));
 
